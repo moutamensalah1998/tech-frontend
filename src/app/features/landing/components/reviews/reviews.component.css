@@ -1,0 +1,12 @@
+.review-slider-container {
+  @apply flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-6;
+  scroll-behavior: smooth;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

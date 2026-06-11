@@ -1,0 +1,38 @@
+
+.contacts-wrapper {
+    transition: all 0.3s ease;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #6b7280;
+}
+
+.btn-primary {
+    transition: all 0.2s ease;
+}
+
+.btn-secondary {
+    transition: all 0.2s ease;
+}
+
+
+@media (max-width: 640px) {
+    .mobile-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .mobile-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .export-import-group {
+        width: 100%;
+    }
+}

@@ -1,0 +1,25 @@
+<div class="max-h-64 overflow-y-auto border border-border dark:border-dark-border rounded-lg">
+  <div class="divide-y divide-border dark:divide-dark-border">
+    <div *ngFor="let contact of contacts; let i = index"
+      class="flex items-center justify-between p-4 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+          <span class="text-sm font-medium text-primary dark:text-primary-dark">
+            {{getContactInitials(contact.name)}}
+          </span>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-text-primary dark:text-dark-text-primary">{{contact.name}}</p>
+          <p class="text-sm text-text-secondary dark:text-dark-text-secondary">{{contact.country_code}}
+            {{contact.phone_number}}</p>
+        </div>
+      </div>
+      <button type="button" (click)="removeContact.emit(i)"
+        class="text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

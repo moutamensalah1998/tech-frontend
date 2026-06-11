@@ -1,0 +1,399 @@
+<!-- app-interactive-buttons-node.component.html - Updated with video/document support for header -->
+<div
+  class="node-card bg-white rounded-lg shadow-lg p-4 cursor-grab active:cursor-grabbing select-none relative will-change-transform transition-shadow duration-200 hover:shadow-xl"
+  [class.dragging]="isDragging"
+  [class.no-transition]="isDragging"
+  [class.ring-2]="isFirstNode"
+  [class.ring-green-400]="isFirstNode"
+  [class.ring-offset-2]="isFirstNode"
+  [class.border-2]="true"
+  [class.border-red-500]="getValidationState() === 'error'"
+  [class.border-yellow-500]="getValidationState() === 'warning'"
+  [class.border-green-500]="getValidationState() === 'valid'"
+  [class.border-gray-200]="getValidationState() === 'unknown'"
+  [title]="getValidationTooltip()"
+  (mousedown)="onMouseDown($event)"
+  (touchstart)="onTouchStart($event)"
+>
+  <!-- Validation Badge -->
+  <div
+    *ngIf="getValidationState() !== 'unknown' && getValidationState() !== 'valid'"
+    class="absolute top-2 right-2 z-10"
+    [title]="getValidationTooltip()">
+    <span
+      *ngIf="getValidationState() === 'error'"
+      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-300">
+      <span class="material-icons text-xs mr-1">error</span>
+      {{ getValidationErrors().length }}
+    </span>
+    <span
+      *ngIf="getValidationState() === 'warning'"
+      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-300">
+      <span class="material-icons text-xs mr-1">warning</span>
+      {{ getValidationWarnings().length }}
+    </span>
+  </div>
+
+  <app-node-header
+    [title]="node.title || ('chatbot.builder.nodes.interactiveButtons.title' | translate)"
+    icon="widgets"
+    color="yellow"
+    [node]="node"
+    [isFirstNode]="isFirstNode"
+    (addNode)="onAddNode.emit()"
+    (delete)="onDelete.emit()"
+    (setAsFirst)="onSetAsFirst($event)"
+  >
+  </app-node-header>
+
+  <form [formGroup]="buttonsForm" class="space-y-4">
+    <!-- First Node Indicator -->
+    <div *ngIf="isFirstNode" class="bg-green-50 border border-green-200 rounded-lg p-2 mb-3">
+      <div class="flex items-center text-green-700 text-xs">
+        <span class="material-icons text-sm mr-1">play_arrow</span>
+        {{ 'chatbot.builder.nodes.interactiveButtons.firstNodeIndicator' | translate }}
+      </div>
+    </div>
+
+    <!-- Interactive Type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'chatbot.builder.nodes.interactiveButtons.interactiveType' | translate }}</label>
+      <select
+        formControlName="type"
+        class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-yellow-500 focus:border-transparent no-drag"
+      >
+        <option *ngFor="let option of typeOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Header Section -->
+    <div class="border border-gray-200 rounded-lg p-4">
+      <div class="flex items-center justify-between mb-3">
+        <label class="text-sm font-medium text-gray-700">{{ 'chatbot.builder.nodes.interactiveButtons.headerOptional' | translate }}</label>
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            [(ngModel)]="headerEnabled"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="toggleHeader(headerEnabled)"
+            class="w-4 h-4 text-yellow-600 rounded focus:ring-yellow-500 no-drag"
+          />
+          <span class="text-sm text-gray-600">Enable</span>
+        </div>
+      </div>
+
+      <div *ngIf="headerEnabled" class="space-y-4" [formGroup]="headerFormGroup">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-2">{{ 'chatbot.builder.nodes.interactiveButtons.headerType' | translate }}</label>
+          <select
+            formControlName="type"
+            class="w-full p-2 border border-gray-300 rounded-lg text-sm no-drag focus:ring-2 focus:ring-yellow-500"
+          >
+            <option value="text">{{ 'chatbot.builder.nodes.interactiveButtons.textHeader' | translate }}</option>
+            <option value="media">{{ 'chatbot.builder.nodes.interactiveButtons.mediaHeader' | translate }}</option>
+          </select>
+        </div>
+
+        <!-- Text Header -->
+        <div *ngIf="headerFormGroup.get('type')?.value === 'text'">
+          <label class="block text-xs font-medium text-gray-700 mb-1">{{ 'chatbot.builder.nodes.interactiveButtons.headerText' | translate }}</label>
+          <input
+            type="text"
+            formControlName="text"
+            maxlength="60"
+            [placeholder]="'chatbot.builder.nodes.interactiveButtons.headerPlaceholder' | translate"
+            class="w-full p-2 border border-gray-300 rounded-lg text-sm no-drag focus:ring-2 focus:ring-yellow-500"
+          />
+          <div class="text-xs text-gray-500 mt-1">
+            {{ (headerFormGroup.get('text')?.value?.length || 0) }}/60 characters
+          </div>
+        </div>
+
+        <!-- Media Header -->
+        <div *ngIf="headerFormGroup.get('type')?.value === 'media'">
+          <!-- Media Type Selector -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-700 mb-2">{{ 'chatbot.builder.nodes.interactiveButtons.mediaType' | translate }}</label>
+            <div class="grid grid-cols-3 gap-2">
+              <div
+                *ngFor="let mediaOption of headerMediaTypeOptions"
+                class="relative"
+              >
+                <input
+                  type="radio"
+                  [id]="'headerMediaType_' + mediaOption.value + '_' + node.id"
+                  [value]="mediaOption.value"
+                  formControlName="mediaType"
+                  (change)="onHeaderMediaTypeChange()"
+                  class="sr-only no-drag"
+                />
+                <label
+                  [for]="'headerMediaType_' + mediaOption.value + '_' + node.id"
+                  class="flex flex-col items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 no-drag"
+                  [class.border-yellow-500]="headerFormGroup.get('mediaType')?.value === mediaOption.value"
+                  [class.bg-yellow-50]="headerFormGroup.get('mediaType')?.value === mediaOption.value"
+                  [class.border-gray-200]="headerFormGroup.get('mediaType')?.value !== mediaOption.value"
+                  [class.bg-white]="headerFormGroup.get('mediaType')?.value !== mediaOption.value"
+                  [class.hover:border-yellow-300]="headerFormGroup.get('mediaType')?.value !== mediaOption.value"
+                >
+                  <span
+                    class="material-icons text-lg mb-1"
+                    [class.text-yellow-600]="headerFormGroup.get('mediaType')?.value === mediaOption.value"
+                    [class.text-gray-500]="headerFormGroup.get('mediaType')?.value !== mediaOption.value"
+                  >
+                    {{ mediaOption.icon }}
+                  </span>
+                  <span
+                    class="text-xs font-medium"
+                    [class.text-yellow-700]="headerFormGroup.get('mediaType')?.value === mediaOption.value"
+                    [class.text-gray-700]="headerFormGroup.get('mediaType')?.value !== mediaOption.value"
+                  >
+                    {{ mediaOption.label }}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media Upload Component -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-2">
+              {{ 'chatbot.builder.nodes.interactiveButtons.upload' | translate }} {{ getCurrentMediaTypeLabel() }}
+            </label>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <app-media-upload
+                [mediaType]="currentHeaderMediaType"
+                [initialValue]="getHeaderMediaValue()"
+                [maxSizeMB]="getHeaderMediaMaxSize()"
+                [placeholder]="getHeaderMediaPlaceholder()"
+                (mediaUploaded)="onHeaderMediaUploaded($event)"
+                (mediaRemoved)="onHeaderMediaRemoved()"
+                (uploadError)="onHeaderMediaError($event)">
+              </app-media-upload>
+            </div>
+
+            <!-- Media Type Info -->
+            <div class="mt-2 text-xs text-gray-500">
+              <div class="flex items-center gap-1">
+                <span class="material-icons text-xs">info</span>
+                <span>
+                  Max size: {{ getHeaderMediaMaxSize() }}MB •
+                  <ng-container [ngSwitch]="currentHeaderMediaType">
+                    <span *ngSwitchCase="'image'">Formats: PNG, JPG, GIF, WebP</span>
+                    <span *ngSwitchCase="'video'">Formats: MP4, WebM, MOV</span>
+                    <span *ngSwitchCase="'document'">Formats: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX</span>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Section -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        {{ 'chatbot.builder.nodes.interactiveButtons.bodyText' | translate }} <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        formControlName="bodyText"
+        [placeholder]="'chatbot.builder.nodes.interactiveButtons.bodyPlaceholder' | translate"
+        maxlength="1024"
+        class="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent no-drag"
+        [class.border-red-300]="buttonsForm.get('bodyText')?.invalid && buttonsForm.get('bodyText')?.touched"
+        rows="4"
+      >
+      </textarea>
+      <div class="flex justify-between items-center mt-1">
+        <div class="text-xs text-red-600" *ngIf="buttonsForm.get('bodyText')?.invalid && buttonsForm.get('bodyText')?.touched">
+          {{ 'chatbot.builder.nodes.interactiveButtons.bodyRequired' | translate }}
+        </div>
+        <div class="text-xs text-gray-500">
+          {{ buttonsForm.get("bodyText")?.value?.length || 0 }}/1024 characters
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="border border-gray-200 rounded-lg p-4">
+      <div class="flex items-center justify-between mb-3">
+        <label class="text-sm font-medium text-gray-700">{{ 'chatbot.builder.nodes.interactiveButtons.footerOptional' | translate }}</label>
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            [(ngModel)]="footerEnabled"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="toggleFooter(footerEnabled)"
+            class="w-4 h-4 text-yellow-600 rounded focus:ring-yellow-500 no-drag"
+          />
+          <span class="text-sm text-gray-600">{{ 'chatbot.builder.nodes.interactiveButtons.enable' | translate }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="footerEnabled" [formGroup]="footerFormGroup">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{{ 'chatbot.builder.nodes.interactiveButtons.footerText' | translate }}</label>
+        <input
+          type="text"
+          [formControl]="footerTextControl"
+          maxlength="60"
+          [placeholder]="'chatbot.builder.nodes.interactiveButtons.footerPlaceholder' | translate"
+          class="w-full p-2 border border-gray-300 rounded-lg text-sm no-drag focus:ring-2 focus:ring-yellow-500"
+        />
+        <div class="text-xs text-gray-500 mt-1">
+          {{ (footerTextControl.value!.length || 0) }}/60 characters
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="border border-gray-200 rounded-lg p-4">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <label class="text-sm font-medium text-gray-700">
+            {{ 'chatbot.builder.nodes.interactiveButtons.buttons' | translate }} <span class="text-red-500">*</span>
+          </label>
+          <p class="text-xs text-gray-500 mt-1">{{ 'chatbot.builder.nodes.interactiveButtons.addButtons' | translate }}</p>
+        </div>
+        <div class="flex gap-2">
+          <button
+            type="button"
+            (click)="addButton()"
+            [disabled]="getButtonsCount() >= 3"
+            class="px-3 py-1 ml-6 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 disabled:bg-gray-300 disabled:cursor-not-allowed no-drag transition-colors"
+          >
+            <span class="material-icons text-xs mr-1">add</span>
+            {{ 'chatbot.builder.nodes.interactiveButtons.addButton' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div
+          *ngFor="let buttonControl of buttonsFormArray.controls; let i = index"
+          class="border border-gray-300 rounded-lg p-4 bg-gray-50 relative button-container"
+          [attr.data-button-index]="i"
+        >
+          <!-- Enhanced Connection Button -->
+          <button
+            type="button"
+            class="connection-button absolute -right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 z-30 no-drag border-2 border-white hover:scale-110"
+            [ngClass]="{
+              'bg-blue-500 hover:bg-blue-600': i === 0,
+              'bg-green-500 hover:bg-green-600': i === 1,
+              'bg-orange-500 hover:bg-orange-600': i === 2
+            }"
+            (mousedown)="onButtonConnectionStart($event, i)"
+            (touchstart)="onButtonConnectionStart($event, i)"
+            (click)="$event.stopPropagation(); $event.preventDefault()"
+            [title]="getConnectionButtonTitle(i)"
+            [attr.data-button-connection]="i"
+          >
+            <span class="material-icons pointer-events-none">arrow_forward</span>
+          </button>
+
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" [ngClass]="{
+                'bg-blue-500': i === 0,
+                'bg-green-500': i === 1,
+                'bg-orange-500': i === 2
+              }">{{ i + 1 }}</span>
+              <span class="text-sm font-medium text-gray-700">{{ 'chatbot.builder.nodes.interactiveButtons.button' | translate }} {{ i + 1 }}</span>
+            </div>
+            <button
+              type="button"
+              (click)="removeButton(i)"
+              class="w-6 h-6 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center no-drag transition-colors"
+            >
+              <span class="material-icons text-xs text-red-600">close</span>
+            </button>
+          </div>
+
+          <div class="space-y-3" [formGroup]="$any(buttonControl)">
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">
+                {{ 'chatbot.builder.nodes.interactiveButtons.buttonTitle' | translate }} <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                formControlName="title"
+                maxlength="20"
+                [placeholder]="'chatbot.builder.nodes.interactiveButtons.buttonPlaceholder' | translate"
+                class="w-full p-2 border border-gray-300 rounded-lg text-sm no-drag focus:ring-2 focus:ring-yellow-500"
+                [class.border-red-300]="buttonControl.get('title')?.invalid && buttonControl.get('title')?.touched"
+              />
+              <div class="flex justify-between items-center mt-1">
+                <div class="text-xs text-red-600" *ngIf="buttonControl.get('title')?.invalid && buttonControl.get('title')?.touched">
+                  {{ 'chatbot.builder.nodes.interactiveButtons.titleRequired' | translate }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{ buttonControl.get("title")?.value?.length || 0 }}/20 characters
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="getButtonsCount() === 0"
+          class="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg"
+        >
+          <span class="material-icons text-gray-400 text-3xl mb-2 block">widgets</span>
+          <p class="text-sm">{{ 'chatbot.builder.nodes.interactiveButtons.noButtons' | translate }}</p>
+          <p class="text-xs text-gray-400 mt-1">{{ 'chatbot.builder.nodes.interactiveButtons.clickToAdd' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Preview Section (Optional) -->
+    <div *ngIf="headerEnabled && getHeaderPreview()" class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-icons text-yellow-600 text-sm">preview</span>
+        <label class="text-sm font-medium text-gray-700">{{ 'chatbot.builder.nodes.interactiveButtons.headerPreview' | translate }}</label>
+      </div>
+
+      <!-- Text Header Preview -->
+      <div *ngIf="headerFormGroup.get('type')?.value === 'text'" class="bg-white rounded-lg p-3 border">
+        <div class="text-sm font-medium text-gray-800">
+          {{ headerFormGroup.get('text')?.value || 'Header text...' }}
+        </div>
+      </div>
+
+      <!-- Media Header Preview -->
+      <div *ngIf="headerFormGroup.get('type')?.value === 'media' && hasHeaderMedia()" class="bg-white rounded-lg p-3 border">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+            <span class="material-icons text-gray-500">
+              {{ getCurrentMediaTypeIcon() }}
+            </span>
+          </div>
+          <div class="flex-1">
+            <div class="text-sm font-medium text-gray-800">
+              {{ headerMediaResult?.fileName || 'Media file' }}
+            </div>
+            <div class="text-xs text-gray-500">
+              {{ getCurrentMediaTypeLabel() }} •
+              {{ headerMediaResult?.size ? (headerMediaResult!.size / 1024 / 1024 | number:'1.1-1') + ' MB' : 'Unknown size' }}
+            </div>
+          </div>
+          <div class="w-2 h-2 bg-green-400 rounded-full" title="Ready"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Validation Summary -->
+    <div *ngIf="!isFormValid() && buttonsForm.touched" class="bg-red-50 border border-red-200 rounded-lg p-3">
+      <div class="flex items-center mb-2">
+        <span class="material-icons text-red-500 text-sm mr-2">error</span>
+        <span class="text-red-700 text-sm font-medium">{{ 'chatbot.builder.nodes.interactiveButtons.fixErrors' | translate }}</span>
+      </div>
+      <ul class="text-xs text-red-600 space-y-1 ml-6">
+        <li *ngFor="let error of getFormValidationErrors()">{{ error }}</li>
+      </ul>
+    </div>
+  </form>
+</div>

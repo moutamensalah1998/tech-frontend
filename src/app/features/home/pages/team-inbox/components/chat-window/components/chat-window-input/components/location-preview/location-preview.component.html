@@ -1,0 +1,29 @@
+<div
+  class="border-t border-border dark:border-dark-border p-4 bg-surface-secondary dark:bg-dark-surface-secondary space-y-3">
+  <div class="flex items-center space-x-3">
+    <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded flex items-center justify-center">
+      📍
+    </div>
+    <div class="flex-1 space-y-2">
+      <input type="text" [(ngModel)]="locationData.name" (ngModelChange)="onLocationDataChange()"
+        placeholder="Location name (optional)"
+        class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark placeholder-text-tertiary dark:placeholder-dark-text-tertiary" />
+      <input type="text" [(ngModel)]="locationData.address" (ngModelChange)="onLocationDataChange()"
+        placeholder="Address (optional)"
+        class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark placeholder-text-tertiary dark:placeholder-dark-text-tertiary" />
+    </div>
+  </div>
+  <div class="text-xs text-text-secondary dark:text-dark-text-secondary">
+    Coordinates: {{ locationData.latitude }}, {{ locationData.longitude }}
+  </div>
+  <div class="flex space-x-2">
+    <button (click)="sendLocation()"
+      class="px-4 py-2 bg-primary dark:bg-primary-dark text-white rounded-md text-sm hover:bg-primary-hover dark:hover:bg-primary transition-colors">
+      Send Location
+    </button>
+    <button (click)="cancel()"
+      class="px-4 py-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary rounded-md text-sm hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated border border-border dark:border-dark-border transition-colors">
+      Cancel
+    </button>
+  </div>
+</div>

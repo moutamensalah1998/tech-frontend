@@ -1,0 +1,124 @@
+<div class="min-h-screen bg-surface-secondary dark:bg-dark-surface-secondary">
+  <!-- Header Bar -->
+  <div
+    class="bg-surface/80 dark:bg-dark-surface-secondary/80 backdrop-blur-sm border-b border-border dark:border-dark-border sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-0 sm:h-16">
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <div
+            class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-lg sm:text-xl font-semibold text-text-primary dark:text-dark-text-primary truncate">{{ 'contacts.title' |
+              translate }}</h1>
+            <p class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary -mt-0.5 hidden sm:block">{{ 'contacts.subtitle' |
+              translate }}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+          <!-- Search Bar -->
+          <div class="relative hidden sm:block flex-1 sm:flex-initial">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-4 w-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input type="text" [placeholder]="'contacts.searchContacts' | translate" (input)="onSearchChange($event)"
+              [value]="searchTerm"
+              class="block w-full sm:w-64 lg:w-80 pl-10 pr-4 py-2 border-0 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary rounded-xl focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:bg-surface dark:focus:bg-dark-surface transition-all duration-200 text-sm" />
+          </div>
+
+          <!-- Add Contact Button -->
+          <button (click)="openAddContact()"
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 sm:px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200 flex items-center justify-center space-x-2 min-h-[44px] flex-shrink-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span class="hidden sm:inline">{{ 'contacts.addContact' | translate }}</span>
+            <span class="sm:hidden">{{ 'contacts.add' | translate }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Controls Bar -->
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+
+      <div class="flex items-center space-x-4">
+        <!-- Sort Dropdown -->
+        <div class="relative">
+          <span class="text-sm text-text-secondary dark:text-dark-text-secondary">{{ 'contacts.sort' | translate }}
+          </span>
+
+          <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange($event)"
+            class="appearance-none bg-surface dark:bg-dark-surface-tertiary border border-border dark:border-dark-border text-text-primary dark:text-dark-text-primary rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent">
+
+            <option value="">{{ 'contacts.sortNone' | translate }}</option>
+            <option value="ASCENDING">{{ 'contacts.sortAscending' | translate }}</option>
+            <option value="DESCENDING">{{ 'contacts.sortDescending' | translate }}</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="hidden lg:flex items-center space-x-2">
+          <span class="text-sm text-text-secondary dark:text-dark-text-secondary">{{ 'contacts.filters' | translate
+            }}</span>
+          <button
+            class="px-3 py-1 bg-primary-light dark:bg-primary-dark/20 text-primary dark:text-primary-dark rounded-full text-xs font-medium hover:bg-primary/20 dark:hover:bg-primary-dark/30 transition-colors">
+            {{ 'contacts.whatsapp' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Search -->
+      <div class="relative sm:hidden">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input type="text" [placeholder]="'contacts.searchContacts' | translate" (input)="onSearchChange($event)"
+          [value]="searchTerm"
+          class="block w-full pl-10 pr-4 py-2 border-0 bg-surface dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary rounded-xl focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark transition-all duration-200 text-sm shadow-sm dark:shadow-dark-sm" />
+      </div>
+    </div>
+
+    <!-- Contacts Table -->
+    <app-contact-table [searchTerm]="searchTerm" [currentPage]="currentPage" [limit]="limit" [sortBy]="sortBy"
+      (paginationChange)="paginationChangeHandler($event)" (contactSelected)="onEditContact($event)">
+    </app-contact-table>
+
+    <!-- Pagination -->
+    <app-pagination [currentPage]="currentPage" [totalPages]="paginationData?.totalPages || 0"
+      [totalCount]="paginationData?.totalCount || 0" [limit]="limit" (pageChange)="onPageChange($event)"
+      (limitChange)="onLimitChange($event)">
+    </app-pagination>
+  </div>
+</div>
+
+<!-- Dialogs -->
+<app-edit-contact-dialog *ngIf="editContactDialog" [contact]="contact" (closeDialog)="closeEditContact()"
+  (contactUpdated)="onContactUpdated()">
+</app-edit-contact-dialog>
+
+<app-contact-header-add-contact-dialog *ngIf="addContactDialog" (closeDialog)="closeAddContact()"
+  (contactCreated)="onContactUpdated()">
+</app-contact-header-add-contact-dialog>

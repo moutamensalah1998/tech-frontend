@@ -1,0 +1,10 @@
+<div class="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
+  <button
+    *ngFor="let type of contentTypes"
+    (click)="onAddContent(type.value)"
+    [class]="getButtonClasses(type.color)"
+    type="button">
+    <span class="material-icons text-sm">{{ type.icon }}</span>
+    {{ type.label }}
+  </button>
+</div>

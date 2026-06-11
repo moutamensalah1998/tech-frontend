@@ -1,0 +1,30 @@
+<div class="mt-6 bg-surface dark:bg-dark-surface rounded-lg border border-border dark:border-dark-border p-4">
+  <h4 class="text-sm font-medium text-text-primary dark:text-dark-text-primary mb-3">{{ 'broadcast.create.summary.title'
+    | translate }}</h4>
+  <div class="space-y-2 text-sm">
+    <div class="flex justify-between">
+      <span class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.summary.recipients' |
+        translate }}:</span>
+      <span class="font-medium text-text-primary dark:text-dark-text-primary">{{contactCount}}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.summary.template' | translate
+        }}:</span>
+      <span class="font-medium text-text-primary dark:text-dark-text-primary">{{templateName}}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.summary.schedule' | translate
+        }}:</span>
+      <span class="font-medium text-text-primary dark:text-dark-text-primary">
+        {{ (isNow ? 'broadcast.create.schedule.sendNow' : 'broadcast.create.schedule.scheduled') | translate }}
+      </span>
+    </div>
+    <div *ngIf="!isNow && scheduledTime" class="flex justify-between">
+      <span class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.summary.dateTime' | translate
+        }}:</span>
+      <span class="font-medium text-text-primary dark:text-dark-text-primary text-xs">
+        {{scheduledTime | date:'medium'}}
+      </span>
+    </div>
+  </div>
+</div>

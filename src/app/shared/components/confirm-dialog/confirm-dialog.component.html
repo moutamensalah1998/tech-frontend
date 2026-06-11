@@ -1,0 +1,70 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 dark:bg-black/70 p-4" (click)="onCancel()">
+    <div class="w-full max-w-md lg:max-w-lg bg-surface dark:bg-dark-surface-elevated rounded-lg shadow-xl dark:shadow-dark-xl
+            transition-all transform max-h-[90vh] overflow-y-auto border border-border dark:border-dark-border"
+        (click)="$event.stopPropagation()">
+
+        <div class="p-4 sm:p-6">
+            <div class="flex justify-between items-start mb-4 sm:mb-6 gap-4">
+                <h3 class="text-lg sm:text-xl font-semibold text-text-primary dark:text-dark-text-primary flex-1">{{ header }}</h3>
+                <button
+                    class="text-text-tertiary dark:text-dark-text-tertiary hover:text-text-primary dark:hover:text-dark-text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary"
+                    (click)="onCancel()" aria-label="Close">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mb-4 sm:mb-6 text-sm sm:text-base text-text-secondary dark:text-dark-text-secondary">
+                {{ message }}
+            </div>
+
+            <div class="mt-6 sm:mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button class="px-4 sm:px-6 py-2.5 sm:py-2 text-text-primary dark:text-dark-text-primary bg-surface-tertiary dark:bg-dark-surface-tertiary hover:bg-border dark:hover:bg-dark-border rounded-md 
+                        transition-colors text-sm font-medium w-full sm:w-auto min-h-[44px]" (click)="onCancel()">
+                    {{ cancelText }}
+                </button>
+                <button class="px-4 sm:px-6 py-2.5 sm:py-2 text-white rounded-md transition-colors 
+                        text-sm font-medium w-full sm:w-auto min-h-[44px]" [class]="buttonColorClasses" (click)="onConfirm()">
+                    {{ confirmText }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 " (click)="onCancel()">
+    <div class="w-full mx-4 my-4 max-w-md lg:max-w-lg bg-white rounded-lg shadow-xl 
+            transition-all transform max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="text-xl font-semibold text-gray-900">{{ header }}</h3>
+                <button class="text-gray-400 hover:text-gray-600 transition-colors" (click)="onCancel()"
+                    aria-label="Close">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mb-6 text-gray-600">
+                {{ message }}
+            </div>
+
+            <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button class="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md 
+                        transition-colors text-sm font-medium w-full sm:w-auto" (click)="onCancel()">
+                    {{ cancelText }}
+                </button>
+                <button class="px-6 py-2 text-white rounded-md transition-colors 
+                        text-sm font-medium w-full sm:w-auto" [class]="buttonColorClasses" (click)="onConfirm()">
+                    {{ confirmText }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->

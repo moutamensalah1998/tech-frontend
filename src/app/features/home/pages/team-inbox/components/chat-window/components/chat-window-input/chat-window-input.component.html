@@ -1,0 +1,137 @@
+<!-- File Previews Section (Multiple files from drag & drop) -->
+<app-file-preview *ngIf="isPreviewMode && filePreviews.length > 0" [filePreviews]="filePreviews"
+  (fileRemoved)="onFileRemoved($event)" (captionUpdated)="onCaptionUpdated($event)" (sendAllFiles)="onSendAllFiles()"
+  (clearAllFiles)="onClearAllFiles()">
+</app-file-preview>
+<!-- Reply Input Section -->
+<app-reply-input [replyingToMessage]="replyingToMessage" (replyCleared)="onReplyCleared()">
+</app-reply-input>
+
+<!-- Regular Input (shown when NOT in preview mode and NOT expired) -->
+<ng-container *ngIf="showRegularInput">
+
+  <!-- Main Toolbar + Text Input -->
+  <div *ngIf="showMainToolbar"
+    class="flex bg-surface dark:bg-dark-surface border-t border-border dark:border-dark-border p-4 items-center space-x-2">
+    <!-- Trigger chatbot -->
+    <button (click)="openChatBotPicker()"
+      class="text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary"
+      [title]="'teamInbox.chatInput.triggerChatbot' | translate">
+      🤖
+    </button>
+
+    <!-- Send Template -->
+    <button (click)="openTemplatePicker()"
+      class="text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary"
+      [title]="'teamInbox.chatInput.sendTemplate' | translate">
+      📄
+    </button>
+
+    <!-- File Attachment -->
+    <label
+      class="cursor-pointer text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary"
+      [title]="'teamInbox.chatInput.attachFile' | translate">
+      📎
+      <input type="file" class="hidden" (change)="onFileSelected($event)" />
+    </label>
+
+    <!-- Send Location -->
+    <button (click)="sendLocation()"
+      class="text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary"
+      [title]="'teamInbox.chatInput.sendLocation' | translate">
+      📍
+    </button>
+
+    <!-- Text Input -->
+    <input type="text"
+      class="border border-border dark:border-dark-border w-full rounded-full px-4 py-2 bg-surface dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark placeholder-text-tertiary dark:placeholder-dark-text-tertiary"
+      [placeholder]="'teamInbox.chatInput.typeMessage' | translate" [(ngModel)]="messageBody"
+      (keyup.enter)="sendText()" />
+
+    <!-- Send Button -->
+    <button (click)="sendText()" [disabled]="!messageBody.trim()"
+      class="ml-2 bg-primary dark:bg-primary-dark text-white rounded-full px-4 py-2 disabled:opacity-50 hover:bg-primary-dark dark:hover:bg-primary transition-colors"
+      [title]="'teamInbox.chatInput.sendMessage' | translate">
+      ➤
+    </button>
+  </div>
+
+  <!-- Single Media Preview (for file picker uploads) -->
+  <div *ngIf="showSingleMediaPreview"
+    class="border-t border-border dark:border-dark-border p-4 bg-surface-secondary dark:bg-dark-surface-secondary space-y-3">
+    <div class="flex items-center space-x-3">
+      <img [src]="filePreviewUrl" alt="Preview" class="w-16 h-16 object-cover rounded" />
+      <input type="text" [(ngModel)]="previewCaption" [placeholder]="'teamInbox.chatInput.addCaption' | translate"
+        class="flex-1 px-3 py-2 border border-border dark:border-dark-border rounded-md text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark" />
+    </div>
+    <div class="flex space-x-2">
+      <button (click)="submitSingleMediaPreview()"
+        class="px-4 py-2 bg-primary dark:bg-primary-dark text-white rounded-md text-sm hover:bg-primary-dark dark:hover:bg-primary transition-colors">
+        {{ 'teamInbox.chatInput.sendMedia' | translate }}
+      </button>
+      <button (click)="cancelSinglePreview()"
+        class="px-4 py-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary rounded-md text-sm hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated transition-colors border border-border dark:border-dark-border">
+        {{ 'teamInbox.chatInput.cancel' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Location Preview -->
+  <app-location-preview *ngIf="showLocationPreview" [locationData]="locationPreviewData!"
+    (locationDataChange)="onLocationDataChange($event)" (locationSent)="onLocationSent($event)"
+    (cancelled)="cancelSinglePreview()">
+  </app-location-preview>
+
+</ng-container>
+
+<!-- EXPIRED BAR -->
+<div *ngIf="isExpired && !isPreviewMode"
+  class="flex bg-warning-light/20 dark:bg-warning-dark/20 border-t border-warning/50 dark:border-warning-dark/50 p-4 items-center space-x-2 text-text-primary dark:text-dark-text-primary text-sm">
+  <span>{{ 'teamInbox.chatInput.expiredMessage' | translate }}</span>
+  <button (click)="openTemplatePicker()"
+    class="ml-auto bg-primary dark:bg-primary-dark text-white rounded-full px-4 py-2 hover:bg-primary-dark dark:hover:bg-primary transition-colors">
+    {{ 'teamInbox.chatInput.sendTemplateButton' | translate }}
+  </button>
+</div>
+
+<!-- TEMPLATE PICKER OVERLAY -->
+<app-template-picker *ngIf="showTemplatePicker" [templates$]="templates$" [loading$]="loading$"
+  (templateSelected)="onTemplateSelected($event)" (templateSent)="onTemplateSent($event)"
+  (cancelled)="onTemplatePickerCancelled()"></app-template-picker>
+
+<!-- CHATBOT PICKER OVERLAY -->
+<div *ngIf="showChatBotPicker"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+  <div
+    class="bg-surface dark:bg-dark-surface rounded-lg max-w-xl w-full p-6 space-y-4 shadow-xl dark:shadow-dark-xl border border-border dark:border-dark-border">
+    <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary">{{
+      'teamInbox.chatInput.selectChatbot' | translate }}</h3>
+    <div *ngIf="loading$ | async" class="text-center py-4 text-text-secondary dark:text-dark-text-secondary">{{
+      'teamInbox.chatInput.loading' | translate }}</div>
+    <ng-container *ngIf="!(loading$ | async)">
+      <ul class="max-h-64 overflow-auto space-y-2">
+        <ng-container *ngFor="let chatbot of chatBots$ | async">
+          <li (click)="chooseChatBot(chatbot.id)" [ngClass]="{
+              'bg-primary-light/10 dark:bg-primary-dark/10': chatbot.id === selectedChatBotId,
+              'border-primary dark:border-primary-dark': chatbot.id === selectedChatBotId
+            }"
+            class="p-3 rounded cursor-pointer hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary transition-colors border border-transparent">
+            {{ chatbot.name }} - {{ chatbot.language }}
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+    <!-- ACTIONS -->
+    <div class="text-right space-x-2 pt-4">
+      <button (click)="sendTriggerChatBot()" [disabled]="!selectedChatBotId"
+        class="px-4 py-2 bg-primary dark:bg-primary-dark text-white rounded disabled:opacity-50 hover:bg-primary-dark dark:hover:bg-primary transition-colors">
+        {{ 'teamInbox.chatInput.trigger' | translate }}
+      </button>
+      <button (click)="cancelChatBot()"
+        class="px-4 py-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary rounded hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated transition-colors border border-border dark:border-dark-border">
+        {{ 'teamInbox.chatInput.cancel' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

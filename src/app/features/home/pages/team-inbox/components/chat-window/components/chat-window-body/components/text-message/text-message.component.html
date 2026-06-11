@@ -1,0 +1,12 @@
+    <div
+      class="rounded-lg p-3 max-w-xs shadow-md"
+      [ngClass]="
+        message.is_from_contact
+          ? 'bg-white text-gray-900'
+          : 'bg-green-100 text-gray-900'
+      "
+    >
+      <div>
+        {{ message.content?.text || message.content?.text_body || message.content?.question_text }}
+      </div>
+    </div>

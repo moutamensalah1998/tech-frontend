@@ -1,0 +1,17 @@
+<div class="p-6 border-b border-border dark:border-dark-border bg-surface dark:bg-dark-surface">
+  <div class="flex items-center gap-4">
+    <!-- Avatar with gradient -->
+    <div
+      class="flex-shrink-0 w-10 h-10 bg-gradient-to-br rounded-full flex items-center justify-center shadow-lg dark:shadow-dark-md"
+      [ngClass]="getGradientClass()">
+      <span class="text-white text-sm font-semibold">
+        {{ getInitials(conversation?.contact_name) }}
+      </span>
+    </div>
+
+    <!-- Contact name -->
+    <div class="font-semibold text-text-primary dark:text-dark-text-primary">
+      {{ conversation?.contact_name }}
+    </div>
+  </div>
+</div>

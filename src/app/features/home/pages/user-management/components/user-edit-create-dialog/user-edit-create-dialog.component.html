@@ -1,0 +1,143 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50" (click)="closeDialog()">
+    <div class="bg-surface dark:bg-dark-surface rounded-lg shadow-lg dark:shadow-dark-lg p-6 max-w-md w-full max-h-[85vh] flex flex-col dialog-container"
+        (click)="$event.stopPropagation()">
+        <div class="mb-4 border-b border-border dark:border-dark-border pb-3">
+            <h1 class="text-xl font-semibold text-text-primary dark:text-dark-text-primary">
+                {{ (actionSelected === 'edit-user' ? 'userManagement.editUser' : 'userManagement.createNewUser') |
+                translate }}
+            </h1>
+        </div>
+
+        <form method="POST" class="flex-1 overflow-y-auto py-1 px-1 space-y-4" (ngSubmit)="onSubmit()">
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.firstName' | translate }}</label>
+                    <input type="text" name="firstName" [(ngModel)]="internalUser.first_name" required
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.lastName' | translate }}</label>
+                    <input type="text" name="lastName" [(ngModel)]="internalUser.last_name" required
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.email' | translate }}</label>
+                    <input type="email" name="email" [(ngModel)]="internalUser.email"
+                        [disabled]="actionSelected === 'edit-user'" required
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark disabled:bg-surface-secondary dark:disabled:bg-dark-surface-secondary">
+                </div>
+
+                <div *ngIf="actionSelected === 'create-user'" class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.password' | translate }}</label>
+                    <input type="password" name="password" [(ngModel)]="internalUser.password" required
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.phoneNumber' | translate }}</label>
+                    <input type="tel" name="phoneNumber" [(ngModel)]="internalUser.phone_number"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.roles' | translate }}</label>
+                    <div (click)="toggleRolesDropdown()"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface flex items-center justify-between cursor-pointer">
+                        <span class="text-text-tertiary dark:text-dark-text-tertiary">{{ 'userManagement.selectRoles' |
+                            translate }}</span>
+                        <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <div *ngIf="showRolesDropdown"
+                        class="mt-1 max-h-48 overflow-y-auto bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-md shadow-lg dark:shadow-dark-lg z-10">
+                        <div *ngFor="let role of roles$ | async" (click)="selectRole(role)"
+                            class="px-4 py-2 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer text-sm text-text-primary dark:text-dark-text-primary">
+                            {{ getRoleTranslationKey(role) | translate }}
+                        </div>
+                        <div *ngIf="(roles$ | async)?.length === 0"
+                            class="px-4 py-2 text-sm text-text-tertiary dark:text-dark-text-tertiary">
+                            {{ 'userManagement.noRolesAvailable' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-2" *ngIf="selectedRoles.length > 0">
+                        <div *ngFor="let role of selectedRoles"
+                            class="flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full px-3 py-1 text-sm">
+                            {{ getRoleTranslationKey(role) | translate }}
+                            <button type="button"
+                                class="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                                (click)="removeRole(role)">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.teams' | translate }}</label>
+                    <div (click)="toggleTeamsDropdown()"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface flex items-center justify-between cursor-pointer">
+                        <span class="text-text-tertiary dark:text-dark-text-tertiary">{{ 'userManagement.selectTeams' |
+                            translate }}</span>
+                        <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <div *ngIf="showTeamsDropdown"
+                        class="mt-1 max-h-48 overflow-y-auto bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-md shadow-lg dark:shadow-dark-lg z-10">
+                        <div *ngFor="let team of teams$ | async" (click)="selectTeam(team)"
+                            class="px-4 py-2 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer text-sm text-text-primary dark:text-dark-text-primary">
+                            {{ team.name }}
+                        </div>
+                        <div *ngIf="(teams$ | async)?.length === 0"
+                            class="px-4 py-2 text-sm text-text-tertiary dark:text-dark-text-tertiary">
+                            {{ 'userManagement.noTeamsAvailable' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-2" *ngIf="selectedTeams.length > 0">
+                        <div *ngFor="let team of selectedTeams"
+                            class="flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full px-3 py-1 text-sm">
+                            {{ team.name }}
+                            <button type="button"
+                                class="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                                (click)="removeTeam(team)">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="flex mt-6 pt-4 border-t border-border dark:border-dark-border w-full justify-end gap-3">
+                <button type="button"
+                    class="px-4 py-1.5 text-sm bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary rounded-md hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary 
+                        focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark transition-colors"
+                    (click)="closeDialog()">
+                    {{ 'common.buttons.cancel' | translate }}
+                </button>
+                <button (click)="submitButtonAction()" type="submit"
+                    class="px-4 py-1.5 text-sm bg-primary dark:bg-primary-dark text-white rounded-md hover:bg-primary-hover dark:hover:bg-primary 
+                            focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark transition-colors">
+                    {{ (actionSelected === 'edit-user' ? 'common.buttons.update' : 'common.buttons.create') | translate
+                    }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

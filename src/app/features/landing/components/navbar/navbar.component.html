@@ -1,0 +1,140 @@
+<nav
+  class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center select-none">
+      <!-- Logo -->
+      <a href="#" class="flex-shrink-0 flex items-center group">
+        <img src="assets/features/logo_no_background.svg"
+          class="h-20 md:h-40 lg:h-50 w-auto transition-transform group-hover:scale-105"
+          alt="Prog Gate Logo">
+      </a>
+
+      <!-- Company Name - Hidden on mobile, shown on larger screens -->
+      <div class="hidden lg:flex flex-col items-center justify-center flex-1 mx-4">
+
+        <p class="text-gray-600 dark:text-gray-400 text-s mt-1" dir="rtl">
+          مؤسسة بوابة البرمجة
+        </p>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-1">
+        <a href="#"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:w-0 after:h-0.5 after:bg-blue-600 dark:after:bg-blue-400 after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
+          {{ 'landing.navbar.home' | translate }}
+        </a>
+        <a href="#features"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:w-0 after:h-0.5 after:bg-blue-600 dark:after:bg-blue-400 after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
+          {{ 'landing.navbar.features' | translate }}
+        </a>
+        <a href="#pricing"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:w-0 after:h-0.5 after:bg-blue-600 dark:after:bg-blue-400 after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
+          {{ 'landing.navbar.pricing' | translate }}
+        </a>
+
+        <!-- Dark mode toggle -->
+        <button (click)="onToggleDarkMode()" [attr.aria-label]="'common.ariaLabels.toggleDarkMode' | translate"
+          class="p-2 rounded-lg text-lg">
+          <span aria-hidden="true">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+        </button>
+
+        <!-- CTA -->
+        <a (click)="goToLogin()"
+          role="button" tabindex="0"
+          (keydown.enter)="goToLogin()"
+          (keydown.space)="$event.preventDefault(); goToLogin()"
+          class="ml-4 inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 duration-200 active:translate-y-[2px] active:scale-95 hover:translate-y-[1px] hover:scale-95 hover:shadow-none">
+          {{ 'landing.navbar.getStarted' | translate }}
+        </a>
+
+        <!-- Language Switcher -->
+        <div class="ml-4 pl-2">
+          <app-language-switcher></app-language-switcher>
+        </div>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center space-x-2">
+        <!-- Language Switcher -->
+        <app-language-switcher></app-language-switcher>
+        
+        <button (click)="onToggleDarkMode()" type="button"
+          class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [attr.aria-label]="'common.ariaLabels.toggleDarkMode' | translate">
+          <svg *ngIf="!isDarkMode" class="w-5 h-5" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+              clip-rule="evenodd" />
+          </svg>
+          <svg *ngIf="isDarkMode" class="w-5 h-5 text-yellow-300"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V4a8 8 0 108 8 1 1 0 110 2 10 10 0 11-8-8z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <button 
+          id="mobile-menu-button" 
+          type="button"
+          (click)="toggleMobileMenu()"
+          class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          [attr.aria-expanded]="isMobileMenuOpen"
+          [attr.aria-label]="isMobileMenuOpen ? ('landing.navbar.closeMainMenu' | translate) : ('landing.navbar.openMainMenu' | translate)">
+          <span class="sr-only">{{ isMobileMenuOpen ? ('landing.navbar.closeMainMenu' | translate) : ('landing.navbar.openMainMenu' | translate) }}</span>
+          <svg *ngIf="!isMobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg *ngIf="isMobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div 
+    id="mobile-menu"
+    class="md:hidden transition-all duration-300 ease-out overflow-hidden"
+    [ngClass]="{'max-h-0 opacity-0': !isMobileMenuOpen, 'max-h-screen opacity-100': isMobileMenuOpen}">
+    <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50">
+      <a 
+        href="#"
+        (click)="closeMobileMenu()"
+        class="block px-3 py-2.5 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors min-h-[44px] flex items-center">
+        {{ 'landing.navbar.home' | translate }}
+      </a>
+      <a 
+        href="#features"
+        (click)="closeMobileMenu()"
+        class="block px-3 py-2.5 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors min-h-[44px] flex items-center">
+        {{ 'landing.navbar.features' | translate }}
+      </a>
+      <a 
+        href="#pricing"
+        (click)="closeMobileMenu()"
+        class="block px-3 py-2.5 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors min-h-[44px] flex items-center">
+        {{ 'landing.navbar.pricing' | translate }}
+      </a>
+    </div>
+    <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md">
+      <a 
+        (click)="goToLogin(); closeMobileMenu()"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="goToLogin(); closeMobileMenu()"
+        (keydown.space)="$event.preventDefault(); goToLogin(); closeMobileMenu()"
+        class="w-full items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 duration-200 active:translate-y-[2px] active:scale-95 hover:translate-y-[1px] hover:scale-95 hover:shadow-none block text-center min-h-[44px] flex items-center justify-center">
+        {{ 'landing.navbar.getStarted' | translate }}
+      </a>
+    </div>
+  </div>
+</nav>

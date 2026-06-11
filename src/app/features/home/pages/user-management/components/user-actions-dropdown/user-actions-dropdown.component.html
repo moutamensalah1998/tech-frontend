@@ -1,0 +1,55 @@
+<div class="relative flex gap-2">
+    <!-- Dropdown Trigger -->
+    <button (click)="toggleDropdown()"
+        class="text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary focus:outline-none">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+        </svg>
+    </button>
+
+    <!-- Actions Menu -->
+    <div *ngIf="isDropDownOpen"
+        class="absolute right-0 rtl:left-0 rtl:right-auto mt-6 w-48 bg-surface dark:bg-dark-surface rounded-md shadow-lg dark:shadow-dark-lg py-1 z-50 border border-border dark:border-dark-border">
+        <button (click)="handleEdit()"
+            class="block w-full px-4 py-2 text-sm text-text-primary dark:text-dark-text-primary hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-left rtl:text-right">
+            {{ 'userManagement.editUser' | translate }}
+        </button>
+        <button (click)="openResetPasswordDialog()"
+            class="block w-full px-4 py-2 text-sm text-text-primary dark:text-dark-text-primary hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-left rtl:text-right">
+            {{ 'userManagement.resetPassword' | translate }}
+        </button>
+        <ng-container *ngIf="currentUser$ | async as currentUser">
+            <button *ngIf="canManageUser(currentUser) && !isCurrentUser(currentUser)" (click)="openRemoveUserDialog()"
+                class="block w-full px-4 py-2 text-sm text-danger dark:text-danger-dark hover:bg-red-50 dark:hover:bg-red-900/20 text-left rtl:text-right">
+                {{ 'userManagement.removeUser' | translate }}
+            </button>
+            <button *ngIf="canManageUser(currentUser) && !isCurrentUser(currentUser)" (click)="openLogoutConfirmation()"
+                class="block w-full px-4 py-2 text-sm text-text-primary dark:text-dark-text-primary hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-left rtl:text-right">
+                {{ 'userManagement.logoutSessions' | translate }}
+            </button>
+        </ng-container>
+    </div>
+
+    <!-- Dialogs -->
+    @if (showConfirmDialog) {
+    <app-confirm-dialog [header]="'userManagement.logoutUserSessions' | translate"
+        [message]="'userManagement.logoutSessionsMessage' | translate"
+        [confirmText]="'userManagement.logoutSessions' | translate" [cancelText]="'common.buttons.cancel' | translate"
+        dialogStyle="danger" (confirmed)="onLogoutConfirmed()" (cancelled)="onLogoutCancelled()">
+    </app-confirm-dialog>
+    }
+
+    @if (showResetPasswordDialog) {
+    <app-reset-password-dialog (confirmed)="onPasswordConfirmed($event)" (cancelled)="onPasswordCancelled()">
+    </app-reset-password-dialog>
+    }
+
+    @if (removeUserDialog) {
+    <app-confirm-dialog [header]="'userManagement.removeUser' | translate"
+        [message]="'userManagement.removeUserMessage' | translate" [confirmText]="'common.buttons.remove' | translate"
+        [cancelText]="'common.buttons.cancel' | translate" dialogStyle="danger" (confirmed)="handleRemove()"
+        (cancelled)="onCloseRemoveUserDialog()">
+    </app-confirm-dialog>
+    }
+</div>

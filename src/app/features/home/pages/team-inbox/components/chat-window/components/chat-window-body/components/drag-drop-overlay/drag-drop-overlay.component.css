@@ -1,0 +1,10 @@
+ .drag-overlay {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(2px);
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }

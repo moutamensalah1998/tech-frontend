@@ -1,0 +1,418 @@
+/* import-result-dialog.component.css */
+
+/* Dialog container styling */
+.import-result-dialog {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar for the dialog content */
+.import-result-dialog ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.import-result-dialog ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.import-result-dialog ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.import-result-dialog ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Phone number card hover effects */
+.import-result-dialog .rounded-md {
+  transition: all 0.2s ease;
+}
+
+.import-result-dialog .rounded-md:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover effects */
+.import-result-dialog button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Stats cards animation */
+.import-result-dialog .grid > div {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Success badge pulse animation */
+.import-result-dialog .bg-green-100 {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Error badge shake animation */
+.import-result-dialog .bg-red-100 {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* Warning badge warning animation */
+.import-result-dialog .bg-yellow-100 {
+  animation: warning 1.5s ease-in-out infinite;
+}
+
+@keyframes warning {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Phone number grid responsive */
+@media (max-width: 640px) {
+  .import-result-dialog .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .import-result-dialog .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Loading animation for buttons */
+.import-result-dialog button[disabled] {
+  position: relative;
+  overflow: hidden;
+}
+
+.import-result-dialog button[disabled]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Backdrop blur effect */
+.import-result-dialog .backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Message container styling */
+.import-result-dialog .bg-gray-50 {
+  border-left: 4px solid #10b981;
+}
+
+/* Results section spacing */
+.import-result-dialog .space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Icon animations */
+.import-result-dialog svg {
+  transition: all 0.2s ease;
+}
+
+.import-result-dialog svg:hover {
+  transform: scale(1.1);
+}
+
+/* Footer sticky positioning */
+.import-result-dialog .bg-gray-50:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+/* Results container max height and scroll */
+.import-result-dialog .max-h-\[calc\(90vh-200px\)\] {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Phone number typography */
+.import-result-dialog .font-mono {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  letter-spacing: 0.025em;
+}
+
+/* Stats number animation */
+.import-result-dialog .text-2xl {
+  animation: countUp 1s ease-out;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient backgrounds for different states */
+.import-result-dialog .bg-green-50 {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.import-result-dialog .bg-yellow-50 {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.import-result-dialog .bg-red-50 {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+}
+
+.import-result-dialog .bg-blue-50 {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+/* Header gradient animation */
+.import-result-dialog .bg-gradient-to-r {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Border animations for different states */
+.import-result-dialog .border-green-200 {
+  border-image: linear-gradient(45deg, #bbf7d0, #86efac) 1;
+  animation: borderGlow 2s ease-in-out infinite alternate;
+}
+
+.import-result-dialog .border-yellow-200 {
+  border-image: linear-gradient(45deg, #fde68a, #fcd34d) 1;
+}
+
+.import-result-dialog .border-red-200 {
+  border-image: linear-gradient(45deg, #fecaca, #f87171) 1;
+}
+
+@keyframes borderGlow {
+  from {
+    border-color: #bbf7d0;
+  }
+  to {
+    border-color: #86efac;
+  }
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .import-result-dialog .grid-cols-1 {
+    gap: 0.75rem;
+  }
+
+  .import-result-dialog .p-6 {
+    padding: 1rem;
+  }
+
+  .import-result-dialog .text-2xl {
+    font-size: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .import-result-dialog {
+    background: white !important;
+    color: black !important;
+  }
+
+  .import-result-dialog button {
+    display: none;
+  }
+
+  .import-result-dialog .bg-gradient-to-r {
+    background: #1f2937 !important;
+    color: white !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .import-result-dialog .bg-green-50 {
+    background: #ffffff;
+    border: 2px solid #059669;
+  }
+
+  .import-result-dialog .bg-red-50 {
+    background: #ffffff;
+    border: 2px solid #dc2626;
+  }
+
+  .import-result-dialog .bg-yellow-50 {
+    background: #ffffff;
+    border: 2px solid #d97706;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .import-result-dialog * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Variable input styling */
+.template-variables-section {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+  transition: all 0.3s ease;
+}
+
+.template-variables-section:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+/* Variable input focus effects */
+.template-variables-section input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+/* Variable labels */
+.variable-label {
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Example text styling */
+.variable-example {
+  font-style: italic;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+/* Template info section */
+.template-info-section {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+/* Status badges */
+.status-approved {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Variable chips */
+.variable-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Smooth transitions */
+.template-section-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.template-section-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .template-variables-section .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .template-info-section .grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}

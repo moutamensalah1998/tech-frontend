@@ -1,0 +1,217 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50" (click)="closeDialog()">
+    <div class="bg-surface dark:bg-dark-surface rounded-lg shadow-lg dark:shadow-dark-lg p-6 max-w-md w-full max-h-[85vh] flex flex-col dialog-container"
+        (click)="$event.stopPropagation()">
+        <div class="mb-4 border-b border-border dark:border-dark-border pb-3">
+            <h1 class="text-xl font-semibold text-text-primary dark:text-dark-text-primary">
+                {{ 'userManagement.editDialog.title' | translate }}
+            </h1>
+        </div>
+
+        <form [formGroup]="editUserForm" class="flex-1 overflow-y-auto py-1 px-1 space-y-4">
+
+            <div class="space-y-4">
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.editDialog.firstName' | translate }}</label>
+                    <input type="text" name="firstName" formControlName="firstName" id="firstName"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+
+                    <div *ngIf="formValidationUtils.isFieldFilled(editUserForm, 'firstName')"
+                        class="text-danger dark:text-danger-dark text-sm mt-2">
+                        <div *ngIf="editUserForm.get('firstName')?.hasError('required')">
+                            {{ 'userManagement.editDialog.firstNameRequired' | translate }}
+                        </div>
+                        <div *ngIf="editUserForm.get('firstName')?.hasError('pattern')">
+                            {{ 'userManagement.editDialog.firstNamePattern' | translate }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.editDialog.lastName' | translate }}</label>
+                    <input type="text" name="lastName" formControlName="lastName" id="lastName"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark">
+
+                    <div *ngIf="formValidationUtils.isFieldFilled(editUserForm, 'lastName')"
+                        class="text-danger dark:text-danger-dark text-sm mt-2">
+                        <div *ngIf="editUserForm.get('lastName')?.hasError('required')">
+                            {{ 'userManagement.editDialog.lastNameRequired' | translate }}
+                        </div>
+                        <div *ngIf="editUserForm.get('lastName')?.hasError('pattern')">
+                            {{ 'userManagement.editDialog.lastNamePattern' | translate }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.editDialog.email' | translate }}</label>
+                    <input type="email" name="email" formControlName="email" id="email"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark disabled:bg-surface-secondary dark:disabled:bg-dark-surface-secondary">
+
+                    <div *ngIf="formValidationUtils.isFieldFilled(editUserForm, 'email')"
+                        class="text-danger dark:text-danger-dark text-sm mt-2">
+                        <div *ngIf="editUserForm.get('email')?.hasError('required')">
+                            {{ 'userManagement.editDialog.emailRequired' | translate }}
+                        </div>
+                        <div *ngIf="editUserForm.get('email')?.hasError('email')">
+                            {{ 'userManagement.editDialog.emailInvalid' | translate }}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+                        'userManagement.editDialog.phoneNumber' | translate }}</label>
+                    <div class="flex gap-2 flex-col sm:flex-row">
+                        <!-- Country Code -->
+                        <div class="relative input-focus-within flex-1">
+                            <select formControlName="countryCode" id="countryCode"
+                                class="input-field w-full p-3 border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark transition-all">
+                                <option value="" disabled selected>{{ 'userManagement.editDialog.selectCountry' |
+                                    translate }}</option>
+                                <option *ngFor="let country of countries" [value]="country.code">
+                                    {{ country.name }} ({{ country.dialCode }})
+                                </option>
+                            </select>
+                            <div *ngIf="formValidationUtils.isFieldInvalid(editUserForm, 'countryCode')"
+                                class="text-danger dark:text-danger-dark text-sm mt-1">
+                                {{ 'userManagement.editDialog.countryCodeRequired' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Phone Number Input -->
+                        <div class="flex-1">
+                            <input type="tel" formControlName="phoneNumber"
+                                [placeholder]="'userManagement.editDialog.phonePlaceholder' | translate"
+                                class="w-full px-4 py-2 border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-primary dark:focus:border-primary-dark transition-all placeholder-text-tertiary dark:placeholder-dark-text-tertiary">
+                            <div *ngIf="formValidationUtils.isFieldInvalid(editUserForm, 'phoneNumber')"
+                                class="text-danger dark:text-danger-dark text-sm mt-1">
+                                <span *ngIf="formValidationUtils.hasError(editUserForm, 'phoneNumber', 'required')">
+                                    {{ 'userManagement.editDialog.phoneNumberRequired' | translate }}
+                                </span>
+                                <span *ngIf="formValidationUtils.hasError(editUserForm, 'phoneNumber', 'invalidPhone')">
+                                    {{ 'userManagement.editDialog.phoneNumberInvalid' | translate }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="currentUser$ | async as currentUser">
+                    <div class="space-y-1">
+                        <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                            'userManagement.editDialog.roles' | translate }}</label>
+                        <div (click)="!isRoleEditingDisabled(currentUser) && toggleRolesDropdown()"
+                            [class]="'w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface flex items-center justify-between ' + (isRoleEditingDisabled(currentUser) ? 'bg-surface-secondary dark:bg-dark-surface-secondary cursor-not-allowed' : 'cursor-pointer')">
+                            <span class="text-text-tertiary dark:text-dark-text-tertiary">{{
+                                'userManagement.editDialog.selectRoles' | translate }}</span>
+                            <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+
+                        <div *ngIf="isRoleEditingDisabled(currentUser)"
+                            class="text-yellow-600 dark:text-yellow-400 text-sm mt-1">
+                            {{ 'userManagement.editDialog.roleEditingDisabled' | translate }}
+                        </div>
+
+                        <div *ngIf="showRolesDropdown && !isRoleEditingDisabled(currentUser)"
+                            class="mt-1 max-h-48 overflow-y-auto bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-md shadow-lg dark:shadow-dark-lg z-10">
+                            <div *ngFor="let role of roles$ | async" (click)="selectRole(role)"
+                                class="px-4 py-2 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer text-sm text-text-primary dark:text-dark-text-primary">
+                                {{ getRoleTranslationKey(role) | translate }}
+                            </div>
+                            <div *ngIf="(roles$ | async)?.length === 0"
+                                class="px-4 py-2 text-sm text-text-tertiary dark:text-dark-text-tertiary">
+                                {{ 'userManagement.editDialog.noRolesAvailable' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-2" *ngIf="selectedRoles.length > 0">
+                            <div *ngFor="let role of selectedRoles"
+                                class="flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full px-3 py-1 text-sm">
+                                {{ getRoleTranslationKey(role) | translate }}
+                                <button type="button" [disabled]="isRoleEditingDisabled(currentUser)"
+                                    [class]="'ml-1 ' + (isRoleEditingDisabled(currentUser) ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200')"
+                                    (click)="!isRoleEditingDisabled(currentUser) && removeRole(role)">
+                                    ×
+                                </button>
+                            </div>
+                        </div>
+
+                        <div *ngIf="formValidationUtils.isFieldFilled(editUserForm, 'role')"
+                            class="text-danger dark:text-danger-dark text-sm mt-2">
+                            <div *ngIf="editUserForm.get('role')?.hasError('required')">
+                                {{ 'userManagement.editDialog.roleRequired' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary block">{{
+                        'userManagement.editDialog.teams' | translate }}</label>
+                    <div (click)="toggleTeamsDropdown()"
+                        class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface flex items-center justify-between cursor-pointer">
+                        <span class="text-text-tertiary dark:text-dark-text-tertiary">{{
+                            'userManagement.editDialog.selectTeams' | translate }}</span>
+                        <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <div *ngIf="showTeamsDropdown"
+                        class="mt-1 max-h-48 overflow-y-auto bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-md shadow-lg dark:shadow-dark-lg z-10">
+                        <div *ngFor="let team of teams$ | async" (click)="selectTeam(team)"
+                            class="px-4 py-2 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer text-sm text-text-primary dark:text-dark-text-primary">
+                            {{ team.name }}
+                        </div>
+                        <div *ngIf="(teams$ | async)?.length === 0"
+                            class="px-4 py-2 text-sm text-text-tertiary dark:text-dark-text-tertiary">
+                            {{ 'userManagement.editDialog.noTeamsAvailable' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-2" *ngIf="selectedTeams.length > 0">
+                        <div *ngFor="let team of selectedTeams"
+                            class="flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full px-3 py-1 text-sm">
+                            {{ team.name }}
+                            <button type="button"
+                                class="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                                (click)="removeTeam(team)">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="formValidationUtils.isFieldFilled(editUserForm, 'team')"
+                        class="text-danger dark:text-danger-dark text-sm mt-2">
+                        <div *ngIf="editUserForm.get('team')?.hasError('required')">
+                            {{ 'userManagement.editDialog.teamRequired' | translate }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex mt-6 pt-4 border-t border-border dark:border-dark-border w-full justify-end gap-3">
+                <button type="button"
+                    class="px-4 py-1.5 text-sm bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary rounded-md hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary
+                        focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark transition-colors"
+                    (click)="closeDialog()">
+                    {{ 'userManagement.editDialog.cancel' | translate }}
+                </button>
+                <button (click)="onSubmit()" type="submit" [disabled]="!canSubmit()"
+                    class="px-4 py-1.5 text-sm bg-primary dark:bg-primary-dark text-white rounded-md hover:bg-primary-hover dark:hover:bg-primary
+                            focus:outline-none focus:ring-1 focus:ring-primary dark:focus:ring-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ 'userManagement.editDialog.update' | translate }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

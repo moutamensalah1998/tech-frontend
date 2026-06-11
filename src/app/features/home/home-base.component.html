@@ -1,0 +1,29 @@
+<div class="flex flex-col min-h-screen md:h-screen w-full md:overflow-hidden">
+  <!-- Top Navigation -->
+  <app-home-base-nav></app-home-base-nav>
+
+  <!-- Content Area -->
+  <div *ngIf="showWelcomeMessage" class="welcome-container">
+    <div class="welcome-content">
+      <div class="welcome-icon">
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor"
+            stroke-width="2" stroke-linejoin="round" />
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2"
+            stroke-linejoin="round" />
+          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h1 class="welcome-title">
+        {{ 'home.welcomeTitle' | translate }}
+      </h1>
+      <p class="welcome-subtitle">
+        {{ 'home.welcomeSubtitle' | translate }}
+      </p>
+    </div>
+  </div>
+  <div class="flex-1 md:h-full md:min-h-0 md:overflow-hidden"><router-outlet></router-outlet>
+  </div>
+</div>

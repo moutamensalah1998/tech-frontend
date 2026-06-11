@@ -1,0 +1,44 @@
+/* Theme-aware pagination elements */
+.pagination-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+  transition: all 0.2s ease;
+}
+
+:host-context(.dark) .pagination-button {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-primary);
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--color-bg-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -7px var(--color-shadow);
+}
+
+.pagination-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.pagination-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pagination-select {
+  min-width: 4.5rem;
+}
+
+@media (max-width: 640px) {
+  .pagination-button {
+    padding: 0.45rem 0.75rem;
+  }
+}

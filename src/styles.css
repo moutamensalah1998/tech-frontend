@@ -1,0 +1,333 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   CSS CUSTOM PROPERTIES (THEME TOKENS)
+   =========================== */
+
+:root {
+    /* Light Theme Colors */
+    --color-bg-primary: #FFFFFF;
+    --color-bg-secondary: #F5F5F5;
+    --color-bg-tertiary: #E8E8E8;
+    --color-bg-elevated: #FFFFFF;
+    
+    --color-text-primary: #1A1A1A;
+    --color-text-secondary: #666666;
+    --color-text-tertiary: #999999;
+    --color-text-inverse: #FFFFFF;
+    
+    --color-border-primary: #E0E0E0;
+    --color-border-secondary: #CCCCCC;
+    
+    --color-brand-primary: #0B67D0;
+    --color-brand-primary-hover: #0952A5;
+    --color-brand-primary-active: #073D7A;
+    --color-brand-secondary: #E8F2FC;
+    
+    --color-success: #4CAF50;
+    --color-success-bg: #E8F5E9;
+    --color-danger: #FF6B6B;
+    --color-danger-bg: #FFEBEE;
+    --color-warning: #FF9800;
+    --color-warning-bg: #FFF3E0;
+    --color-info: #2196F3;
+    --color-info-bg: #E3F2FD;
+    
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-shadow-heavy: rgba(0, 0, 0, 0.2);
+    
+    /* Spacing tokens */
+    --nav-height: 64px;
+    --sidebar-width: 280px;
+}
+
+/* Dark Theme Colors */
+.dark {
+    --color-bg-primary: #0F1419;
+    --color-bg-secondary: #1A1F26;
+    --color-bg-tertiary: #2D3748;
+    --color-bg-elevated: #1E2530;
+    
+    --color-text-primary: #E8E8E8;
+    --color-text-secondary: #A0A0A0;
+    --color-text-tertiary: #6B7280;
+    --color-text-inverse: #1A1A1A;
+    
+    --color-border-primary: #2D3748;
+    --color-border-secondary: #4A5568;
+    
+    --color-brand-primary: #3B82F6;
+    --color-brand-primary-hover: #60A5FA;
+    --color-brand-primary-active: #2563EB;
+    --color-brand-secondary: rgba(59, 130, 246, 0.15);
+    
+    --color-success: #4ADE80;
+    --color-success-bg: rgba(74, 222, 128, 0.15);
+    --color-danger: #F87171;
+    --color-danger-bg: rgba(248, 113, 113, 0.15);
+    --color-warning: #FBBF24;
+    --color-warning-bg: rgba(251, 191, 36, 0.15);
+    --color-info: #60A5FA;
+    --color-info-bg: rgba(96, 165, 250, 0.15);
+    
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --color-shadow-heavy: rgba(0, 0, 0, 0.5);
+}
+
+/* ===========================
+   BASE STYLES
+   =========================== */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    /* Smooth theme transition */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+[lang="ar"] body {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* ===========================
+   THEME TRANSITION CLASSES
+   =========================== */
+
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+    transition: background-color 0.2s ease, 
+                border-color 0.2s ease, 
+                color 0.2s ease,
+                box-shadow 0.2s ease !important;
+}
+
+/* ===========================
+   CUSTOM UTILITY CLASSES FOR THEMES
+   =========================== */
+
+@layer components {
+    /* Background utilities using CSS variables */
+    .bg-theme-primary {
+        background-color: var(--color-bg-primary);
+    }
+    
+    .bg-theme-secondary {
+        background-color: var(--color-bg-secondary);
+    }
+    
+    .bg-theme-tertiary {
+        background-color: var(--color-bg-tertiary);
+    }
+    
+    .bg-theme-elevated {
+        background-color: var(--color-bg-elevated);
+    }
+    
+    /* Text utilities using CSS variables */
+    .text-theme-primary {
+        color: var(--color-text-primary);
+    }
+    
+    .text-theme-secondary {
+        color: var(--color-text-secondary);
+    }
+    
+    .text-theme-tertiary {
+        color: var(--color-text-tertiary);
+    }
+    
+    /* Border utilities using CSS variables */
+    .border-theme-primary {
+        border-color: var(--color-border-primary);
+    }
+    
+    .border-theme-secondary {
+        border-color: var(--color-border-secondary);
+    }
+    
+    /* Card component */
+    .card-theme {
+        background-color: var(--color-bg-primary);
+        border: 1px solid var(--color-border-primary);
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px var(--color-shadow);
+    }
+    
+    /* Input component */
+    .input-theme {
+        background-color: var(--color-bg-primary);
+        border: 1px solid var(--color-border-primary);
+        color: var(--color-text-primary);
+    }
+    
+    .input-theme::placeholder {
+        color: var(--color-text-tertiary);
+    }
+    
+    .input-theme:focus {
+        border-color: var(--color-brand-primary);
+        outline: none;
+        box-shadow: 0 0 0 3px var(--color-brand-secondary);
+    }
+    
+    /* Button primary */
+    .btn-primary-theme {
+        background-color: var(--color-brand-primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary-theme:hover {
+        background-color: var(--color-brand-primary-hover);
+    }
+    
+    .btn-primary-theme:active {
+        background-color: var(--color-brand-primary-active);
+    }
+    
+    /* Button secondary */
+    .btn-secondary-theme {
+        background-color: var(--color-brand-secondary);
+        color: var(--color-brand-primary);
+        border: 1px solid var(--color-brand-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-secondary-theme:hover {
+        background-color: var(--color-brand-primary);
+        color: white;
+    }
+}
+
+/* ===========================
+   CUSTOM DIALOG STYLES
+   =========================== */
+
+/* Dark overlay backdrop */
+.custom-dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .custom-dialog-backdrop {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Dialog container styling */
+.custom-dialog-container {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 20px 60px var(--color-shadow-heavy) !important;
+}
+
+.custom-dialog-container .mat-mdc-dialog-container {
+    padding: 0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.custom-dialog-container .mat-mdc-dialog-surface {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    background-color: var(--color-bg-primary) !important;
+}
+
+/* Fade in animation */
+@keyframes dialogFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-dialog-container {
+    animation: dialogFadeIn 0.3s ease !important;
+}
+
+/* ===========================
+   SCROLLBAR STYLING
+   =========================== */
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-tertiary);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-secondary) var(--color-bg-secondary);
+}
+
+/* ===========================
+   ANGULAR MATERIAL DARK MODE OVERRIDES
+   =========================== */
+
+.dark .mat-mdc-menu-panel {
+    background-color: var(--color-bg-elevated) !important;
+}
+
+.dark .mat-mdc-option {
+    color: var(--color-text-primary) !important;
+}
+
+.dark .mat-mdc-select-panel {
+    background-color: var(--color-bg-elevated) !important;
+}
+
+.dark .mat-mdc-form-field-focus-overlay {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: var(--color-bg-tertiary) !important;
+}
+
+.dark .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: var(--color-bg-tertiary);
+    --mdc-plain-tooltip-supporting-text-color: var(--color-text-primary);
+}

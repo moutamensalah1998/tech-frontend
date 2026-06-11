@@ -1,0 +1,30 @@
+<div class="flex flex-col h-full">
+  <!-- Header with fixed height -->
+  <app-chat-window-header
+    [conversation]="conversation"
+    [reset_counter]="reset_counter"
+    [expiry_time]="expiry_time"
+    class="flex-shrink-0">
+  </app-chat-window-header>
+
+  <!-- Body that takes remaining space and scrolls -->
+  <app-chat-window-body
+    [conversation]="conversation"
+    (filesDropped)="onFilesDropped($event)"
+    (replyToMessage)="onReplyToMessage($event)"
+    class="flex-1 min-h-0 overflow-y-auto">
+  </app-chat-window-body>
+
+  <!-- Input area with flexible height but constrained max -->
+  <app-chat-window-input
+    [conversationId]="conversation.id"
+    [isExpired]="isExpired"
+    [recipientNumber]="conversation.country_code_phone_number + conversation.contact_phone_number"
+    [droppedFiles]="droppedFiles"
+    [replyingToMessage]="replyingToMessage"
+    (replyCleared)="onReplyCleared()"
+    class="flex-shrink-0 max-h-64">
+  </app-chat-window-input>
+
+  <div class="h-16"></div>
+</div>

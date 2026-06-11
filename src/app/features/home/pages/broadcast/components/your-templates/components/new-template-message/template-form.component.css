@@ -1,0 +1,10 @@
+:host {
+      display: block;
+    }
+
+    @media (max-width: 1279px) {
+      .xl\\:col-span-2,
+      .xl\\:col-span-1 {
+        grid-column: span 1;
+      }
+    }

@@ -1,0 +1,59 @@
+<div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+      <svg class="w-5 h-5 text-gray-500 dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <label class="text-sm font-semibold text-gray-700 dark:text-dark-text-primary whitespace-nowrap">
+        {{ 'reports.period.label' | translate }}:
+      </label>
+      
+      <div class="flex items-center space-x-2 rtl:space-x-reverse">
+        <button
+          *ngFor="let option of periodOptions"
+          (click)="selectPeriod(option.value)"
+          [ngClass]="{
+            'bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600': periodType === option.value,
+            'bg-gray-100 dark:bg-dark-surface-tertiary text-gray-700 dark:text-dark-text-primary hover:bg-gray-200 dark:hover:bg-dark-surface-tertiary/70': periodType !== option.value
+          }"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          {{ option.label | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 dark:text-dark-text-secondary">
+      <span *ngIf="periodType !== 'custom'">{{ getPeriodDateRange() }}</span>
+      <span *ngIf="periodType === 'custom' && startDate && endDate">
+        {{ formatDateDisplay(startDate) }} - {{ formatDateDisplay(endDate) }}
+      </span>
+    </div>
+  </div>
+
+  <div *ngIf="showCustomDates" class="mt-4 flex flex-col sm:flex-row gap-4">
+      <div class="flex items-center space-x-2 rtl:space-x-reverse">
+        <label class="text-sm font-medium text-gray-700 dark:text-dark-text-primary whitespace-nowrap">
+          {{ 'reports.period.startDate' | translate }}:
+        </label>
+        <input
+          type="date"
+          [(ngModel)]="startDate"
+          (ngModelChange)="onDateChange()"
+          [max]="getMaxDate()"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-dark-surface-tertiary dark:text-dark-text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent">
+      </div>
+      
+      <div class="flex items-center space-x-2 rtl:space-x-reverse">
+        <label class="text-sm font-medium text-gray-700 dark:text-dark-text-primary whitespace-nowrap">
+          {{ 'reports.period.endDate' | translate }}:
+        </label>
+        <input
+          type="date"
+          [(ngModel)]="endDate"
+          (ngModelChange)="onDateChange()"
+          [max]="getMaxDate()"
+          [min]="startDate"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-dark-surface-tertiary dark:text-dark-text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent">
+      </div>
+    </div>
+</div>

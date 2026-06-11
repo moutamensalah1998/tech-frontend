@@ -1,0 +1,15 @@
+<div
+  class="flex flex-col h-screen bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border shadow-md dark:shadow-dark-md overflow-hidden">
+  <app-chat-list-header></app-chat-list-header>
+  <div class="overflow-y-auto flex-1 bg-surface dark:bg-dark-surface">
+    <ng-container *ngIf="conversations$ | async as convs; else loading">
+      <app-chat-list-contact *ngFor="let conv of convs; let x = index" [conversation]="conv"
+        [selectedConversationId]="selectedConversationId" (select)="onSelectConversation($event, x)" [i]="x"
+        class="hover:bg-surface-secondary dark:hover:bg-dark-surface-tertiary transition-colors duration-200">
+      </app-chat-list-contact>
+    </ng-container>
+    <ng-template #loading>
+      <div class="p-4 text-center text-primary dark:text-primary-dark">Loading conversations…</div>
+    </ng-template>
+  </div>
+</div>

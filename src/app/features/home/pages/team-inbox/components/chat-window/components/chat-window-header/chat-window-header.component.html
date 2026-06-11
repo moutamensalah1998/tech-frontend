@@ -1,0 +1,57 @@
+<div
+  class="py-4 flex items-center justify-between w-full h-full px-6 bg-surface dark:bg-dark-surface border-b border-border dark:border-dark-border shadow-sm dark:shadow-dark-sm">
+  <!-- Left Section - Headset Icon -->
+
+  <!-- Center Section - User Select and Timer -->
+  <div class="flex items-center gap-4">
+    <div class="flex items-center">
+      <div class="p-2 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg">
+        <svg class="w-5 h-5 text-primary" viewBox="0 0 20 20">
+          <path
+            d="M10.3418 1.25801C6.28604 1.06709 2.91669 4.31522 2.91669 8.3332V10.2082V13.1249C2.91669 14.3218 3.86078 15.2875 5.03501 15.3815C5.13052 17.0159 6.46784 18.3332 8.12502 18.3332H8.54738C8.73777 18.5845 9.03628 18.7499 9.37502 18.7499H10.625C11.1992 18.7499 11.6667 18.2828 11.6667 17.7082C11.6667 17.1336 11.1992 16.6665 10.625 16.6665H9.37502C9.03628 16.6665 8.73777 16.8319 8.54738 17.0832H8.12502C7.15598 17.0832 6.39839 16.3548 6.29152 15.4165H7.29169C7.45744 15.4165 7.6164 15.3507 7.73361 15.2335C7.85082 15.1163 7.91667 14.9573 7.91669 14.7915V10.2082C7.91667 10.0424 7.85082 9.88348 7.73361 9.76628C7.6164 9.64907 7.45744 9.58322 7.29169 9.5832H4.16669V8.3332C4.16669 5.01035 6.92068 2.34813 10.2824 2.50638C13.4134 2.6536 15.8334 5.35821 15.8334 8.51549V9.5832H12.7084C12.5426 9.58322 12.3836 9.64907 12.2664 9.76628C12.1492 9.88348 12.0834 10.0424 12.0834 10.2082V14.7915C12.0834 14.9573 12.1492 15.1163 12.2664 15.2335C12.3836 15.3507 12.5426 15.4165 12.7084 15.4165H14.7917C16.0499 15.4165 17.0834 14.3831 17.0834 13.1249V10.2082V8.51549C17.0834 4.71778 14.1583 1.43746 10.3418 1.25801ZM4.16669 10.8332H6.66669V14.1665H5.20835C4.62576 14.1665 4.16669 13.7075 4.16669 13.1249V10.8332ZM13.3334 10.8332H15.8334V13.1249C15.8334 13.7075 15.3743 14.1665 14.7917 14.1665H13.3334V10.8332Z"
+            fill="currentColor"></path>
+        </svg>
+      </div>
+    </div>
+    <!-- User Selection Dropdown -->
+    <div class="flex items-center gap-2">
+      <select
+        class="text-text-primary dark:text-dark-text-primary px-3 py-2 border bg-surface dark:bg-dark-surface border-border dark:border-dark-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-secondary transition-colors min-w-[160px]"
+        [(ngModel)]="selectedUserId" (ngModelChange)="onUserChange($event)">
+        <option *ngFor="let user of users$ | async" [ngValue]="user.id.toString()">
+          {{ user.first_name }} {{ user.last_name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Right Section - Status Selection -->
+  <div class="flex items-center gap-2">
+    <!-- Timer Section -->
+    <div
+      class="flex items-center gap-2 px-3 py-2 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg border border-border dark:border-dark-border">
+      <svg class="w-5 h-5 text-primary" viewBox="0 0 21 20">
+        <path
+          d="M9.35909 1.25006C9.27627 1.24889 9.19404 1.26419 9.11719 1.29508C9.04033 1.32596 8.97038 1.37181 8.9114 1.42996C8.85242 1.48812 8.80558 1.55741 8.77362 1.63382C8.74165 1.71023 8.72519 1.79223 8.72519 1.87506C8.72519 1.95789 8.74165 2.03989 8.77362 2.1163C8.80558 2.19271 8.85242 2.26201 8.9114 2.32016C8.97038 2.37832 9.04033 2.42417 9.11719 2.45505C9.19404 2.48593 9.27627 2.50123 9.35909 2.50006H9.77576V3.36513C5.93284 3.68453 2.90076 6.90957 2.90076 10.8334C2.90076 14.9681 6.26602 18.3334 10.4008 18.3334C14.5355 18.3334 17.9008 14.9681 17.9008 10.8334C17.9008 8.99037 17.2292 7.30352 16.1218 5.99616L16.8843 5.23362C16.9745 5.14581 17.036 5.03282 17.0609 4.90944C17.0858 4.78606 17.0729 4.65805 17.0238 4.54214C16.9747 4.42624 16.8918 4.32785 16.7859 4.25985C16.68 4.19185 16.556 4.15741 16.4302 4.16103C16.2679 4.16576 16.1138 4.23348 16.0005 4.34983L15.238 5.11237C14.0802 4.13172 12.6242 3.49799 11.0258 3.36513V2.50006H11.4424C11.5252 2.50123 11.6075 2.48593 11.6843 2.45505C11.7612 2.42417 11.8311 2.37832 11.8901 2.32016C11.9491 2.26201 11.9959 2.19271 12.0279 2.1163C12.0599 2.03989 12.0763 1.95789 12.0763 1.87506C12.0763 1.79223 12.0599 1.71023 12.0279 1.63382C11.9959 1.55741 11.9491 1.48812 11.8901 1.42996C11.8311 1.37181 11.7612 1.32596 11.6843 1.29508C11.6075 1.26419 11.5252 1.24889 11.4424 1.25006H9.35909ZM10.3267 4.58746C10.377 4.5936 10.4278 4.5936 10.4781 4.58746C13.901 4.62914 16.6508 7.40031 16.6508 10.8334C16.6508 14.2926 13.8599 17.0834 10.4008 17.0834C6.94157 17.0834 4.15076 14.2926 4.15076 10.8334C4.15076 7.39922 6.90222 4.62741 10.3267 4.58746ZM13.0969 7.49437C12.9346 7.4991 12.7805 7.56681 12.6672 7.68317L10.723 9.62734C10.618 9.59872 10.5096 9.58395 10.4008 9.5834C10.0692 9.5834 9.75129 9.71509 9.51687 9.94951C9.28245 10.1839 9.15076 10.5019 9.15076 10.8334C9.15076 11.1649 9.28245 11.4829 9.51687 11.7173C9.75129 11.9517 10.0692 12.0834 10.4008 12.0834C10.5924 12.0833 10.7814 12.0391 10.9533 11.9543C11.1251 11.8695 11.2752 11.7463 11.3919 11.5943C11.5085 11.4422 11.5886 11.2654 11.626 11.0774C11.6635 10.8895 11.6572 10.6954 11.6076 10.5103L13.551 8.56696C13.6412 8.47914 13.7027 8.36615 13.7276 8.24278C13.7525 8.1194 13.7395 7.99138 13.6905 7.87548C13.6414 7.75957 13.5585 7.66118 13.4526 7.59318C13.3467 7.52518 13.2227 7.49074 13.0969 7.49437Z"
+          fill="currentColor"></path>
+      </svg>
+
+      <ng-container *ngIf="remainingTime; else expired">
+        <span class="text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{ remainingTime
+          }}</span>
+      </ng-container>
+
+      <ng-template #expired>
+        <span class="text-sm font-bold text-red-500">{{ 'teamInbox.chatWindowHeader.expired' | translate }}</span>
+      </ng-template>
+    </div>
+    <select id="statusSelect"
+      class="text-text-primary dark:text-dark-text-primary px-3 py-2 border bg-surface dark:bg-dark-surface border-border dark:border-dark-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-secondary transition-colors min-w-[120px]"
+      [(ngModel)]="selectedStatus" (ngModelChange)="selectStatus($event)">
+      <option *ngFor="let status of statusList" [value]="status.value">
+        {{ status.label }}
+      </option>
+    </select>
+  </div>
+
+</div>

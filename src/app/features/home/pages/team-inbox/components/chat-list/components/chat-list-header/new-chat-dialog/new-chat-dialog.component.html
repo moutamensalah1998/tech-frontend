@@ -1,0 +1,228 @@
+<div
+  class="bg-surface dark:bg-dark-surface rounded-xl shadow-md dark:shadow-dark-md max-w-5xl mx-auto border border-border dark:border-dark-border overflow-hidden">
+  <!-- Header -->
+  <div
+    class="px-6 py-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-b border-border dark:border-dark-border">
+    <h2 class="text-2xl font-bold text-text-primary dark:text-dark-text-primary">{{ 'teamInbox.newChatDialog.title' |
+      translate }}</h2>
+    <p class="text-sm text-text-secondary dark:text-dark-text-secondary mt-1">{{ 'teamInbox.newChatDialog.subtitle' |
+      translate }}</p>
+  </div>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- Left Column: Recipient Selection -->
+      <div class="space-y-6">
+        <!-- Input Mode Toggle -->
+        <div
+          class="flex items-center space-x-4 p-2 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg border border-border dark:border-dark-border">
+          <button type="button" (click)="setInputMode('contact')"
+            [class]="inputMode === 'contact'
+              ? 'bg-surface dark:bg-dark-surface shadow-sm text-primary dark:text-primary-dark px-4 py-2 rounded-md text-sm font-medium border border-blue-100 dark:border-blue-900/30'
+              : 'bg-transparent text-text-secondary dark:text-dark-text-secondary px-4 py-2 rounded-md text-sm font-medium hover:text-text-primary dark:hover:text-dark-text-primary'">
+            {{ 'teamInbox.newChatDialog.existingContact' | translate }}
+          </button>
+          <button type="button" (click)="setInputMode('phone')"
+            [class]="inputMode === 'phone'
+              ? 'bg-surface dark:bg-dark-surface shadow-sm text-primary dark:text-primary-dark px-4 py-2 rounded-md text-sm font-medium border border-blue-100 dark:border-blue-900/30'
+              : 'bg-transparent text-text-secondary dark:text-dark-text-secondary px-4 py-2 rounded-md text-sm font-medium hover:text-text-primary dark:hover:text-dark-text-primary'">
+            {{ 'teamInbox.newChatDialog.newNumber' | translate }}
+          </button>
+        </div>
+
+        <!-- Contact Selection -->
+        <div *ngIf="inputMode === 'contact'" class="space-y-2">
+          <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+            'teamInbox.newChatDialog.selectContact' | translate }}</label>
+          <div class="relative contact-dropdown-container">
+            <div
+              class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg p-3 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex justify-between items-center"
+              (click)="toggleContactsDropdown()">
+              <span class="text-text-primary dark:text-dark-text-primary truncate">
+                {{ contactForm.get('selectedContactName')?.value || ('teamInbox.newChatDialog.selectContactPlaceholder'
+                | translate) }}
+              </span>
+              <svg class="w-5 h-5 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+
+            <div *ngIf="showContactsDropdown"
+              class="absolute z-10 bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg mt-1 w-full max-h-60 overflow-y-auto shadow-lg dark:shadow-dark-lg divide-y divide-border dark:divide-dark-border">
+              <div *ngIf="(contacts$ | async)?.length === 0 && !(contactsLoading$ | async)"
+                class="p-4 text-center text-text-secondary dark:text-dark-text-secondary text-sm">
+                {{ 'teamInbox.newChatDialog.noContactsFound' | translate }}
+              </div>
+              <div *ngFor="let contact of contacts$ | async"
+                class="p-3 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer flex items-start"
+                (click)="selectContact(contact)">
+                <div
+                  class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-medium">
+                  {{ contact.name | slice:0:1 }}
+                </div>
+                <div class="ml-3">
+                  <div class="font-medium text-text-primary dark:text-dark-text-primary">{{ contact.name }}</div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{ contact.phone_number }}
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="contactsLoading$ | async" class="p-3 flex justify-center">
+                <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-primary dark:border-primary-dark"></div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="formUtils.isFieldInvalid(contactForm, 'selectedContactId')"
+            class="text-danger dark:text-danger-dark text-xs mt-1">
+            {{ 'teamInbox.newChatDialog.pleaseSelectContact' | translate }}
+          </div>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div *ngIf="inputMode === 'phone'" class="space-y-2">
+          <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+            'teamInbox.newChatDialog.phoneNumber' | translate }}</label>
+          <div class="flex gap-3">
+            <div class="w-32">
+              <select formControlName="countryCode"
+                class="w-full p-2.5 text-sm border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-primary dark:focus:border-primary-dark bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary">
+                <option value="" disabled selected>{{ 'teamInbox.newChatDialog.country' | translate }}</option>
+                <option *ngFor="let country of countries" [value]="country.dialCode">
+                  {{ country.name }} ({{ country.dialCode }})
+                </option>
+              </select>
+            </div>
+            <div class="flex-1">
+              <input type="tel" formControlName="phoneNumber"
+                [placeholder]="'teamInbox.newChatDialog.phoneNumberPlaceholder' | translate"
+                class="w-full p-2.5 text-sm border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-primary dark:focus:border-primary-dark bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary" />
+            </div>
+          </div>
+          <div *ngIf="formUtils.isFieldInvalid(contactForm, 'phoneNumber')"
+            class="text-danger dark:text-danger-dark text-xs mt-1">
+            {{ 'teamInbox.newChatDialog.validPhoneRequired' | translate }}
+          </div>
+        </div>
+
+        <!-- Template Selection -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+            'teamInbox.newChatDialog.messageTemplate' | translate }}</label>
+          <div class="relative template-dropdown-container">
+            <div
+              class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg p-3 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex justify-between items-center"
+              (click)="toggleTemplatesDropdown()">
+              <span class="text-text-primary dark:text-dark-text-primary truncate">
+                {{ selectedTemplateItem?.template?.name || ('teamInbox.newChatDialog.selectTemplate' | translate) }}
+              </span>
+              <svg class="w-5 h-5 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+
+            <!-- Updated template dropdown with template items -->
+            <div *ngIf="showTemplatesDropdown"
+              class="absolute z-10 bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg mt-1 w-full max-h-60 overflow-y-auto shadow-lg dark:shadow-dark-lg">
+              <div *ngIf="templates.length === 0 && !templatesLoading"
+                class="p-4 text-center text-text-secondary dark:text-dark-text-secondary text-sm">
+                {{ 'teamInbox.newChatDialog.noApprovedTemplates' | translate }}
+              </div>
+              <div class="max-h-56 overflow-y-auto">
+                <div *ngFor="let templateItem of templates"
+                  class="p-3 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary cursor-pointer border-b border-border dark:border-dark-border last:border-b-0"
+                  (click)="selectTemplate(templateItem)">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <div class="font-medium text-text-primary dark:text-dark-text-primary">{{
+                        templateItem.template.name }}</div>
+                      <div class="text-xs text-text-secondary dark:text-dark-text-secondary mt-1">{{
+                        templateItem.template.language }} • {{ templateItem.template.category }}</div>
+                      <div class="text-xs text-text-tertiary dark:text-dark-text-tertiary mt-1 truncate">{{
+                        getTemplatePreview(templateItem) }}</div>
+                    </div>
+                    <div *ngIf="templateItem.variables.length > 0"
+                      class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded ml-2">
+                      {{ templateItem.variables.length }} var(s)
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="templatesLoading" class="p-3 flex justify-center">
+                <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-primary dark:border-primary-dark"></div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="formUtils.isFieldInvalid(contactForm, 'templateId')"
+            class="text-danger dark:text-danger-dark text-xs mt-1">
+            {{ 'teamInbox.newChatDialog.pleaseSelectTemplate' | translate }}
+          </div>
+        </div>
+
+        <!-- Template Variables -->
+        <div *ngIf="selectedTemplateItem && selectedTemplateItem.variables.length > 0" class="space-y-3">
+          <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">{{
+            'teamInbox.newChatDialog.templateVariables' | translate }}</label>
+          <div class="space-y-2">
+            <div *ngFor="let variable of selectedTemplateItem.variables; let i = index" class="space-y-1">
+              <label class="block text-xs font-medium text-text-secondary dark:text-dark-text-secondary">
+                {{ variable }}
+                <span class="text-danger dark:text-danger-dark">*</span>
+              </label>
+              <input type="text" [value]="templateVariableValues[variable] || ''"
+                (input)="updateVariableValue(variable, $any($event.target).value)"
+                class="w-full p-2 text-sm border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-primary dark:focus:border-primary-dark bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary"
+                [placeholder]="('teamInbox.newChatDialog.enterValueFor' | translate: {variable: variable})" required />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Message Preview & Custom Parameters -->
+      <div class="space-y-6">
+        <!-- Message Preview -->
+        <div *ngIf="selectedTemplateItem" class="space-y-2">
+          <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+            'teamInbox.newChatDialog.messagePreview' | translate }}</label>
+          <div
+            class="bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-lg p-4">
+            <div class="text-sm font-medium text-text-primary dark:text-dark-text-primary mb-2">{{
+              selectedTemplateItem.template.name }}</div>
+            <div
+              class="text-sm text-text-secondary dark:text-dark-text-secondary whitespace-pre-wrap overflow-y-auto max-h-40">
+              <ng-container *ngFor="let component of selectedTemplateItem.template.components">
+                <div *ngIf="component.type === 'HEADER' && component.text" class="font-semibold mb-1">
+                  {{ component.text }}
+                </div>
+                <div *ngIf="component.type === 'BODY' && component.text" class="mb-1">
+                  {{ component.text }}
+                </div>
+                <div *ngIf="component.type === 'FOOTER' && component.text"
+                  class="text-xs text-text-tertiary dark:text-dark-text-tertiary mt-2">
+                  {{ component.text }}
+                </div>
+              </ng-container>
+            </div>
+            <div *ngIf="selectedTemplateItem.variables.length > 0"
+              class="mt-2 pt-2 border-t border-border dark:border-dark-border text-xs text-text-tertiary dark:text-dark-text-tertiary">
+              {{ 'teamInbox.newChatDialog.variables' | translate }} {{ selectedTemplateItem.variables.join(', ') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end space-x-3 pt-6 mt-8">
+      <button type="button" (click)="closeDialog()"
+        class="px-5 py-2.5 text-sm font-medium text-text-primary dark:text-dark-text-primary bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary">
+        {{ 'common.buttons.cancel' | translate }}
+      </button>
+      <button type="submit" (click)="onSubmit()" [disabled]="!isFormValidWithVariables()"
+        class="px-6 py-2.5 text-sm font-medium text-white bg-primary dark:bg-primary-dark rounded-lg hover:bg-primary-hover dark:hover:bg-primary focus:ring-2 focus:ring-primary disabled:opacity-70 disabled:cursor-not-allowed">
+        {{ 'teamInbox.newChatDialog.sendMessage' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

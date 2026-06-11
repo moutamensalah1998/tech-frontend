@@ -1,0 +1,15 @@
+/* Minimap styles */
+.minimap-container {
+  transition: box-shadow 0.2s ease;
+}
+
+.minimap-container.dragging {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  opacity: 0.95;
+  cursor: grabbing !important;
+}
+
+.minimap-container:not(.dragging) {
+  cursor: default;
+}
+

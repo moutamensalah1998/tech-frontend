@@ -1,0 +1,191 @@
+/* Interactive Buttons Node Styles */
+
+.connection-button {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.connection-button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.connection-button:active {
+  transform: scale(0.95);
+}
+
+/* Prevent dragging on interactive elements */
+.no-drag {
+  pointer-events: auto !important;
+  cursor: auto !important;
+}
+
+.no-drag:hover {
+  cursor: auto !important;
+}
+
+/* Enhanced button connection visual feedback */
+.connection-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.connection-button:hover::before {
+  opacity: 0.6;
+  animation: connectionPulse 1s infinite;
+}
+
+@keyframes connectionPulse {
+  0%, 100% {
+    opacity: 0.3;
+    width: 15px;
+  }
+  50% {
+    opacity: 0.8;
+    width: 25px;
+  }
+}
+
+/* Button container improvements */
+.button-container {
+  position: relative;
+  padding-right: 24px; /* Space for connection button */
+}
+
+/* Form input focus states */
+.node-card input:focus,
+.node-card textarea:focus,
+.node-card select:focus {
+  outline: none;
+  border-color: transparent;
+}
+
+/* Button preview styling */
+.button-preview {
+  transition: all 0.2s ease;
+}
+
+.button-preview:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dragging state overrides */
+.node-card.dragging .connection-button {
+  pointer-events: auto !important;
+}
+
+.node-card.dragging .no-drag {
+  pointer-events: none !important;
+}
+
+/* Color-coded connection buttons */
+.connection-button.blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.connection-button.green {
+  background: linear-gradient(135deg, #10b981, #047857);
+}
+
+.connection-button.orange {
+  background: linear-gradient(135deg, #f97316, #c2410c);
+}
+
+/* Enhanced hover states */
+.connection-button.blue:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+.connection-button.green:hover {
+  background: linear-gradient(135deg, #059669, #065f46);
+}
+
+.connection-button.orange:hover {
+  background: linear-gradient(135deg, #ea580c, #9a3412);
+}
+
+/* Form section spacing */
+.form-section {
+  margin-bottom: 1rem;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Preview section enhancements */
+.preview-section {
+  background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.preview-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid;
+  margin: 0.125rem;
+  transition: all 0.15s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .connection-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    right: -0.5rem;
+  }
+
+  .button-container {
+    padding-right: 2rem;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .connection-button {
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .connection-button:hover {
+    border-color: rgba(255, 255, 255, 1);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .connection-button,
+  .preview-button,
+  .button-preview {
+    transition: none;
+  }
+
+  .connection-button::before {
+    animation: none;
+  }
+
+  .connection-button:hover::before {
+    animation: none;
+  }
+}

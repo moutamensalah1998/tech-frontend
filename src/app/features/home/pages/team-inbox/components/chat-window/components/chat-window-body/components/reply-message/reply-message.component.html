@@ -1,0 +1,260 @@
+<div class="reply-message-container" [ngClass]="getMessageClasses()">
+  <!-- Reply Context (the actual original message) -->
+  <div *ngIf="message.context" class="reply-context">
+    <div class="reply-indicator">
+      <div class="reply-line"></div>
+      <div class="reply-content">
+        <div class="reply-header">
+          <svg class="reply-icon" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor">
+            <path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6" />
+          </svg>
+          <span class="reply-label">Reply to</span>
+        </div>
+
+        <!-- Original Message Display -->
+        <div class="original-message-container">
+          <ng-container
+            *ngIf="originalMessage$ | async as originalMsg; else fallbackContent">
+            <!-- Render the original message as it was -->
+            <div class="original-message-preview">
+              <ng-container [ngSwitch]="originalMsg.message_type">
+
+                <!-- Original Text Message -->
+                <div *ngSwitchCase="'text'" class="original-text">
+                  {{ originalMsg.content?.text || originalMsg.content?.text_body
+                  }}
+                </div>
+
+                <!-- Original Question Message -->
+                <div *ngSwitchCase="'question'" class="original-text">
+                  {{ originalMsg.content?.question_text ||
+                  originalMsg.content?.text }}
+                </div>
+
+                <!-- Original Image Message -->
+                <div *ngSwitchCase="'image'" class="original-media">
+                  <div class="flex items-center space-x-2">
+                    <img
+                      [src]="originalMsg.content?.cdn_url"
+                      alt="Original image"
+                      class="original-media-thumbnail"
+                      (click)="onOriginalImageClick(originalMsg)" />
+                    <div class="original-media-info">
+                      <div class="original-media-type">📷 Image</div>
+                      <div *ngIf="originalMsg.content?.caption"
+                        class="original-caption">
+                        {{ originalMsg.content.caption }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Original Video Message -->
+                <div *ngSwitchCase="'video'" class="original-media">
+                  <div class="flex items-center space-x-2">
+                    <div class="original-video-thumbnail"
+                      (click)="onOriginalVideoClick(originalMsg)">
+                      <video class="original-media-thumbnail">
+                        <source [src]="originalMsg.content?.cdn_url" />
+                      </video>
+                      <div class="video-play-overlay">
+                        <svg class="play-icon-small" viewBox="0 0 24 24"
+                          fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="original-media-info">
+                      <div class="original-media-type">🎥 Video</div>
+                      <div *ngIf="originalMsg.content?.caption"
+                        class="original-caption">
+                        {{ originalMsg.content.caption }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Original Audio Message -->
+                <div *ngSwitchCase="'audio'" class="original-media">
+                  <div class="flex items-center space-x-2">
+                    <div class="original-audio-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                          d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                      </svg>
+                    </div>
+                    <div class="original-media-info">
+                      <div class="original-media-type">🎵 Audio message</div>
+                      <div *ngIf="originalMsg.content?.caption"
+                        class="original-caption">
+                        {{ originalMsg.content.caption }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Original Document Message -->
+                <div *ngSwitchCase="'document'" class="original-media">
+                  <div class="flex items-center space-x-2">
+                    <div class="original-document-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                          d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                      </svg>
+                    </div>
+                    <div class="original-media-info">
+                      <div class="original-media-type">📄 {{
+                        getOriginalDocumentName(originalMsg) }}</div>
+                      <div *ngIf="originalMsg.content?.caption"
+                        class="original-caption">
+                        {{ originalMsg.content.caption }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Original Location Message -->
+                <div *ngSwitchCase="'location'" class="original-media">
+                  <div class="flex items-center space-x-2">
+                    <div class="original-location-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                          d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
+                      </svg>
+                    </div>
+                    <div class="original-media-info">
+                      <div class="original-media-type">📍 Location</div>
+                      <div *ngIf="originalMsg.content?.name"
+                        class="original-caption">
+                        {{ originalMsg.content.name }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Original Template Message -->
+                <div *ngSwitchCase="'template'" class="original-template">
+                  <div class="original-template-icon">📄</div>
+                  <span>Template message</span>
+                </div>
+
+                <!-- Original Interactive Message -->
+                <div *ngSwitchCase="'interactive'" class="original-interactive">
+                  <div class="original-interactive-icon">🔘</div>
+                  <span>Interactive message</span>
+                </div>
+
+                <!-- Original Button Message -->
+                <app-button-message
+                  *ngSwitchCase="'button_interactive'"
+                  [message]="message"
+                  class="mx-2">
+                </app-button-message>
+
+                <!-- Fallback for unknown message types -->
+                <div *ngSwitchDefault class="original-text">
+                  {{ originalMsg.content?.text || 'Message' }}
+                </div>
+
+              </ng-container>
+            </div>
+          </ng-container>
+
+          <!-- Fallback content when original message not found -->
+          <ng-template #fallbackContent>
+            <div class="original-message-fallback">
+              {{ getFallbackText() }}
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Message Content -->
+  <div class="current-message-content"
+    [class.button-interactive]="message.message_type === 'button_interactive'">
+    <ng-container [ngSwitch]="message.message_type">
+      <!-- Text Message -->
+      <div *ngSwitchCase="'text'" class="message-text">
+        {{ message.content?.text || message.content?.text_body }}
+      </div>
+
+      <!-- Image Message -->
+      <div *ngSwitchCase="'image'" class="message-media">
+        <img
+          [src]="message.content?.cdn_url"
+          alt="Reply image"
+          class="reply-image"
+          (click)="onImageClick()" />
+        <div *ngIf="message.content?.caption" class="media-caption">
+          {{ message.content.caption }}
+        </div>
+      </div>
+
+      <!-- Video Message -->
+      <div *ngSwitchCase="'video'" class="message-media">
+        <div class="video-container" (click)="onVideoClick()">
+          <video class="reply-video" preload="metadata">
+            <source [src]="message.content?.cdn_url"
+              [type]="message.content?.mime_type" />
+          </video>
+          <div class="video-overlay">
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+        <div *ngIf="message.content?.caption" class="media-caption">
+          {{ message.content.caption }}
+        </div>
+      </div>
+
+      <!-- Document Message -->
+      <div *ngSwitchCase="'document'" class="message-document">
+        <div class="document-info">
+          <svg class="document-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+          </svg>
+          <span class="document-name">{{ getDocumentName() }}</span>
+        </div>
+      </div>
+
+      <!-- Audio Message -->
+      <div *ngSwitchCase="'audio'" class="message-audio">
+        <div class="audio-info">
+          <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+          </svg>
+          <span class="audio-label">Audio message</span>
+        </div>
+      </div>
+
+      <!-- Location Message -->
+      <div *ngSwitchCase="'location'" class="message-location">
+        <div class="location-info">
+          <svg class="location-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
+          </svg>
+          <span class="location-label">Location shared</span>
+        </div>
+      </div>
+
+      <!-- Button Message -->
+      <app-button-message
+        *ngSwitchCase="'button_interactive'"
+        [message]="message"
+        class="mx-2">
+      </app-button-message>
+
+      <!-- Default fallback -->
+      <div *ngSwitchDefault class="message-text">
+        {{ message.content?.text || 'Unsupported message type' }}
+      </div>
+    </ng-container>
+  </div>
+</div>

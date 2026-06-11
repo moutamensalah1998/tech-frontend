@@ -1,0 +1,223 @@
+<!-- broadcast-details.component.html -->
+<div class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-xl mb-4 p-6">
+  <div class="flex items-center mb-6">
+    <div
+      class="w-8 h-8 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center text-sm font-medium">
+      1
+    </div>
+    <h2 class="ml-3 text-xl font-semibold text-text-primary dark:text-dark-text-primary">{{
+      'broadcast.create.steps.details' | translate }}</h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6" [formGroup]="form">
+    <!-- Broadcast Name -->
+    <div>
+      <label for="broadcast-name"
+        class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">
+        {{ 'broadcast.create.form.broadcastName' | translate }} <span class="text-danger dark:text-danger-dark">*</span>
+      </label>
+      <input id="broadcast-name" type="text" formControlName="broadcast_name"
+        [placeholder]="'broadcast.create.form.broadcastNamePlaceholder' | translate"
+        class="w-full px-4 py-3 border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">
+      <div *ngIf="form.get('broadcast_name')?.invalid && form.get('broadcast_name')?.touched"
+        class="mt-2 text-sm text-danger dark:text-danger-dark">
+        {{ 'broadcast.create.form.broadcastNameRequired' | translate }}
+      </div>
+    </div>
+
+    <!-- Template Selection -->
+    <div>
+      <label for="template-select"
+        class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">
+        {{ 'broadcast.create.form.messageTemplate' | translate }} <span
+          class="text-danger dark:text-danger-dark">*</span>
+      </label>
+      <div class="flex space-x-3">
+        <select id="template-select" formControlName="template_id"
+          class="flex-1 px-4 py-3 bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg text-text-primary dark:text-dark-text-primary focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">
+          <option value>{{ 'broadcast.create.form.chooseTemplate' | translate }}</option>
+          <option *ngFor="let templateItem of templates$ | async" [value]="templateItem.template.id">
+            {{ templateItem.template.name }}
+            <span *ngIf="templateItem.variables && templateItem.variables.length > 0"
+              class="text-text-tertiary dark:text-dark-text-tertiary">
+              ({{ templateItem.variables.length }} {{ 'broadcast.create.form.variables' | translate }})
+            </span>
+          </option>
+        </select>
+
+        <button type="button" (click)="addNewTemplate.emit()"
+          class="px-6 py-3 bg-surface dark:bg-dark-surface text-text-secondary dark:text-dark-text-secondary border border-border dark:border-dark-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 hover:text-primary dark:hover:text-primary-dark transition-colors flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>{{ 'broadcast.create.form.newTemplate' | translate }}</span>
+        </button>
+      </div>
+      <div *ngIf="form.get('template_id')?.invalid && form.get('template_id')?.touched"
+        class="mt-2 text-sm text-danger dark:text-danger-dark">
+        {{ 'broadcast.create.form.templateRequired' | translate }}
+      </div>
+    </div>
+
+    <!-- Header Media Upload Section (Dynamic) -->
+    <div *ngIf="selectedTemplateItem && hasMediaHeader()"
+      class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+      <div class="flex items-center mb-4">
+        <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2" fill="none" stroke="currentColor"
+          stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+          </path>
+        </svg>
+        <h3 class="text-lg font-medium text-purple-900 dark:text-purple-200">
+          {{ 'broadcast.create.form.headerMedia' | translate }}
+        </h3>
+      </div>
+
+      <p class="text-sm text-purple-700 dark:text-purple-300 mb-4">
+        {{ 'broadcast.create.form.headerMediaDescription' | translate:{mediaType: getMediaType(), templateName: getSelectedTemplateName()} }}
+      </p>
+
+      <div class="space-y-3">
+        <!-- File Upload Button -->
+        <div *ngIf="!uploadedMediaUrl && !isUploadingMedia" class="flex items-center gap-3">
+          <label
+            class="cursor-pointer inline-flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-md hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            {{ 'broadcast.create.form.chooseMedia' | translate:{mediaType: getMediaType()} }}
+            <input type="file" class="hidden" [accept]="getAcceptedFileTypes()"
+              (change)="onFileSelected($event)" />
+          </label>
+          <span class="text-sm text-text-secondary dark:text-dark-text-secondary">
+            {{ 'broadcast.create.form.chooseMediaHint' | translate:{mediaType: getMediaType()} }}
+          </span>
+        </div>
+
+        <!-- Upload Progress -->
+        <div *ngIf="isUploadingMedia" class="space-y-3">
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div class="bg-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+              [style.width.%]="uploadProgress">
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-3 text-purple-700 dark:text-purple-400">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600 dark:border-purple-400">
+              </div>
+              <span>{{ 'broadcast.create.form.uploadingMedia' | translate:{mediaType: getMediaType()} }} {{ uploadProgress }}%</span>
+            </div>
+            <span class="text-text-secondary dark:text-dark-text-secondary">{{ selectedFile?.name }}</span>
+          </div>
+        </div>
+
+        <!-- Upload Success -->
+        <div *ngIf="uploadedMediaUrl && !isUploadingMedia"
+          class="p-3 bg-green-50 dark:bg-green-900/20 rounded-md">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-green-600 dark:text-green-300" fill="none" stroke="currentColor"
+                  stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-green-800 dark:text-green-300">
+                  {{ 'broadcast.create.form.mediaUploadedSuccess' | translate:{mediaType: getMediaType()} }}
+                </div>
+              </div>
+            </div>
+            <button type="button" (click)="removeUploadedMedia()"
+              class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
+              title="Remove uploaded media">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                </path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Media Type Guidelines -->
+        <div
+          class="text-xs text-text-secondary dark:text-dark-text-secondary bg-surface-secondary dark:bg-dark-surface-secondary p-2 rounded">
+          <strong>{{ getMediaType() | titlecase }} {{ 'broadcast.create.form.guidelines' | translate }}:</strong>
+          <ul class="mt-1 space-y-1">
+            <li *ngIf="getMediaType() === 'image'">• {{ 'broadcast.create.form.imageGuidelines' | translate }}</li>
+            <li *ngIf="getMediaType() === 'video'">• {{ 'broadcast.create.form.videoGuidelines' | translate }}</li>
+            <li *ngIf="getMediaType() === 'document'">• {{ 'broadcast.create.form.documentGuidelines' | translate }}</li>
+            <li *ngIf="getMediaType() === 'audio'">• {{ 'broadcast.create.form.audioGuidelines' | translate }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Template Variables Section (Dynamic) -->
+    <div *ngIf="hasTemplateVariables()"
+      class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div class="flex items-center mb-4">
+        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-blue-900 dark:text-blue-200">{{ 'broadcast.create.form.templateVariables' |
+          translate }}</h3>
+      </div>
+
+      <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
+        {{ 'broadcast.create.form.variablesDescription' | translate:{templateName: getSelectedTemplateName()} }}
+      </p>
+
+      <div class="space-y-4" formGroupName="template_variables">
+        <div *ngFor="let variable of getTemplateVariables()" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <!-- Variable Name and Description -->
+          <div>
+            <label [for]="'variable-' + variable"
+              class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">
+              {{ variable }} <span class="text-danger dark:text-danger-dark">*</span>
+            </label>
+            <div *ngIf="getVariableExample(variable)"
+              class="text-xs text-text-tertiary dark:text-dark-text-tertiary mb-2">
+              {{ 'broadcast.create.form.variableExample' | translate:{example: getVariableExample(variable)} }}
+            </div>
+          </div>
+
+          <!-- Variable Input -->
+          <div>
+            <input [id]="'variable-' + variable" type="text" [formControlName]="variable"
+              [placeholder]="'broadcast.create.form.enterValue' | translate:{variable: variable}"
+              class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">
+            <div *ngIf="getVariableControl(variable)?.invalid && getVariableControl(variable)?.touched"
+              class="mt-1 text-sm text-danger dark:text-danger-dark">
+              {{ 'broadcast.create.form.variableRequired' | translate:{variable: variable} }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Helper Text -->
+      <div class="mt-4 p-3 bg-blue-100 dark:bg-blue-800/30 rounded-md">
+        <div class="flex">
+          <svg class="w-5 h-5 text-blue-500 dark:text-blue-400 mr-2 flex-shrink-0 mt-0.5" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div class="text-sm text-blue-700 dark:text-blue-300">
+            <p class="font-medium">{{ 'broadcast.create.form.howVariablesWork' | translate }}</p>
+            <ul class="mt-1 list-disc list-inside space-y-1">
+              <li>{{ 'broadcast.create.form.variableTip1' | translate }}</li>
+              <li>{{ 'broadcast.create.form.variableTip2' | translate }}</li>
+              <li>{{ 'broadcast.create.form.variableTip3' | translate }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

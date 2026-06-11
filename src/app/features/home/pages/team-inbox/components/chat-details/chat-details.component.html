@@ -1,0 +1,21 @@
+<div
+  class="flex flex-col top-2 right-0 h-screen bg-surface dark:bg-dark-surface border-l border-border dark:border-dark-border overflow-y-auto">
+  <app-contact-header [i]="i" [conversation]="conversation"></app-contact-header>
+
+  <!-- Scrollable content -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-6">
+    <app-notes-card [notes$]="contactNotes$" [loading$]="contactNotesLoading$" [conversation]="conversation"
+      [currentUser$]="currentUser$">
+    </app-notes-card>
+    <div class="h-1"></div> <!-- Spacer -->
+    <app-attributes-card [attributes$]="contactAttributes$" [loading$]="contactAttributesLoading$"
+      [conversation]="conversation">
+    </app-attributes-card>
+    <div class="h-1"></div> <!-- Spacer -->
+    <app-tags-card [tags$]="contactTags$" [loading$]="contactTagsLoading$" [conversation]="conversation">
+    </app-tags-card>
+    <div class="h-1"></div> <!-- Spacer -->
+    <app-contact-info [i]="i" [conversation]="conversation"></app-contact-info>
+  </div>
+  <div class="h-10 border-t border-border dark:border-dark-border"></div>
+</div>

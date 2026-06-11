@@ -1,0 +1,40 @@
+<nav class="flex bg-white dark:bg-gray-900 select-none ">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center ">
+        <img src="assets/features/logo-cropped.svg" alt="Prog Gate Logo" class="h-12 w-25">
+      </div>
+      <!-- Language Switcher & Dark Mode Toggle -->
+      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+        <app-language-switcher></app-language-switcher>
+
+        <div class="flex items-center">
+          <button id="theme-toggle" class="ms-4 text-text-primary dark:text-white hover:text-primary dark:hover:text-accent 
+                           focus:outline-none transition-colors duration-200">
+            <!-- Sun Icon (for Light mode button) -->
+            <svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 
+                           2.22a1 1 0 011.415 1.415l-.707.707a1 1 0 11-1.414-1.414l.707-.707zM18 
+                           9a1 1 0 100 2h-1a1 1 0 100-2h1zM4 9a1 1 0 100 2H3a1 1 
+                           0 100-2h1zM15.657 14.657a1 1 0 00-1.414 
+                           1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM6.343 
+                           14.657a1 1 0 001.414 1.414l.707-.707a1 1 
+                           0 10-1.414-1.414l-.707.707zM10 16a1 1 0 
+                           011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM10 
+                           5a5 5 0 100 10A5 5 0 0010 5z" />
+            </svg>
+            <!-- Moon Icon (for Dark mode button) -->
+            <svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M17.293 13.293A8 8 0 016.707 
+                           2.707a8.001 8.001 0 1010.586 
+                           10.586z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

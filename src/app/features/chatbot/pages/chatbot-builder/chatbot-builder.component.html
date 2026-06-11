@@ -1,0 +1,87 @@
+<!-- Refactored chatbot-builder.component.html using new components -->
+<div class="flex flex-col h-[100vh] overflow-hidden">
+
+  <main class="flex-1 bg-surface-secondary dark:bg-dark-surface-secondary p-6 pb-11 h-full overflow-hidden">
+    <!-- Toolbar Component -->
+        <app-toolbar
+          [zoomConfig]="zoomConfig"
+          [undoRedoState]="undoRedoState"
+          [gridConfig]="gridConfig"
+          [firstNodeTitle]="getFirstNodeTitle()"
+          (zoomChange)="onZoomChange($event)"
+          (undo)="undo()"
+          (redo)="redo()"
+          (toggleGrid)="toggleGridSnapping()"
+          (addNodeClick)="onAddNodeButtonClick($event)">
+        </app-toolbar>
+
+    <!-- Add Node Menu -->
+    <div class="relative">
+      <app-add-node-menu
+        [visible]="showAddMenu && !selectedNode"
+        [selectedNode]="null"
+        [options]="nodeOptions"
+        [showCenterMenu]="false"
+        (selectOption)="onAddNodeOption($event)"
+        (deleteNode)="onNodeDelete($event)"
+        (toggleMenu)="toggleAddMenu()">
+      </app-add-node-menu>
+    </div>
+
+    <!-- Canvas Container Component -->
+    <app-canvas-container
+      [nodes]="nodes"
+      [connections]="connections"
+      [zoomConfig]="zoomConfig"
+      [gridConfig]="gridConfig"
+      [isPanning]="isPanning"
+      [isDragging]="isDragging"
+      [draggedNodeId]="draggedNodeId"
+      [previewLine]="connectionPreviewLine"
+      [deleteButton]="connectionDeleteButton"
+      [isNodeFirst]="isNodeFirst.bind(this)"
+      (nodeConnectionStart)="onConnectionStart($event)"
+      (nodeAdd)="openAddMenu($event)"
+      (nodeDelete)="onNodeDelete($event)"
+      (nodeContentChange)="onNodeContentChange()"
+      (connectionClick)="onConnectionClick($event.connection, $event.event)"
+      (connectionDelete)="onConnectionDelete()"
+      (canvasClick)="hideConnectionButtons($event)">
+    </app-canvas-container>
+  </main>
+
+  <app-sidebar
+    [chatBotName]="chatbotName!"
+    [chatBotVersion]="chatbotVersion!"
+    [chatBotLanguage]="chatbotLanguage!"
+    [chatbotId]="chatbotId!">
+  </app-sidebar>
+
+  <div class="h-14"></div>
+
+  <app-loading-overlay
+    [visible]="submitProgress.visible"
+    [title]="submitProgress.title"
+    [loadingText]="submitProgress.text"
+    [showProgress]="true"
+    [showCancel]="true"
+    [steps]="submitProgress.steps"
+    [currentStep]="submitProgress.currentStep"
+    [onCancel]="onCancelSubmission.bind(this)">
+  </app-loading-overlay>
+
+  <app-shortcuts-help
+    [isOpen]="showShortcutsHelp"
+    (close)="onCloseShortcutsHelp()">
+  </app-shortcuts-help>
+
+  <app-node-search></app-node-search>
+
+  <app-minimap
+    [nodes]="nodes"
+    [connections]="connections"
+    [viewportBounds]="viewportBounds"
+    (jumpToPosition)="onMinimapJump($event)">
+  </app-minimap>
+
+</div>

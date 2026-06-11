@@ -1,0 +1,158 @@
+/* Container for all toasts */
+.toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1050;
+}
+
+/* Base toast style */
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+  color: #333;
+  font-size: 0.875rem;
+  min-width: 320px;
+  max-width: 400px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 4s forwards;
+  overflow: hidden;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Toast types */
+.toast-success {
+  border-left: 5px solid #28a745;
+}
+.toast-info {
+  border-left: 5px solid #17a2b8;
+}
+.toast-error {
+  border-left: 5px solid #dc3545;
+}
+
+/* Toast content */
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+.toast-message {
+  flex: 1;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Close button */
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  margin-left: 1rem;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Hover effect on toast */
+.toast:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .toast-container {
+    top: 1rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    align-items: stretch;
+  }
+
+  .toast {
+    width: 100%;
+    max-width: none;
+    min-width: auto;
+    padding: 0.875rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .close-button {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-left: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .toast-container {
+    top: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .toast {
+    padding: 0.75rem;
+  }
+
+  .toast-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}

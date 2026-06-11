@@ -1,0 +1,39 @@
+<div class="flex flex-col bg-surface dark:bg-dark-surface h-full w-full max-w-[500px] mx-auto rounded-xl overflow-hidden shadow-xl">
+
+  <div class="flex justify-between items-center px-6 py-5 bg-surface dark:bg-dark-surface border-b border-border dark:border-dark-border">
+    <h2 class="text-xl font-semibold text-text-primary dark:text-dark-text-primary">{{ 'profile.attributes.addAttributeDialog.title' | translate }}
+    </h2>
+    <button (click)="dialogRef.close()"
+      class="w-8 h-8 flex items-center justify-center rounded-md text-text-secondary dark:text-dark-text-secondary hover:bg-surface dark:hover:bg-dark-surface hover:text-text-primary dark:hover:text-dark-text-primary transition-all focus:outline-none"
+      aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="p-6 flex flex-col gap-6 bg-surface dark:bg-dark-surface">
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+        'profile.attributes.addAttributeDialog.attributeNameLabel' | translate }}</label>
+      <input type="text" [placeholder]="'profile.attributes.addAttributeDialog.attributeNamePlaceholder' | translate"
+        [(ngModel)]="tagName"
+        class="w-full px-4 py-3 border border-border dark:border-dark-border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:border-primary dark:focus:border-primary-dark focus:shadow-[0_0_0_3px_rgba(11,103,208,0.1)] transition-all"
+        autofocus />
+      <span class="text-xs text-text-secondary dark:text-dark-text-secondary">{{ 'profile.attributes.addAttributeDialog.attributeNameHint' | translate
+        }}</span>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button (click)="dialogRef.close()"
+        class="px-6 py-3 rounded-lg border border-border dark:border-dark-border text-text-primary dark:text-dark-text-primary font-semibold text-sm bg-transparent hover:bg-surface dark:hover:bg-dark-surface hover:border-text-primary dark:hover:border-dark-text-primary transition-all focus:outline-none">
+        {{ 'profile.attributes.addAttributeDialog.closeButton' | translate }}
+      </button>
+      <button (click)="addAttribute()"
+        class="px-6 py-3 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-primary-hover hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(11,103,208,0.3)] active:bg-primary-active active:translate-y-0 transition-all focus:outline-none">
+        {{ 'profile.attributes.addAttributeDialog.addButton' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

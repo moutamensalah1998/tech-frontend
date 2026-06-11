@@ -1,0 +1,124 @@
+<div *ngIf="isAuthenticationTemplate" class="mt-4">
+  <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+    'broadcast.createTemplate.media.noHeader' | translate }}</label>
+</div>
+
+<div *ngIf="!isAuthenticationTemplate" class="space-y-4">
+  <div>
+    <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-3">{{
+      'broadcast.createTemplate.media.headerType' | translate }}</label>
+    <div [formGroup]="form" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <label *ngFor="let option of mediaOptions"
+        class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary"
+        [ngClass]="{
+          'border-primary bg-primary/10 dark:bg-primary-dark/20': form.get('broadcastTitle')?.value === option,
+          'border-border': form.get('broadcastTitle')?.value !== option
+        }">
+        <input type="radio" formControlName="broadcastTitle" [value]="option" (change)="onMediaTypeChange(option)"
+          class="sr-only" />
+        <div class="text-center">
+          <span class="text-sm font-medium">{{ option }}</span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="selectedMediaType && selectedMediaType !== 'None'" class="space-y-4">
+    <div *ngIf="selectedMediaType === 'Text'">
+      <label for="headerText"
+        class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+        'broadcast.createTemplate.media.headerText' | translate }} <span class="text-danger dark:text-danger-dark">{{
+          'broadcast.createTemplate.media.headerTextRequired' | translate }}</span></label>
+      <div [formGroup]="form" class="relative">
+        <input #headerInput id="headerText" type="text" formControlName="text"
+          class="w-full px-3 py-2 pr-20 border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary"
+          [placeholder]="'broadcast.createTemplate.media.headerTextPlaceholder' | translate"
+          (input)="onHeaderTextChange($event)" (click)="onInputClick($event)" (keyup)="onInputKeyUp($event)"
+          (focus)="onInputFocus($event)" (select)="updateCursorPosition('text', $event)" />
+        <button type="button" (click)="insertVariableAtCursor('text')"
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-2 rounded hover:bg-green-200 dark:hover:bg-green-800/40 transition-colors flex items-center gap-1"
+          [title]="'broadcast.createTemplate.content.variableButtonTitle' | translate">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          {{ 'broadcast.createTemplate.content.variableButton' | translate }}
+        </button>
+      </div>
+
+      <div *ngIf="getHeaderVariables().length > 0"
+        class="mt-3 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800/40 rounded-lg p-3">
+        <h5 class="text-sm font-semibold text-green-800 dark:text-green-300 mb-2 flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+            </path>
+          </svg>
+          {{ 'broadcast.createTemplate.media.headerVariables' | translate }}
+        </h5>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let variable of getHeaderVariables()"
+            class="inline-flex items-center px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs font-medium rounded-full border border-green-300 dark:border-green-700">
+            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+              </path>
+            </svg>
+            {{ variable.placeholder }}
+            <button type="button" (click)="removeVariableFromText(variable)"
+              class="ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200">x</button>
+          </span>
+        </div>
+        <p class="text-xs text-green-600 dark:text-green-400 mt-2">{{
+          'broadcast.createTemplate.media.headerVariablesHint' | translate }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="isFileBasedMedia(selectedMediaType)" class="space-y-3">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" [value]="getSelectedFileName()"
+          class="flex-1 px-3 py-2 border border-border dark:border-dark-border rounded-lg bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary"
+          [placeholder]="'broadcast.createTemplate.media.noFileSelected' | translate" readonly />
+        <label
+          class="inline-flex items-center px-4 py-2 bg-primary dark:bg-primary-dark text-white rounded-lg hover:bg-primary-hover dark:hover:bg-primary cursor-pointer transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          {{ 'broadcast.createTemplate.media.chooseFile' | translate }} {{ selectedMediaType }}
+          <input type="file" class="hidden" (change)="onFileSelected($event)" [accept]="getAcceptedFileTypes()" />
+        </label>
+      </div>
+
+      <div *ngIf="mediaService.hasSelectedMedia(selectedMediaType)"
+        class="border-2 border-dashed border-green-300 dark:border-green-700 rounded-lg p-4 bg-green-50 dark:bg-green-900/10">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-green-800 dark:text-green-300">{{ getSelectedFileName() }}</p>
+              <p class="text-xs text-green-600 dark:text-green-400">{{ getFileSize() }}</p>
+            </div>
+          </div>
+          <button type="button" (click)="removeFile()"
+            class="text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-400 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-xs text-text-tertiary dark:text-dark-text-tertiary space-y-1">
+        <p>- {{ 'broadcast.createTemplate.media.fileRequirements' | translate }}</p>
+        <p>- {{ 'broadcast.createTemplate.media.supportedFormats' | translate }} {{ getSupportedFormats() }}</p>
+      </div>
+    </div>
+  </div>
+</div>

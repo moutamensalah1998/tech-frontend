@@ -1,0 +1,156 @@
+<section
+  class="relative flex items-center justify-center select-none bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 transition-colors duration-300 min-h-screen overflow-hidden">
+
+  <!-- Background decorative elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      class="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-2xl opacity-60 animate-pulse">
+    </div>
+    <div
+      class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-100 dark:bg-indigo-900/20 rounded-full blur-2xl opacity-60 animate-pulse">
+    </div>
+  </div>
+
+  <div class="relative w-full max-w-md mx-auto">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-2xl p-8">
+
+      <!-- Logo and Header -->
+      <div class="text-center mb-6">
+        <div class="flex justify-center mb-4">
+          <img src="assets/features/logo-cropped.svg"
+            class="h-8 w-auto transition-transform duration-300 hover:scale-105"
+            alt="Logo">
+        </div>
+        <h1
+          class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1 transition-colors duration-300">
+          Admin Login
+        </h1>
+        <p class="text-gray-600 dark:text-gray-300 text-sm transition-colors duration-300">
+          Sign in to access the admin dashboard
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+        <!-- Email Field -->
+        <div class="space-y-1">
+          <label
+            class="block text-xs font-medium text-gray-700 dark:text-gray-200 transition-colors duration-300">
+            Email
+          </label>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-blue-500">
+              <svg class="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+            </div>
+            <input formControlName="email" type="email" required autocomplete="email"
+              placeholder="Enter your email"
+              class="w-full ps-9 pe-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-300 transform focus:scale-[1.01]"
+              [ngClass]="{
+                'border-red-500 focus:ring-red-500 animate-pulse': loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
+                'border-green-500 focus:ring-green-500': loginForm.get('email')?.valid && loginForm.get('email')?.touched
+              }" />
+          </div>
+          <div *ngIf="loginForm.get('email')?.touched" class="mt-1 text-xs">
+            <div *ngIf="loginForm.get('email')?.invalid" class="text-red-500 flex items-center">
+              <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l5.516 9.8c.75 1.333-.213 2.99-1.743 2.99H4.484c-1.53 0-2.493-1.657-1.743-2.99l5.516-9.8zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              <span *ngIf="loginForm.get('email')?.hasError('required')">
+                Email is required
+              </span>
+              <span *ngIf="loginForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-1">
+          <label
+            class="block text-xs font-medium text-gray-700 dark:text-gray-200 transition-colors duration-300">
+            Password
+          </label>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-blue-500">
+              <svg class="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <input formControlName="password" type="password" required autocomplete="current-password"
+              placeholder="Enter your password"
+              class="w-full ps-9 pe-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-300 transform focus:scale-[1.01]"
+              [ngClass]="{
+                'border-red-500 focus:ring-red-500 animate-pulse': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+                'border-green-500 focus:ring-green-500': loginForm.get('password')?.valid && loginForm.get('password')?.touched
+              }" />
+          </div>
+          <div *ngIf="loginForm.get('password')?.touched" class="mt-1 text-xs">
+            <div *ngIf="loginForm.get('password')?.invalid" class="text-red-500 flex items-center">
+              <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l5.516 9.8c.75 1.333-.213 2.99-1.743 2.99H4.484c-1.53 0-2.493-1.657-1.743-2.99l5.516-9.8zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              <span *ngIf="loginForm.get('password')?.hasError('required')">
+                Password is required
+              </span>
+              <span *ngIf="loginForm.get('password')?.hasError('minlength')">
+                Password must be at least 6 characters
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div *ngIf="localError"
+          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 animate-pulse mt-2">
+          <div class="flex items-center text-xs text-red-700 dark:text-red-300">
+            <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            {{ localError }}
+          </div>
+        </div>
+
+        <ng-container *ngIf="error$ | async as error">
+          <div *ngIf="error"
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 animate-pulse mt-2">
+            <div class="flex items-center text-xs text-red-700 dark:text-red-300">
+              <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              {{ error }}
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Login Button -->
+        <div class="pt-1">
+          <app-loading-button type="submit"
+            [customClasses]="'w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg'"
+            [buttonText]="'Sign In'" [isLoading]="loading$ | async">
+          </app-loading-button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+

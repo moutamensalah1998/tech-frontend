@@ -1,0 +1,60 @@
+<!-- Updated add-node-menu.component.html -->
+<div class="add-node-menu-container">
+  <!-- Dropdown menu positioned under the Add Node button -->
+  <div
+    *ngIf="visible && !showCenterMenu"
+    class="dropdown-menu">
+
+    <!-- Node options -->
+    <div
+      *ngFor="let option of options"
+      class="dropdown-item"
+      (click)="selectOption.emit(option)">
+      <div
+        class="option-icon"
+        [ngClass]="option.bgColor">
+        <span class="material-icons text-sm">{{ option.icon }}</span>
+      </div>
+      <span class="option-text">{{ option.title }}</span>
+    </div>
+
+    <!-- Delete option (only shown when selectedNode exists) -->
+    <div *ngIf="selectedNode" class="dropdown-divider"></div>
+    <div
+      *ngIf="selectedNode"
+      class="dropdown-item delete-item"
+      (click)="deleteNode.emit(selectedNode)">
+      <div class="delete-icon">
+        <span class="material-icons text-sm">delete</span>
+      </div>
+      <span class="delete-text">{{ 'chatbot.builder.addNodeMenu.delete' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Center menu for empty canvas (unchanged) -->
+  <div
+    *ngIf="visible && !selectedNode && showCenterMenu"
+    class="center-menu">
+
+    <button
+      (click)="toggleMenu.emit()"
+      class="center-button">
+      <span class="material-icons">{{ visible ? 'close' : 'add' }}</span>
+    </button>
+
+    <div *ngIf="visible" class="center-options">
+      <div
+        *ngFor="let option of options"
+        class="center-option"
+        [ngClass]="option.bgColor"
+        (click)="selectOption.emit(option)">
+        <div
+          class="center-option-icon"
+          [ngClass]="option.iconBg">
+          <span class="material-icons">{{ option.icon }}</span>
+        </div>
+        <span class="font-medium">{{ option.title }}</span>
+      </div>
+    </div>
+  </div>
+</div>

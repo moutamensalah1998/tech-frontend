@@ -1,0 +1,274 @@
+<div class="h-full flex flex-col">
+  <!-- Loading State -->
+  <div *ngIf="loading$ | async" class="flex-1 flex items-center justify-center">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary-dark mx-auto mb-4">
+      </div>
+      <p class="text-text-secondary dark:text-dark-text-secondary font-medium">
+        {{ activeTab === 'users' ? ('userManagement.table.loadingUsers' | translate) :
+        ('userManagement.table.loadingTeams' | translate) }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error$ | async as error" class="flex-1 flex items-center justify-center">
+    <div class="text-center">
+      <div class="text-danger dark:text-danger-dark mb-4">
+        <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <p class="text-text-secondary dark:text-dark-text-secondary font-medium">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Users Tab Content -->
+  <div *ngIf="activeTab === 'users' && !(loading$ | async) && !(error$ | async)" class="flex flex-col flex-1">
+    <!-- Table Content -->
+    <div
+      class="flex-1 overflow-auto rounded-xl shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border m-4">
+      <div class="min-w-full divide-y divide-border dark:divide-dark-border">
+        <!-- Desktop Table -->
+        <!-- Table Header -->
+        <div
+          class="grid grid-cols-12 gap-4 bg-surface-secondary dark:bg-dark-surface-secondary px-6 py-4 text-sm font-semibold text-text-secondary dark:text-dark-text-secondary uppercase tracking-wider border-b border-border dark:border-dark-border">
+          <div class="col-span-3 flex items-center">{{ 'userManagement.table.headers.user' | translate }}</div>
+          <!-- <div class="col-span-2">{{ 'userManagement.table.headers.status' | translate }}</div> -->
+          <div class="col-span-3">{{ 'userManagement.table.headers.contact' | translate }}</div>
+          <div class="col-span-2">{{ 'userManagement.table.headers.role' | translate }}</div>
+          <div class="col-span-2 text-right">{{ 'userManagement.table.headers.actions' | translate }}</div>
+        </div>
+        <div class="hidden lg:block h-[calc(52vh)] overflow-y-auto bg-surface dark:bg-dark-surface">
+          <!-- Table Rows -->
+          <div *ngFor="let user of users$ | async; let i = index; trackBy: trackByUserId"
+            class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors duration-150 border-b border-border dark:border-dark-border">
+            <!-- User Column -->
+            <div class="col-span-3 flex items-center space-x-3">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-gradient-to-br rounded-full flex items-center justify-center shadow-lg"
+                [ngClass]="{
+                       'from-blue-500 to-indigo-600': i % 3 === 0,
+                       'from-purple-500 to-pink-600': i % 3 === 1,
+                       'from-green-500 to-teal-600': i % 3 === 2
+                     }">
+                <span class="text-white text-sm font-semibold">
+                  {{ user.first_name[0] }}{{ user.last_name[0] }}
+                </span>
+
+              </div>
+              <div>
+                <p class="font-medium text-text-primary dark:text-dark-text-primary">{{ user.first_name }} {{
+                  user.last_name }}</p>
+              </div>
+            </div>
+
+            <!-- Status Column -->
+            <!-- <div class="col-span-2 flex items-center">
+              <div class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                [ngClass]="user.online_status ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300'">
+                <span class="w-2 h-2 rounded-full mr-1.5"
+                  [ngClass]="user.online_status ? 'bg-green-500' : 'bg-gray-500'"></span>
+                {{ user.online_status ? ('userManagement.table.status.online' | translate) :
+                ('userManagement.table.status.offline' | translate) }}
+              </div>
+            </div> -->
+
+            <!-- Contact Column -->
+            <div class="col-span-3">
+              <a href="mailto:{{ user.email }}"
+                class="text-sm font-medium text-primary dark:text-primary-dark hover:text-primary-hover dark:hover:text-primary hover:underline">{{
+                user.email }}</a>
+              <p class="text-sm text-text-tertiary dark:text-dark-text-tertiary mt-1">{{ user.phone_number ||
+                ('userManagement.table.noPhone' | translate) }}</p>
+            </div>
+
+            <!-- Role Column -->
+            <div class="col-span-2">
+              <div class="flex flex-wrap gap-1.5">
+                <span *ngFor="let role of user.roles"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-indigo-100 to-indigo-50 dark:from-indigo-900/30 dark:to-indigo-800/20 text-indigo-800 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  {{ roleTranslationKey(role) | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions Column -->
+            <div class="col-span-2 flex items-center justify-end">
+              <app-user-actions-dropdown [user]="user" (edit)="editUserClick($event)"></app-user-actions-dropdown>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile/Tablet Cards -->
+        <div class="lg:hidden p-4 space-y-4">
+          <div *ngFor="let user of users$ | async; trackBy: trackByUserId"
+            class="bg-surface dark:bg-dark-surface rounded-lg shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border p-4 hover:shadow-md dark:hover:shadow-dark-md transition-all duration-200 transform hover:-translate-y-1">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-lg">
+                  {{ user.first_name[0] }}{{ user.last_name[0] }}
+                </div>
+                <!-- <div>
+                  <h3 class="font-medium text-text-primary dark:text-dark-text-primary">{{ user.first_name }} {{
+                    user.last_name }}</h3>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <div class="w-2 h-2 rounded-full animate-pulse"
+                      [ngClass]="user.online_status ? 'bg-green-500' : 'bg-gray-400'"></div>
+                    <span class="text-sm font-medium"
+                      [ngClass]="user.online_status ? 'text-green-600 dark:text-green-400' : 'text-text-tertiary dark:text-dark-text-tertiary'">
+                      {{ user.online_status ? ('userManagement.table.status.online' | translate) :
+                      ('userManagement.table.status.offline' | translate) }}
+                    </span>
+                  </div>
+                </div> -->
+              </div>
+              <app-user-actions-dropdown [user]="user" (edit)="editUserClick($event)"></app-user-actions-dropdown>
+            </div>
+
+            <div class="mt-4 space-y-3">
+              <div>
+                <p class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+                  'userManagement.table.mobileLabels.contact' | translate }}</p>
+                <p class="text-sm text-text-primary dark:text-dark-text-primary">{{ user.email }}</p>
+                <p class="text-sm text-text-tertiary dark:text-dark-text-tertiary">{{ user.phone_number ||
+                  ('userManagement.table.noPhone' | translate) }}</p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+                  'userManagement.table.mobileLabels.roles' | translate }}</p>
+                <div class="flex flex-wrap gap-1 mt-1">
+                  <span *ngFor="let role of user.roles"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    {{ roleTranslationKey(role) | translate }}
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="user.teams.length">
+                <p class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+                  'userManagement.table.mobileLabels.teams' | translate }}</p>
+                <div class="flex flex-wrap gap-1 mt-1">
+                  <span *ngFor="let team of user.teams"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/20 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
+                    {{ team.name }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- end min-w-full -->
+    </div> <!-- end overflow-auto -->
+  </div> <!-- end users tab -->
+
+  <!-- Teams Tab Content -->
+  <div *ngIf="activeTab === 'teams' && !(loading$ | async) && !(error$ | async)" class="flex flex-col flex-1">
+    <!-- Table Content -->
+    <div
+      class="flex-1 overflow-auto rounded-xl shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border m-4">
+      <div class="min-w-full divide-y divide-border dark:divide-dark-border">
+        <!-- Desktop Table -->
+        <div
+          class="grid grid-cols-12 gap-4 bg-surface-secondary dark:bg-dark-surface-secondary px-6 py-4 text-sm font-semibold text-text-secondary dark:text-dark-text-secondary uppercase tracking-wider border-b border-border dark:border-dark-border">
+          <div class="col-span-4">{{ 'userManagement.table.headers.teamName' | translate }}</div>
+          <div class="col-span-3">{{ 'userManagement.table.headers.members' | translate }}</div>
+          <div class="col-span-3">{{ 'userManagement.table.headers.default' | translate }}</div>
+          <div class="col-span-2">{{ 'userManagement.table.headers.actions' | translate }}</div>
+        </div>
+        <div class="hidden lg:block h-[calc(52vh)] overflow-y-auto bg-surface dark:bg-dark-surface">
+
+          <div *ngFor="let team of teams$ | async; let i = index; trackBy: trackByTeamId"
+            class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-border dark:border-dark-border hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-sm dark:hover:shadow-dark-sm">
+            <div class="col-span-4 flex items-center space-x-3">
+              <div
+                class="flex-shrink-0 w-10 h-10 bg-gradient-to-br rounded-full flex items-center justify-center shadow-lg"
+                [ngClass]="{
+                       'from-blue-500 to-indigo-600': i % 3 === 0,
+                       'from-purple-500 to-pink-600': i % 3 === 1,
+                       'from-green-500 to-teal-600': i % 3 === 2
+                     }">
+                <span class="text-white text-sm font-semibold">
+                  {{ (team.name || '').slice(0,2) | uppercase }}
+                </span>
+
+              </div>
+              <div>
+                <p class="font-medium text-text-primary dark:text-dark-text-primary">{{ team.name }}</p>
+              </div>
+            </div>
+
+            <div class="col-span-3 flex items-center">
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-text-primary dark:text-dark-text-primary font-medium">{{
+                  team.users.length }} {{ 'userManagement.table.members' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="col-span-3 flex items-center">
+              <span class="text-sm text-text-tertiary dark:text-dark-text-tertiary">-</span>
+            </div>
+
+            <div class="col-span-2 flex items-center space-x-2 justify-end">
+              <button (click)="editTeamClick(team)"
+                class="text-primary dark:text-primary-dark hover:text-primary-hover dark:hover:text-primary text-sm font-medium transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 px-2 py-1 rounded">
+                {{ 'userManagement.table.edit' | translate }}
+              </button>
+              <button (click)="teamDeleteDialogHandler(team.name)"
+                class="text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 text-sm font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded">
+                {{ 'userManagement.table.delete' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile/Tablet Cards -->
+        <div class="lg:hidden p-4 space-y-4">
+          <div *ngFor="let team of teams$ | async; trackBy: trackByTeamId"
+            class="bg-surface dark:bg-dark-surface rounded-lg shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border p-4 hover:shadow-md dark:hover:shadow-dark-md transition-all duration-200 transform hover:-translate-y-1">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-lg">
+                  {{ (team.name || '').slice(0,2) | uppercase }}
+                </div>
+                <div>
+                  <h3 class="font-medium text-text-primary dark:text-dark-text-primary">{{ team.name }}</h3>
+                  <p class="text-sm text-text-tertiary dark:text-dark-text-tertiary">{{ team.users.length }}
+                    {{ 'userManagement.table.members' | translate }}</p>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button (click)="editTeamClick(team)"
+                  class="text-primary dark:text-primary-dark hover:text-primary-hover dark:hover:text-primary text-sm font-medium transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 px-2 py-1 rounded">
+                  {{ 'userManagement.table.edit' | translate }}
+                </button>
+                <button (click)="teamDeleteDialogHandler(team.name)"
+                  class="text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 text-sm font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded">
+                  {{ 'userManagement.table.delete' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <p class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+                'userManagement.table.defaultTeam' | translate }}</p>
+              <p class="text-sm text-text-tertiary dark:text-dark-text-tertiary">-</p>
+            </div>
+          </div>
+        </div>
+      </div> <!-- end min-w-full -->
+    </div> <!-- end overflow-auto -->
+  </div> <!-- end teams tab -->
+
+  <!-- Pagination -->
+  <div
+    class="bg-surface dark:bg-dark-surface border-t border-border dark:border-dark-border px-6 py-4 shadow-sm dark:shadow-dark-sm flex-none">
+    <ng-container *ngIf="(activeTab === 'users' ? usersPagination$ : teamsPagination$) | async as pagination">
+      <app-pagination [currentPage]="pagination.page" [totalPages]="pagination.total_pages"
+        [totalCount]="pagination.total_count" [limit]="currentLimit" (pageChange)="handlePageChange($event)"
+        (limitChange)="handleLimitChange($event)">
+      </app-pagination>
+    </ng-container>
+  </div>
+</div>

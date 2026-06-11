@@ -1,0 +1,46 @@
+<div
+  class="bg-gray-800 text-white rounded-lg p-4 flex items-center space-x-4 max-w-md mx-auto"
+>
+  <!-- Play/Pause Button -->
+  <button
+    (click)="toggleAudio()"
+    class="focus:outline-none"
+  >
+    <!-- Play icon -->
+    <svg *ngIf="!isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M4 2v20l18-10L4 2z"/>
+    </svg>
+
+    <!-- Pause icon -->
+    <svg *ngIf="isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M6 5h4v14H6zM14 5h4v14h-4z"/>
+    </svg>
+  </button>
+
+  <!-- Progress bar + times -->
+  <div class="flex-1">
+    <div class="h-1 bg-gray-600 rounded overflow-hidden">
+      <div
+        class="h-full bg-blue-400 transition-[width]"
+        [style.width.%]="progress"
+      ></div>
+    </div>
+    <div class="flex justify-between text-xs text-gray-300 mt-1">
+      <span>{{ formatTime(currentTime) }}</span>
+      <span>{{ formatTime(duration) }}</span>
+    </div>
+  </div>
+
+  <!-- Download Button -->
+  <button
+    (click)="downloadAudio()"
+    class="text-gray-400 hover:text-white focus:outline-none"
+    title="Download"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M5 20h14v-2H5v2z"/>
+      <path d="M12 3v12"/>
+      <path d="M8 11l4 4 4-4"/>
+    </svg>
+  </button>
+</div>

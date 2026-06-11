@@ -1,0 +1,33 @@
+<div class="toast-container">
+  <div class="toast" *ngFor="let toast of toastMessages" [ngClass]="['toast-' + toast.type]" role="alert"
+    aria-live="assertive" aria-atomic="true">
+    <div class="toast-content">
+      <!-- Icon based on type -->
+      <span class="toast-icon">
+        <ng-container [ngSwitch]="toast.type">
+          <svg *ngSwitchCase="'success'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" class="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-6.219-8.606M12 2a9 9 0 013.476 17.348" />
+          </svg>
+          <svg *ngSwitchCase="'info'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" class="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01m6.938 4A7.938 7.938 0 1112 4.062m0 15.876a7.938 7.938 0 100-15.876" />
+          </svg>
+          <svg *ngSwitchCase="'error'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" class="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728" />
+          </svg>
+        </ng-container>
+      </span>
+      <!-- Message -->
+      <span class="toast-message">{{ toast.message }}</span>
+    </div>
+    <!-- Close Button -->
+    <button class="close-button" (click)="removeToast(toast.id)" aria-label="Close">
+      &times;
+    </button>
+  </div>
+</div>

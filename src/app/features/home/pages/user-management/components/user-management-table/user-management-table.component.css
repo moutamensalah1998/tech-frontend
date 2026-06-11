@@ -1,0 +1,134 @@
+/* Tailwind CSS classes are used for styling */
+/* Modern styles matching the contact table */
+.user-item, .team-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.user-item::before, .team-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: left 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.user-item:hover::before, .team-item:hover::before {
+  left: 100%;
+}
+
+/* Smooth transitions for all interactive elements */
+.user-item button, .team-item button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-item button:hover, .team-item button:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile expansion animation */
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+/* Enhanced hover states */
+.user-item:hover .opacity-0, .team-item:hover .opacity-0 {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.user-item .opacity-0, .team-item .opacity-0 {
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+}
+
+/* Loading animation improvements */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Badge gradient animations */
+.bg-gradient-to-r {
+  background-size: 200% 100%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Enhanced shadow for avatars */
+.user-item .shadow-lg, .team-item .shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Improved mobile responsiveness */
+@media (max-width: 768px) {
+  .user-item, .team-item {
+    padding: 1rem;
+  }
+
+  .user-item .text-sm, .team-item .text-sm {
+    font-size: 0.9rem;
+  }
+}
+
+/* Empty state styling */
+.text-center svg {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Backdrop blur for modern glass effect */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Focus states for accessibility */
+button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

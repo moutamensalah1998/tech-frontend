@@ -1,0 +1,85 @@
+@if (searchState.isOpen) {
+  <div class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white rounded-lg shadow-xl border border-gray-200 w-96">
+    <div class="p-4">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-semibold text-gray-800">Search Nodes</h3>
+        <button
+          (click)="onClose()"
+          class="text-gray-500 hover:text-gray-700 transition-colors">
+          <span class="material-icons text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative mb-3">
+        <input
+          #searchInput
+          type="text"
+          [(ngModel)]="searchState.query"
+          (ngModelChange)="onQueryChange($event)"
+          placeholder="Search by title, content..."
+          class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          autofocus>
+        <span class="material-icons absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl">
+          search
+        </span>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex gap-2 mb-3">
+        <select
+          [(ngModel)]="searchState.filterByType"
+          (ngModelChange)="onFilterTypeChange($event)"
+          class="flex-1 px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option [value]="null">All Types</option>
+          <option value="message">Message</option>
+          <option value="question">Question</option>
+          <option value="interactive_buttons">Buttons</option>
+        </select>
+      </div>
+
+      <!-- Results -->
+      @if (searchState.results.length > 0) {
+        <div class="border-t border-gray-200 pt-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm text-gray-600">
+              {{ searchState.results.length }} result(s)
+            </span>
+            <div class="flex gap-1">
+              <button
+                (click)="onPrevious()"
+                class="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                title="Previous (↑)">
+                ↑
+              </button>
+              <button
+                (click)="onNext()"
+                class="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                title="Next (↓)">
+                ↓
+              </button>
+            </div>
+          </div>
+          <div class="max-h-64 overflow-y-auto space-y-1">
+            @for (result of searchState.results; track result.node.id; let i = $index) {
+              <div
+                (click)="onResultClick(i)"
+                [class.bg-blue-50]="i === searchState.currentIndex"
+                [class.border-blue-500]="i === searchState.currentIndex"
+                class="p-2 border border-gray-200 rounded cursor-pointer hover:bg-gray-50 transition-colors">
+                <div class="text-sm font-medium text-gray-800">{{ result.node.title }}</div>
+                <div class="text-xs text-gray-500 mt-1">{{ result.matchType }}: {{ result.matchText.substring(0, 50) }}...</div>
+              </div>
+            }
+          </div>
+        </div>
+      } @else if (searchState.query.trim()) {
+        <div class="text-center py-4 text-gray-500 text-sm">
+          No results found
+        </div>
+      }
+    </div>
+  </div>
+}
+

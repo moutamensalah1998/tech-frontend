@@ -1,0 +1,82 @@
+/* Custom styles for the broadcast details dialog */
+.broadcast-details-dialog {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar for the dialog content */
+.broadcast-details-dialog ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.broadcast-details-dialog ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.broadcast-details-dialog ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.broadcast-details-dialog ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Hover effects for interactive elements */
+.broadcast-details-dialog button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Gradient animations */
+.broadcast-details-dialog .bg-gradient-to-r {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Stats cards hover effect */
+.broadcast-details-dialog .bg-white.rounded-lg {
+  transition: all 0.3s ease;
+}
+
+.broadcast-details-dialog .bg-white.rounded-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Status badge animations */
+.broadcast-details-dialog .px-3.py-1.rounded-full {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+} 

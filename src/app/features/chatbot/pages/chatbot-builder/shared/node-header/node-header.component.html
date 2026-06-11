@@ -1,0 +1,62 @@
+<!-- node-header.component.html - Enhanced with better first node UI -->
+<div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
+  <div class="flex items-center gap-2">
+    <div [class]="getIconClasses()">
+      <span class="material-icons text-white text-sm">{{ icon }}</span>
+    </div>
+    <span class="font-semibold text-gray-800">{{ title }}</span>
+
+    <!-- First Node Indicator with better visibility -->
+    <div *ngIf="isFirstNode" class="flex items-center">
+      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2 border border-green-200">
+        <span class="material-icons text-xs mr-1">play_arrow</span>
+        {{ 'chatbot.builder.shared.nodeHeader.startingNode' | translate }}
+      </span>
+      <div class="ml-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors"
+         [class.bg-green-50]="isFirstNode"
+         [class.border]="isFirstNode"
+         [class.border-green-200]="isFirstNode">
+      <input
+        type="checkbox"
+        [id]="'first_' + node.id"
+        [checked]="isFirstNode"
+        (change)="onFirstNodeToggle($event)"
+        class="w-4 h-4 text-green-600 rounded focus:ring-green-500 focus:ring-2 no-drag cursor-pointer transition-all"
+        [class.scale-110]="isFirstNode"
+        [title]="getFirstNodeTooltip()"
+      />
+      <label
+        [for]="'first_' + node.id"
+        class="text-xs font-medium cursor-pointer no-drag select-none transition-colors"
+        [class.text-green-700]="isFirstNode"
+        [class.text-gray-600]="!isFirstNode"
+        [title]="getFirstNodeTooltip()">
+        {{ isFirstNode ? '' : ('chatbot.builder.shared.nodeHeader.setFirst' | translate) }}
+      </label>
+    </div>
+
+    <!-- Action Buttons -->
+    <button
+      (click)="delete.emit()"
+      class="w-6 h-6 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors"
+      [title]="'chatbot.builder.shared.nodeHeader.deleteNode' | translate">
+      <span class="material-icons text-xs text-red-600">close</span>
+    </button>
+  </div>
+</div>
+
+<!-- First Node Helper Text (shows only when this node is first) -->
+<div *ngIf="isFirstNode" class="mb-3 p-2 bg-green-50 border border-green-200 rounded-lg">
+  <div class="flex items-start gap-2">
+    <span class="material-icons text-green-600 text-sm mt-0.5">info</span>
+    <div class="text-xs text-green-700">
+      <p class="font-medium">This is your starting node</p>
+      <p class="text-green-600 mt-1">Users will see this {{ getNodeTypeName() }} first when they interact with your chatbot.</p>
+    </div>
+  </div>
+</div>

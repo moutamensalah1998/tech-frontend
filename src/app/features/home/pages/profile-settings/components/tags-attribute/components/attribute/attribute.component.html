@@ -1,0 +1,106 @@
+<div class="bg-surface dark:bg-dark-surface rounded-xl border border-border dark:border-dark-border h-full flex flex-col overflow-hidden">
+  <!-- Header Section -->
+  <div class="bg-surface dark:bg-dark-surface flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 border-b border-border dark:border-dark-border header-section">
+    <!-- Title -->
+    <h2 class="text-base sm:text-lg font-semibold text-text-primary dark:text-dark-text-primary whitespace-nowrap">{{ 'profile.attributes.title' | translate }}
+    </h2>
+
+    <!-- Search Bar - fills remaining space -->
+    <div class="relative flex-1 search-container min-w-0">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-4 w-4 sm:h-[18px] sm:w-[18px] text-text-secondary dark:text-dark-text-secondary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+          fill="currentColor">
+          <path
+            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+      </div>
+      <input type="text" [placeholder]="'profile.attributes.searchPlaceholder' | translate" [(ngModel)]="searchTerm"
+        (input)="handleInputChange($event)"
+        class="block w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface text-sm text-text-primary dark:text-dark-text-primary placeholder-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-0 focus:border-primary dark:focus:border-primary-dark transition-all shadow-none min-h-[44px]" />
+    </div>
+
+    <!-- Add Attribute Button -->
+    <button (click)="openAddTagDialog()"
+      class="flex items-center justify-center px-3 sm:px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors duration-200 font-semibold text-sm focus:outline-none focus:shadow-[0_4px_12px_rgba(11,103,208,0.3)] whitespace-nowrap min-h-[44px] w-full sm:w-auto">
+      <svg class="h-[18px] w-[18px] mr-1.5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      </svg>
+      {{ 'profile.attributes.addAttribute' | translate }}
+    </button>
+  </div>
+  <!-- Table Header -->
+  <div class="hidden sm:grid grid-cols-12 border-b-2 border-border dark:border-dark-border py-3.5 bg-surface dark:bg-dark-surface">
+    <div
+      class="col-span-8 md:col-span-10 text-[13px] font-semibold text-text-secondary dark:text-dark-text-secondary uppercase tracking-[0.5px] px-4 sm:px-6">{{
+      'profile.attributes.attributeName' | translate
+      }}</div>
+    <div
+      class="col-span-4 md:col-span-2 text-[13px] font-semibold text-text-secondary dark:text-dark-text-secondary uppercase tracking-[0.5px] text-right px-4 sm:px-6">
+      {{
+      'profile.attributes.actions' |
+      translate }}</div>
+  </div>
+  <!-- Attributes Table -->
+  <div class="h-[40vh] sm:h-[50vh] overflow-y-auto rounded-b-lg overflow-hidden flex-grow table-container">
+
+
+    <!-- No Data State -->
+    @if (!attributes$ || !attributes$.attributes || attributes$.attributes.length === 0) {
+    <div class="flex flex-col items-center justify-center p-10 sm:p-20 text-center h-full bg-surface dark:bg-dark-surface">
+      <svg width="60" height="60" class="sm:w-20 sm:h-20 text-border mb-4 sm:mb-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+      </svg>
+      <h3 class="text-base sm:text-[18px] font-medium text-text-primary dark:text-dark-text-primary mb-2">{{ 'profile.attributes.noAttributesFound' | translate
+        }}</h3>
+      <p class="text-text-secondary dark:text-dark-text-secondary mb-4 sm:mb-6 text-sm">{{ 'profile.attributes.createFirstAttribute' | translate }}</p>
+      <button (click)="openAddTagDialog()"
+        class="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-semibold text-sm min-h-[44px]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+        </svg>
+        {{ 'profile.attributes.addNewAttribute' | translate }}
+      </button>
+    </div>
+    }
+
+    <!-- Attributes List -->
+    @for (item of attributes$?.attributes; track $index) {
+    <div
+      class="grid grid-cols-12 items-center py-3 sm:py-4 px-4 sm:px-6 border-b border-border dark:border-dark-border last:border-b-0 hover:bg-surface dark:hover:bg-dark-surface transition-colors duration-200">
+      <div class="col-span-8 md:col-span-10 font-medium text-sm text-text-primary dark:text-dark-text-primary break-words">
+        {{item.name}}
+      </div>
+
+      <div class="col-span-4 md:col-span-2 flex justify-end gap-2">
+        <!-- Edit Button -->
+        <button (click)="openEditTagDialog(item.name)"
+          class="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-md border border-border dark:border-dark-border bg-surface dark:bg-dark-surface text-primary hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0"
+          [attr.aria-label]="'profile.attributes.editAttribute' | translate">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+          </svg>
+        </button>
+
+        <!-- Delete Button -->
+        <button (click)="openDeleteTagDialog(item.name)"
+          class="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-md border border-border dark:border-dark-border bg-surface dark:bg-dark-surface text-danger hover:bg-danger hover:text-white hover:border-danger transition-all duration-200 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0"
+          [attr.aria-label]="'profile.attributes.deleteAttribute' | translate">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <div
+    class="mt-auto bg-surface dark:bg-dark-surface border-t border-border dark:border-dark-border p-4 flex items-center justify-between gap-4 pagination-container">
+    <mat-paginator [length]="attributes$?.total_count || 0" [pageSize]="attributes$?.limit || 10"
+      [pageIndex]="(attributes$?.page || 1) - 1" [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)"
+      showFirstLastButtons [attr.aria-label]="'profile.attributes.selectPage' | translate"
+      class="w-full bg-surface dark:bg-dark-surface"></mat-paginator>
+  </div>
+</div>

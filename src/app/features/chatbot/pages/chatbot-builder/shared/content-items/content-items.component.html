@@ -1,0 +1,22 @@
+<div class="space-y-3 mb-3 max-h-64 overflow-y-auto">
+  <div
+    *ngFor="let item of items; let i = index; trackBy: trackByIndex"
+    class="border border-gray-200 rounded-lg p-3 bg-gray-50"
+  >
+    <app-content-item
+      [item]="item"
+      [index]="i"
+      (remove)="removeItem($event)"
+      (change)="onItemChange()"
+    >
+    </app-content-item>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="items.length === 0"
+    class="text-center py-4 text-gray-500 text-sm"
+  >
+    No content added yet. Click the buttons below to add content.
+  </div>
+</div>

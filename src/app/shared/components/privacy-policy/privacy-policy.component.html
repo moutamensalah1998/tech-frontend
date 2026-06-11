@@ -1,0 +1,173 @@
+<!-- src/app/features/privacy/privacy-policy.component.html -->
+<div [class.dark]="isDark" class="h-screen overflow-hidden">
+  <div class="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 z-50">
+      <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300" [style.width.%]="scrollProgress"></div>
+    </div>
+
+    <!-- Header (fixed) -->
+    <header #appHeader class="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center gap-4">
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+            <span [innerHTML]=""></span>
+          </div>
+          <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            سياسة الخصوصية – مؤسسة بوابة البرمجة
+          </h1>
+        </div>
+
+        <!-- Terms checkbox + actions -->
+        <div class="flex items-center gap-3 flex-shrink-0">
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" class="form-checkbox h-5 w-5" [checked]="termsAccepted" (change)="toggleTermsAccepted()" />
+            <span class="text-sm">أوافق على <a (click)="scrollToSection(getSectionIndexByTitle('شروط الخدمة'))" class="text-blue-600 hover:underline">شروط الخدمة</a></span>
+          </label>
+
+          <button (click)="toggleDark()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all hover:scale-105 text-xl">
+            {{ isDark ? '☀️' : '🌙' }}
+          </button>
+          <button (click)="decline()" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all hover:scale-105 font-semibold">
+            رفض
+          </button>
+          <button (click)="accept()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-lg font-semibold">
+            أوافق وأتابع
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content (scrollable) -->
+    <main #mainContent (scroll)="onScroll($event)" class="flex-1 overflow-y-auto" dir="rtl" [style.paddingTop.px]="headerHeight">
+      <div class="max-w-4xl mx-auto px-6 py-8 space-y-6">
+
+        <!-- Date Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-semibold">
+          <span>📅</span>
+          <span>تاريخ آخر تحديث: ‎2 نوفمبر 2025</span>
+        </div>
+
+        <!-- Sections -->
+        <div *ngFor="let section of sections; let i = index" #sectionAnchor class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden border border-gray-200 dark:border-gray-700">
+          <button (click)="toggleSection(i)" class="w-full p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                <span [innerHTML]=""></span>
+              </div>
+              <h2 class="text-xl font-bold text-right">{{ section.title }}</h2>
+            </div>
+            <div class="w-6 h-6 transition-transform duration-300" [class.rotate-180]="expandedSection === i">
+              <span [innerHTML]=""></span>
+            </div>
+          </button>
+
+          <div [class.max-h-0]="expandedSection !== i" [class.max-h-[2000px]]="expandedSection === i" [class.opacity-0]="expandedSection !== i" [class.opacity-100]="expandedSection === i" class="overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-6 text-lg leading-relaxed">
+              <p *ngIf="section.content" class="mb-4 whitespace-pre-line">{{ section.content }}</p>
+
+              <div *ngIf="section.items" class="grid gap-3">
+                <div *ngFor="let item of section.items; let idx = index" class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  <div class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full flex-shrink-0 font-bold text-sm">
+                    {{ idx + 1 }}
+                  </div>
+                  <p class="pt-1">{{ item }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="section.coloredItems" class="space-y-3 mb-4">
+                <div *ngFor="let item of section.coloredItems"
+                     class="p-4 rounded-lg border-r-4"
+                     [ngClass]="{
+                       'bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-900/20 border-blue-500': item.color === 'blue',
+                       'bg-gradient-to-r from-purple-50 to-transparent dark:from-purple-900/20 border-purple-500': item.color === 'purple',
+                       'bg-gradient-to-r from-green-50 to-transparent dark:from-green-900/20 border-green-500': item.color === 'green',
+                       'bg-gradient-to-r from-gray-50 to-transparent dark:from-gray-800 border-gray-500': item.color === 'gray'
+                     }">
+                  {{ item.text }}
+                </div>
+              </div>
+
+              <div *ngIf="section.note"
+                   class="mt-4 p-4 rounded-lg border-r-4"
+                   [ngClass]="{
+                     'bg-amber-50 dark:bg-amber-900/20 border-amber-500': section.noteColor === 'amber',
+                     'bg-green-50 dark:bg-green-900/20 border-green-500 font-semibold': section.noteColor === 'green'
+                   }">
+                <strong *ngIf="section.noteColor === 'amber'">ملاحظة مهمة: </strong>
+                {{ section.note }}
+              </div>
+
+              <div *ngIf="section.subsections" class="grid gap-4">
+                <div *ngFor="let sub of section.subsections"
+                     class="p-5 rounded-xl border"
+                     [ngClass]="{
+                       'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 border-blue-200 dark:border-blue-800': sub.color === 'blue',
+                       'bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 border-purple-200 dark:border-purple-800': sub.color === 'purple',
+                       'bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-900/10 border-green-200 dark:border-green-800': sub.color === 'green'
+                     }">
+                  <div class="font-bold text-lg mb-1">{{ sub.title }}</div>
+                  <div class="text-sm opacity-75">{{ sub.desc }}</div>
+                </div>
+              </div>
+
+              <div *ngIf="section.rights" class="grid gap-3 mb-4">
+                <div *ngFor="let right of section.rights" class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <div class="w-6 h-6 flex items-center justify-center bg-green-500 text-white rounded-full text-sm font-bold">✓</div>
+                  <span>{{ right }}</span>
+                </div>
+              </div>
+
+              <div *ngIf="section.contact" class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-r-4 border-blue-500">
+                <p class="mb-2 font-semibold">يمكنك التواصل معنا عبر البريد:</p>
+                <a href="mailto:admin@prog-gate.cloud" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2">
+                  <span class="w-4 h-4" [innerHTML]=""></span>
+                  admin&#64;prog-gate.cloud
+                </a>
+              </div>
+
+              <div *ngIf="section.deleteData" class="space-y-3">
+                <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-r-4 border-purple-500">
+  <p class="mb-2 font-semibold">زيارة صفحة الحذف:</p>
+  <a
+  href="/delete-data"
+  (click)="onRouteClick($event)"
+  class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
+>
+  https://prog-gate.cloud/delete-data
+</a>
+
+</div>
+
+                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-r-4 border-blue-500">
+                  <p class="mb-2 font-semibold">أو مراسلتنا مباشرة:</p>
+                  <p class="text-sm mb-2">عنوان الرسالة: <strong>"طلب حذف بيانات"</strong></p>
+                  <a href="mailto:admin@prog-gate.cloud" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2">
+                    <span class="w-4 h-4" [innerHTML]=""></span>
+                    admin&#64;prog-gate.cloud
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="sticky bottom-0 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-end gap-3">
+        <button (click)="decline()" class="px-6 py-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all hover:scale-105 font-semibold">
+          رفض
+        </button>
+        <button (click)="accept()" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-lg font-semibold">
+          أوافق وأتابع
+        </button>
+      </div>
+    </footer>
+
+  </div>
+</div>

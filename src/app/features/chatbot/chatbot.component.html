@@ -1,0 +1,49 @@
+<app-shared-sidebar
+  [title]="'chatbot.list.title'"
+  [subtitle]="'chatbot.list.manageSubtitle'"
+  [navigationItems]="navigationItems"
+  [isOpen]="sidebarOpen"
+  (isOpenChange)="sidebarOpen = $event">
+
+  <div class="min-h-[calc(100vh-64px)] bg-surface dark:bg-dark-surface p-6">
+    <div class="max-w-7xl mx-auto">
+      <app-chatbot-header (openAddChatbot)="openAddChatbotDialog()"></app-chatbot-header>
+      <app-chatbot-search
+        (searchChange)="onSearchChange($event)">
+      </app-chatbot-search>
+      <app-chatbot-table
+        [chatbots]="displayChatbots"
+        [loading]="loading"
+        [changingDefault]="changingDefault"
+        (deleteChatbot)="onDeleteChatbot($event)"
+        (changeDefaultChatbot)="onChangeDefaultChatbot($event)">
+      </app-chatbot-table>
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [totalCount]="totalCount"
+        [limit]="limit"
+        (pageChange)="onPageChange($event)"
+        (limitChange)="onLimitChange($event)">
+      </app-pagination>
+    </div>
+  </div>
+</app-shared-sidebar>
+
+@if (deleteChatbotDialogOpen) {
+  <app-confirm-dialog
+    [title]="'chatbot.list.deleteDialog.title' | translate"
+    [message]="'chatbot.list.deleteDialog.message' | translate"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteChatbot()"
+    (cancelled)="deleteChatbotDialogOpen = false">
+  </app-confirm-dialog>
+}
+
+@if (isAddingChatbot) {
+  <div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50" (click)="isAddingChatbot = false">
+    <div (click)="$event.stopPropagation()">
+      <app-add-chatbot-dialog (close)="isAddingChatbot = false"></app-add-chatbot-dialog>
+    </div>
+  </div>
+}

@@ -1,0 +1,32 @@
+<div
+  class="flex-col border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface shadow-md dark:shadow-dark-md select-none">
+  <div class="flex items-center gap-2 p-2 bg-gradient-to-br rounded-t-lg" [ngClass]="getGradientClass()">
+    <!-- SVG icon omitted for brevity -->
+    <span class="text-sm font-semibold text-surface dark:text-dark-text-inverse">{{ 'chatDetails.contactInfo.title' |
+      translate }}</span>
+  </div>
+
+  <div class="px-4 pb-2 space-y-4">
+    <div>
+      <div class="text-xs text-text-secondary dark:text-dark-text-secondary font-medium mb-2 pt-4">{{
+        'chatDetails.contactInfo.phoneNumber' | translate }}</div>
+      <div class="flex items-center gap-2">
+        <span class="text-text-primary dark:text-dark-text-primary">
+          {{conversation?.country_code_phone_number}}{{conversation?.contact_phone_number}}
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <div class="text-xs text-text-secondary dark:text-dark-text-secondary font-medium mb-2 pt-4">{{
+        'chatDetails.contactInfo.userName' | translate }}</div>
+      <div class="flex items-center gap-2">
+        <span class="text-text-primary dark:text-dark-text-primary">
+          {{conversation?.contact_name}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="h-10 border-t border-border dark:border-dark-border"></div>

@@ -1,0 +1,58 @@
+<div class="h-full overflow-y-auto bg-gray-50 dark:bg-dark-surface-secondary">
+  <!-- Header Bar -->
+  <div class="bg-white/80 dark:bg-dark-surface-elevated/80 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-dark-text-primary">{{ 'reports.title' | translate }}</h1>
+        <p class="text-sm text-gray-500 dark:text-dark-text-secondary mt-1">{{ 'reports.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Period Selector -->
+    <div class="mb-6">
+      <app-period-selector
+        [currentPeriod]="currentPeriod"
+        (periodChange)="onPeriodChange($event)">
+      </app-period-selector>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="mb-6">
+      <app-overview-cards></app-overview-cards>
+    </div>
+
+    <!-- Messages Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div class="lg:col-span-1">
+        <app-messages-by-type></app-messages-by-type>
+      </div>
+      <div class="lg:col-span-2">
+        <app-messages-graph></app-messages-graph>
+      </div>
+    </div>
+
+    <!-- Tickets Status Over Time -->
+    <div class="mb-6">
+      <app-tickets-status-over-time></app-tickets-status-over-time>
+    </div>
+
+    <!-- Tickets Total and Operators Performance -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div>
+        <app-tickets-total-by-status></app-tickets-total-by-status>
+      </div>
+      <div>
+        <app-operators-performance-table></app-operators-performance-table>
+      </div>
+    </div>
+
+    <!-- Tags Analytics -->
+    <div class="mb-6">
+      <app-tags-analytics></app-tags-analytics>
+    </div>
+  </div>
+</div>
+

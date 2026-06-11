@@ -1,0 +1,10 @@
+/* Test styles for dark mode */
+.test-dark-mode {
+  background-color: white;
+  color: black;
+}
+
+.dark .test-dark-mode {
+  background-color: #1f2937;
+  color: white;
+}

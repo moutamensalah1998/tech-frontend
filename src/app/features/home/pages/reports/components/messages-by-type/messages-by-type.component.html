@@ -1,0 +1,73 @@
+<div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-full">
+  <h2 class="text-lg font-semibold text-gray-900 dark:text-dark-text-primary mb-6">{{ 'reports.messagesByType.title' | translate }}</h2>
+  
+  <div *ngIf="loading$ | async" class="flex justify-center items-center py-12">
+    <app-loader></app-loader>
+  </div>
+
+  <div *ngIf="error$ | async" class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-4">
+    <p class="text-sm text-red-600 dark:text-red-400">{{ 'reports.error.loadFailed' | translate }}</p>
+  </div>
+
+  <div *ngIf="!(loading$ | async) && !(error$ | async)" class="flex flex-col items-center">
+    <div class="relative w-64 h-64 mb-6">
+      <canvas baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        type="pie">
+      </canvas>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center">
+          <p class="text-xl font-bold text-gray-900 dark:text-dark-text-primary">{{ 'reports.total' | translate }}</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-dark-text-primary">100%</p>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-2 w-full">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="w-4 h-4 bg-blue-600 dark:bg-blue-500 rounded"></div>
+          <span class="text-sm text-gray-700 dark:text-dark-text-secondary">{{ 'reports.messagesByType.service' | translate }}</span>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
+          <ng-container *ngIf="messagesByType$ | async as data">
+            {{ getPercentageForData(data, 'utility') }}%
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="w-4 h-4 bg-green-600 dark:bg-green-500 rounded"></div>
+          <span class="text-sm text-gray-700 dark:text-dark-text-secondary">{{ 'reports.messagesByType.marketing' | translate }}</span>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
+          <ng-container *ngIf="messagesByType$ | async as data">
+            {{ getPercentageForData(data, 'marketing') }}%
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="w-4 h-4 bg-orange-500 dark:bg-orange-400 rounded"></div>
+          <span class="text-sm text-gray-700 dark:text-dark-text-secondary">{{ 'reports.messagesByType.utility' | translate }}</span>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
+          <ng-container *ngIf="messagesByType$ | async as data">
+            {{ getPercentageForData(data, 'utility') }}%
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="w-4 h-4 bg-purple-600 dark:bg-purple-500 rounded"></div>
+          <span class="text-sm text-gray-700 dark:text-dark-text-secondary">{{ 'reports.messagesByType.authentication' | translate }}</span>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
+          <ng-container *ngIf="messagesByType$ | async as data">
+            {{ getPercentageForData(data, 'authentication') }}%
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+<!-- Dark Overlay Backdrop -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+  <!-- Dialog Container -->
+  <div
+    class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border shadow-md dark:shadow-dark-md rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+    <h2 mat-dialog-title class="text-xl font-bold text-text-primary dark:text-dark-text-primary mb-4 p-6 pb-0">{{
+      'broadcast.templates.editDialog.title' | translate }}</h2>
+
+    <!-- Main Content -->
+    <mat-dialog-content class="max-h-[calc(90vh-140px)] overflow-y-auto p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Left: Template Details -->
+        <div class="space-y-4">
+          <!-- Template Info -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+                'broadcast.templates.editDialog.templateName' | translate }}</label>
+              <input type="text" [value]="templateName"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+                'broadcast.templates.editDialog.category' | translate }}</label>
+              <input type="text" [value]="category"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+                'broadcast.templates.editDialog.language' | translate }}</label>
+              <input type="text" [value]="language"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+            </div>
+          </div>
+
+          <!-- Broadcast Title -->
+          <div>
+            <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+              'broadcast.templates.editDialog.broadcastTitle' | translate }}</label>
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="broadcastTitle === 'None' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' : 'bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary'">
+                {{ 'broadcast.templates.editDialog.none' | translate }}
+              </span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="broadcastTitle === 'Text' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' : 'bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary'">
+                {{ 'broadcast.templates.editDialog.text' | translate }}
+              </span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="broadcastTitle === 'Image' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' : 'bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary'">
+                {{ 'broadcast.templates.editDialog.image' | translate }}
+              </span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="broadcastTitle === 'Video' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' : 'bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary'">
+                {{ 'broadcast.templates.editDialog.video' | translate }}
+              </span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="broadcastTitle === 'Document' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' : 'bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary'">
+                {{ 'broadcast.templates.editDialog.document' | translate }}
+              </span>
+            </div>
+
+            <div [ngSwitch]="broadcastTitle">
+              <input *ngSwitchCase="'Text'" type="text" [value]="text"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+              <input *ngSwitchCase="'Image'" type="text" [value]="mediaUrl"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+              <input *ngSwitchCase="'Video'" type="text" [value]="mediaUrl"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+              <input *ngSwitchCase="'Document'" type="text" [value]="mediaUrl"
+                class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+                readonly />
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div>
+            <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+              'broadcast.templates.editDialog.body' | translate }}</label>
+            <textarea rows="3" [value]="body"
+              class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+              readonly></textarea>
+          </div>
+
+          <!-- Footer -->
+          <div>
+            <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+              'broadcast.templates.editDialog.footerOptional' | translate }}</label>
+            <textarea rows="2" [value]="footer"
+              class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary text-sm"
+              readonly></textarea>
+          </div>
+
+          <!-- Buttons -->
+          <div>
+            <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+              'broadcast.templates.editDialog.buttons' | translate }}</label>
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-6 bg-surface-tertiary dark:bg-dark-surface-tertiary rounded-full flex items-center"
+                [class]="showButton ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-300 dark:bg-gray-600'">
+                <div class="w-4 h-4 bg-white dark:bg-text-primary rounded-full shadow transform transition-transform"
+                  [class]="showButton ? 'translate-x-5' : 'translate-x-1'"></div>
+              </div>
+              <span class="ml-3 text-sm font-medium text-text-primary dark:text-dark-text-primary">{{ showButton ?
+                ('broadcast.templates.editDialog.on' | translate) : ('broadcast.templates.editDialog.off' | translate)
+                }}</span>
+            </div>
+
+            <div *ngIf="showButton" class="space-y-3">
+              <!-- Website Button -->
+              <div *ngIf="visitWebsiteButton"
+                class="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                <span
+                  class="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded">{{
+                  'broadcast.templates.editDialog.visitWebsite' | translate }}</span>
+                <div class="flex-1 text-xs text-text-secondary dark:text-dark-text-secondary">
+                  <div class="font-medium">{{ websiteButtonText }}</div>
+                  <div class="text-text-tertiary dark:text-dark-text-tertiary">{{ websiteUrl }}</div>
+                </div>
+              </div>
+
+              <!-- Phone Button -->
+              <div *ngIf="callPhoneButton"
+                class="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                <span
+                  class="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded">{{
+                  'broadcast.templates.editDialog.callPhone' | translate }}</span>
+                <div class="flex-1 text-xs text-text-secondary dark:text-dark-text-secondary">
+                  <div class="font-medium">{{ callButtonText }}</div>
+                  <div class="text-text-tertiary dark:text-dark-text-tertiary">{{ phoneNumber }}</div>
+                </div>
+              </div>
+
+              <!-- Quick Reply Buttons -->
+              <div *ngIf="quickReplyButton > 0" class="space-y-2">
+                <div
+                  class="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded w-fit">
+                  {{ 'broadcast.templates.editDialog.quickReplyButtons' | translate }} ({{ quickReplyButton }}/4)
+                </div>
+                <div *ngFor="let text of quickReplyTexts"
+                  class="p-2 bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-md text-xs text-text-primary dark:text-dark-text-primary">
+                  {{ text }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: WhatsApp Preview -->
+        <div
+          class="flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-lg p-4 min-h-[400px]">
+          <div
+            class="text-sm font-medium text-text-primary dark:text-text-primary mb-4 bg-white dark:bg-dark-surface px-3 py-1 rounded-full shadow-sm">
+            {{ 'broadcast.templates.editDialog.preview' | translate }}
+          </div>
+          <div class="w-full max-w-sm mx-auto ">
+            <app-whatsapp-preview [header]="broadcastTitle === 'Text' ? text : ''" [body]="body || ''"
+              [footer]="footer || ''" [mediaUrl]="mediaUrl" [mediaType]="mediaType" [buttons]="previewButtons"
+              [time]="''"></app-whatsapp-preview>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <!-- Dialog Actions -->
+    <mat-dialog-actions align="end" class="p-6 pt-0">
+      <button mat-button (click)="closeDialog()"
+        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-text-primary dark:text-dark-text-primary rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        {{ 'broadcast.templates.editDialog.close' | translate }}
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>

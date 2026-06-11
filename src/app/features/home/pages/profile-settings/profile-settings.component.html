@@ -1,0 +1,9 @@
+<div class="min-h-screen bg-surface dark:bg-dark-surface-secondary">
+  <app-shared-sidebar [title]="'profile.settings.title'" [subtitle]="'profile.settings.subtitle'"
+    [navigationItems]="navigationItems" [(isOpen)]="sidebarOpen"
+    (navigationItemClicked)="onNavigationItemClick($event)">
+
+    <router-outlet></router-outlet>
+
+  </app-shared-sidebar>
+</div>

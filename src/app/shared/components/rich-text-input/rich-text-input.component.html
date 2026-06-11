@@ -1,0 +1,78 @@
+<div class="rich-text-container" [class.focused]="isFocused">
+  <!-- Text Input Area -->
+  <div class="text-input-wrapper">
+         <div
+       #contentEditable
+       [attr.contenteditable]="!disabled"
+       [attr.data-placeholder]="placeholder"
+       [attr.data-maxlength]="maxLength"
+       (input)="onInput()"
+       (keyup)="onKeyUp()"
+       (paste)="onPaste($event)"
+       (focus)="onFocus()"
+       (blur)="onBlur()"
+       (keydown)="onKeyDown($event)"
+       class="text-input"
+     ></div>
+  </div>
+  
+  <!-- Bottom Toolbar -->
+  <div class="toolbar">
+    <!-- Formatting Icons -->
+    <div class="formatting-tools">
+      <button 
+        type="button" 
+        class="format-btn" 
+        title="Bold (Ctrl+B)"
+        (click)="applyFormat('bold')"
+      >
+        <span class="format-icon bold">B</span>
+      </button>
+      
+      <button 
+        type="button" 
+        class="format-btn" 
+        title="Italic (Ctrl+I)"
+        (click)="applyFormat('italic')"
+      >
+        <span class="format-icon italic">I</span>
+      </button>
+      
+      <button 
+        type="button" 
+        class="format-btn" 
+        title="Strikethrough (Ctrl+S)"
+        (click)="applyFormat('strikethrough')"
+      >
+        <span class="format-icon strikethrough">S</span>
+      </button>
+      
+      <button 
+        type="button" 
+        class="format-btn" 
+        title="Code"
+        (click)="applyFormat('code')"
+      >
+        <span class="format-icon code">{{ '{' + '}' }}</span>
+      </button> 
+      
+      <button 
+        type="button" 
+        class="format-btn" 
+        title="Add Emoji"
+        (click)="applyFormat('emoji')"
+      >
+        <span class="format-icon emoji">😊</span>
+      </button>
+    </div>
+    
+    <!-- Variables Button -->
+    <button 
+      type="button" 
+      class="variables-btn"
+      (click)="onVariablesButtonClick()"
+    >
+      Variables
+    </button>
+    </div>
+</div> 

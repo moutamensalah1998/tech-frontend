@@ -1,0 +1,125 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 dark:bg-black/70">
+  <div
+    class="w-full mx-4 my-4 max-w-md lg:max-w-lg bg-white dark:bg-dark-surface rounded-lg shadow-xl dark:shadow-dark-xl transition-all transform max-h-[90vh] overflow-y-auto border border-transparent dark:border-dark-border">
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-6">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-dark-text-primary">{{ 'contacts.addDialog.title' |
+          translate }}</h3>
+        <button (click)="closeDialogHandler()"
+          class="text-gray-400 hover:text-gray-600 dark:text-dark-text-tertiary dark:hover:text-dark-text-secondary transition-colors"
+          [attr.aria-label]="'contacts.addDialog.closeAriaLabel' | translate">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="space-y-6">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">{{
+              'contacts.addDialog.name' | translate }}</label>
+            <input type="text" formControlName="name" [placeholder]="'contacts.addDialog.contactName' | translate"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-dark focus:border-blue-500 dark:focus:border-primary-dark transition-all placeholder-gray-400 dark:placeholder-dark-text-tertiary bg-white dark:bg-dark-surface-secondary text-gray-900 dark:text-dark-text-primary">
+            <div *ngIf="formUtils.isFieldInvalid(contactForm, 'name')"
+              class="text-red-500 dark:text-danger-dark text-sm mt-1">
+              {{ formUtils.getFirstValidationError(contactForm, 'name') === 'required' ?
+              ('contacts.addDialog.nameRequired' | translate) : '' }}
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">{{
+              'contacts.addDialog.phoneNumber' | translate }}</label>
+            <div class="flex gap-2 flex-col sm:flex-row">
+              <div class="relative input-focus-within flex-1">
+                <select formControlName="countryCode" id="countryCode"
+                  class="input-field w-full p-3 border border-gray-300 dark:border-dark-border rounded-lg inner-shadow text-gray-700 dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-purple-200 dark:focus:ring-primary-dark/30 transition-all bg-white dark:bg-dark-surface-secondary">
+                  <option value="" disabled>{{ 'contacts.addDialog.selectCountry' | translate }}</option>
+                  <option *ngFor="let country of countries" [value]="country.code">
+                    {{ country.name }} ({{ country.dialCode }})
+                  </option>
+                </select>
+                <div *ngIf="formUtils.isFieldInvalid(contactForm, 'countryCode')"
+                  class="text-red-500 dark:text-danger-dark text-sm mt-1">
+                  {{ 'contacts.addDialog.countryCodeRequired' | translate }}
+                </div>
+              </div>
+
+              <div class="flex-1">
+                <input type="tel" formControlName="phoneNumber"
+                  [placeholder]="'contacts.addDialog.phonePlaceholder' | translate" pattern="^[0-9]*$" minlength="6"
+                  maxlength="9" inputmode="numeric" autocomplete="tel"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-dark focus:border-blue-500 dark:focus:border-primary-dark transition-all placeholder-gray-400 dark:placeholder-dark-text-tertiary bg-white dark:bg-dark-surface-secondary text-gray-900 dark:text-dark-text-primary">
+                <div *ngIf="formUtils.isFieldInvalid(contactForm, 'phoneNumber')"
+                  class="text-red-500 dark:text-danger-dark text-sm mt-1">
+                  <span *ngIf="formUtils.hasError(contactForm, 'phoneNumber', 'required')">
+                    {{ 'contacts.addDialog.phoneRequired' | translate }}
+                  </span>
+                  <span *ngIf="formUtils.hasError(contactForm, 'phoneNumber', 'invalidPhone')">
+                    {{ 'contacts.addDialog.phoneInvalid' | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Attributes -->
+          <div class="pt-4 border-t border-gray-200 dark:border-dark-border space-y-4">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{{
+                  'contacts.addDialog.customAttributes' | translate }}</span>
+                <span class="text-sm text-gray-500 dark:text-dark-text-secondary ml-2">{{ 'contacts.addDialog.optional'
+                  | translate }}</span>
+              </div>
+            </div>
+
+            <div formArrayName="customAttributes">
+              <ng-container *ngFor="let attribute of customAttributes.controls; let i = index">
+                <app-attribute-item [group]="$any(attribute)" [index]="i" [attributes$]="attributes$"
+                  [loading$]="loading$" [showDropdownInput]="showDropdownMap[i] || false"
+                  [addNewModeInput]="addNewModeMap[i] || false" [newAttributeNameInput]="newAttributeNameMap[i]"
+                  (toggle)="toggleDropdown(i)" (enterAddNew)="enterAddNewMode(i)" (exitAddNew)="exitAddNewMode(i)"
+                  (newNameChange)="onNewAttributeNameChange(i, $event)" (keyDown)="onNewAttributeKeyDown($event, i)"
+                  (saveNew)="saveNewAttribute(i)" (selectAttr)="selectAttribute($event, i)"
+                  (remove)="removeCustomAttribute(i)">
+                </app-attribute-item>
+              </ng-container>
+
+              <button type="button"
+                class="text-blue-600 dark:text-primary-dark hover:text-blue-800 dark:hover:text-primary-dark-hover font-medium flex items-center transition-colors text-sm"
+                (click)="addCustomAttribute()">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                {{ 'contacts.addDialog.addAttribute' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage"
+          class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+          <p class="text-red-700 dark:text-red-300 text-sm">{{ errorMessage || ('contacts.addDialog.errorMessage' |
+            translate) }}</p>
+        </div>
+
+        <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button type="button" (click)="closeDialogHandler()"
+            class="px-6 py-2 text-gray-700 dark:text-dark-text-secondary bg-gray-100 dark:bg-dark-surface-secondary hover:bg-gray-200 dark:hover:bg-dark-surface-tertiary rounded-md transition-colors text-sm font-medium w-full sm:w-auto">
+            {{ 'contacts.addDialog.cancel' | translate }}
+          </button>
+          <button type="submit" [disabled]="isSubmitting"
+            class="px-6 py-2 bg-blue-600 dark:bg-primary hover:bg-blue-700 dark:hover:bg-primary-hover text-white rounded-md transition-colors text-sm font-medium w-full sm:w-auto disabled:opacity-50">
+            <span *ngIf="isSubmitting">{{ 'contacts.addDialog.saving' | translate }}</span>
+            <span *ngIf="!isSubmitting">{{ 'contacts.addDialog.saveContact' | translate }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

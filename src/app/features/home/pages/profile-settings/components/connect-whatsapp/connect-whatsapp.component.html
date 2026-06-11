@@ -1,0 +1,68 @@
+<div class="p-4 sm:p-6">
+  <h2 class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-text-primary dark:text-dark-text-primary">Connect WhatsApp Business</h2>
+
+  <!-- Button States -->
+  <ng-container *ngIf="isSigningUp$ | async; else notSigningUp">
+    <button
+      [disabled]="true"
+      class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-green-600 text-white rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors min-h-[44px] font-medium">
+      Connecting...
+    </button>
+  </ng-container>
+  <ng-template #notSigningUp>
+    <ng-container *ngIf="isConnected$ | async; else notConnected">
+      <button
+        [disabled]="true"
+        class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-green-600 text-white rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors min-h-[44px] font-medium">
+        Connected
+      </button>
+    </ng-container>
+    <ng-template #notConnected>
+      <button
+        (click)="connect()"
+        class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-green-600 text-white rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors min-h-[44px] font-medium">
+        Connect WhatsApp
+      </button>
+    </ng-template>
+  </ng-template>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage$ | async as message" class="mt-4 p-3 sm:p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm sm:text-base">
+    ✅ {{ message }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error$ | async as error" class="mt-4 p-3 sm:p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm sm:text-base">
+    {{ error?.message || error?.error?.message || error?.error_description || 'Failed to connect WhatsApp' }}
+  </div>
+
+  <!-- Connection Details (for embedded signup) -->
+  <div *ngIf="isConnected$ | async" class="mt-4 p-3 sm:p-4 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg border border-border dark:border-dark-border">
+    <div *ngIf="phoneNumber$ | async as phone" class="mb-3">
+      <p class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary mb-1">Phone Number:</p>
+      <p class="font-mono text-sm sm:text-base font-semibold text-text-primary dark:text-dark-text-primary break-all">{{ phone }}</p>
+    </div>
+    <div *ngIf="verifiedName$ | async as name" class="mb-3">
+      <p class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary mb-1">Verified Name:</p>
+      <p class="text-sm sm:text-base font-semibold text-text-primary dark:text-dark-text-primary">{{ name }}</p>
+    </div>
+    <div *ngIf="wabaId$ | async as wabaId" class="mb-2">
+      <p class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary mb-1">WABA ID:</p>
+      <p class="font-mono text-sm sm:text-base text-text-primary dark:text-dark-text-primary break-all">{{ wabaId }}</p>
+    </div>
+  </div>
+
+  <!-- Old flow connection status (for backward compatibility) -->
+  <ng-container *ngIf="!(isConnected$ | async)">
+    <div *ngIf="connectionId$ | async as connectionId" class="mt-4 p-3 sm:p-4 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg border border-border dark:border-dark-border">
+      <p class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary mb-1">Connection ID:</p>
+      <p class="font-mono text-sm sm:text-base text-text-primary dark:text-dark-text-primary break-all mb-3">{{ connectionId }}</p>
+      <p class="mt-2 text-sm text-text-primary dark:text-dark-text-primary">
+        Status: <span class="font-semibold">{{ status$ | async }}</span>
+      </p>
+      <p *ngIf="isPolling$ | async" class="mt-2 text-blue-600 dark:text-blue-400 text-sm">
+        Checking connection status...
+      </p>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,184 @@
+<div #scrollContainer
+  class="flex flex-col h-full w-full bg-surface-secondary dark:bg-dark-surface-secondary p-4 pt-2 space-y-2 overflow-y-auto shadow-md dark:shadow-dark-md select-none relative drag-drop-area"
+  (scroll)="onScroll()" [class.drag-active]="dragDropState.isDragging">
+  <!-- Drag & Drop Overlay -->
+  <div *ngIf="dragDropState.isDragging" class="absolute inset-0 z-50 flex items-center justify-center drag-overlay">
+    <div
+      class="bg-surface dark:bg-dark-surface rounded-xl shadow-lg dark:shadow-dark-lg p-8 border-2 border-dashed max-w-md mx-4 text-center"
+      [ngClass]="dragDropState.isValidDrop ? 'border-primary bg-primary-light/10 dark:bg-primary-dark/10' : 'border-red-400 bg-red-50 dark:bg-red-900/20'">
+      <div class="mb-4">
+        <svg class="w-16 h-16 mx-auto" [ngClass]="dragDropState.isValidDrop ? 'text-primary' : 'text-red-500'"
+          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path *ngIf="dragDropState.isValidDrop" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          <path *ngIf="!dragDropState.isValidDrop" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+
+      <div [ngClass]="dragDropState.isValidDrop ? 'text-primary' : 'text-red-700 dark:text-red-400'">
+        <h3 class="text-lg font-semibold mb-2">
+          {{ dragDropState.isValidDrop ? 'Drop files to send' :
+          'Invalid file type' }}
+        </h3>
+
+        <p class="text-sm" *ngIf="dragDropState.isValidDrop">
+          Release to upload your files
+        </p>
+
+        <p class="text-sm" *ngIf="!dragDropState.isValidDrop">
+          Only images, videos, audio, and documents are supported
+        </p>
+
+        <div class="mt-4 text-xs opacity-75" *ngIf="dragDropState.isValidDrop">
+          <div>Supported formats:</div>
+          <div>Images, Videos, Audio, Documents</div>
+          <div>Max size: 25MB per file</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages List -->
+  <ng-container *ngIf="messages$ | async as messages; else noMessages">
+    <ng-container *ngIf="messages.length; else noMessages">
+      <div *ngFor="let msg of messages.slice().reverse()" class="flex flex-col items-start" [ngClass]="{
+              'items-end': !msg.is_from_contact,
+              'items-center': msg.message_type === 'assign' || msg.message_type === 'flow_completion',
+              'my-2': msg.message_type === 'assign' || msg.message_type === 'flow_completion',
+            }">
+        <!-- Timestamp + Sender -->
+        <div *ngIf="msg.message_type !== 'flow_completion'" class="flex items-center space-x-2 mb-1">
+          <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
+            {{ msg.created_at | dateUtils:'chat' }}
+          </span>
+          <span class="text-xs"
+            [ngClass]="msg.is_from_contact ? 'text-primary' : 'text-success dark:text-success-light'">
+            {{ msg.is_from_contact ? "Contact" : "You" }}
+          </span>
+        </div>
+
+        <div class="flex flex-row" [ngClass]="{
+                'flex-row-reverse':
+                  !msg.is_from_contact && msg.message_type !== 'assign' && msg.message_type !== 'flow_completion',
+              }">
+
+          <!-- Message with Context Menu -->
+          <div class="message-container" (contextmenu)="onMessageRightClick($event, msg)" (click)="onMessageClick(msg)">
+
+            <!-- Reply Message (if message has context) -->
+            <app-reply-message *ngIf="msg.context && msg.context.type === 'reply'" [message]="msg"
+              (openFullScreen)="openFullScreen($event.url, $event.type, $event.mimeType)" class="mx-2">
+            </app-reply-message>
+
+            <!-- Regular Messages (without context or non-reply context) -->
+            <ng-container *ngIf="!msg.context || msg.context.type !== 'reply'" [ngSwitch]="msg.message_type">
+              <!-- Text Message -->
+              <app-text-message *ngSwitchCase="'text'" [message]="msg" class="mx-2">
+              </app-text-message>
+
+              <!-- Question Message -->
+              <app-text-message *ngSwitchCase="'question'" [message]="msg" class="mx-2">
+              </app-text-message>
+
+              <!-- Image Message -->
+              <app-image-message *ngSwitchCase="'image'" [message]="msg"
+                (openFullScreen)="openFullScreen($event.url, $event.type)" class="mx-2">
+              </app-image-message>
+
+              <!-- Sticker Message (rendered as image) -->
+              <app-image-message *ngSwitchCase="'sticker'" [message]="msg"
+                (openFullScreen)="openFullScreen($event.url, $event.type)" class="mx-2">
+              </app-image-message>
+
+              <!-- Video Message -->
+              <app-video-message *ngSwitchCase="'video'" [message]="msg"
+                (openFullScreen)="openFullScreen($event.url, $event.type, $event.mimeType)" class="mx-2">
+              </app-video-message>
+
+              <!-- Audio Message -->
+              <app-audio-message *ngSwitchCase="'audio'" [message]="msg" class="mx-2">
+              </app-audio-message>
+
+              <!-- Document Message -->
+              <app-document-message *ngSwitchCase="'document'" [message]="msg" class="mx-2">
+              </app-document-message>
+
+              <!-- Location Message -->
+              <app-location-message *ngSwitchCase="'location'" [message]="msg" class="mx-2">
+              </app-location-message>
+
+              <!-- Template Message -->
+              <app-template-message *ngSwitchCase="'template'" [message]="msg"
+                (openFullScreen)="openFullScreen($event.url, $event.type, $event.mimeType)" class="mx-2">
+              </app-template-message>
+
+              <!-- Interactive Message -->
+              <app-interactive-message *ngSwitchCase="'interactive'" [message]="msg"
+                (openFullScreen)="openFullScreen($event.url, $event.type, $event.mimeType)" class="mx-2">
+              </app-interactive-message>
+
+              <!-- Button Message -->
+              <app-button-message *ngSwitchCase="'button_interactive'" [message]="msg" class="mx-2">
+              </app-button-message>
+
+              <!-- Reaction Message -->
+              <div *ngSwitchCase="'reaction'"
+                class="text-sm px-2 py-1 mx-2 text-text-secondary dark:text-dark-text-secondary">
+                {{ msg.content?.emoji || '👍' }}
+              </div>
+
+              <!-- Assign Message -->
+              <app-assign-message *ngSwitchCase="'assign'" [message]="msg">
+              </app-assign-message>
+
+              <!-- Flow Completion Message -->
+              <app-assign-message *ngSwitchCase="'flow_completion'" [message]="msg">
+              </app-assign-message>
+
+              <!-- Fallback for unsupported types -->
+              <div *ngSwitchDefault
+                class="rounded-lg p-3 max-w-xs shadow-md mx-2 bg-surface dark:bg-dark-surface-tertiary">
+                <div class="italic text-xs text-text-tertiary dark:text-dark-text-tertiary">
+                  Unsupported message type: {{ msg.message_type }}
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+
+          <!-- Message Status -->
+          <app-message-status
+            *ngIf="msg.message_status && !msg.is_from_contact && msg.message_type !== 'assign' && msg.message_type !== 'flow_completion'"
+            [status]="msg.message_status" class="mt-1">
+          </app-message-status>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #noMessages>
+    <div class="p-4 text-center text-text-tertiary dark:text-dark-text-tertiary">
+      <div>No messages found.</div>
+      <div class="text-xs mt-2 text-text-secondary dark:text-dark-text-secondary">
+        Drag and drop files here to send them
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Full Screen Modal -->
+<app-full-screen-modal [media]="fullScreenMedia" (close)="closeFullScreen()">
+</app-full-screen-modal>
+
+<!-- Message Context Menu -->
+<app-message-context-menu [isVisible]="contextMenu.isVisible" [position]="contextMenu.position"
+  [message]="contextMenu.message" (reaction)="onContextMenuReaction($event)" (reply)="onContextMenuReply($event)"
+  (copy)="onContextMenuCopy($event)" (delete)="onContextMenuDelete($event)" (closed)="onContextMenuClosed()">
+</app-message-context-menu>
+
+<!-- Reaction Picker -->
+<app-reaction-picker [isVisible]="reactionPicker.isVisible" [position]="reactionPicker.position"
+  [message]="reactionPicker.message" (reactionSelected)="onReactionSelected($event)"
+  (closed)="onReactionPickerClosed()">
+</app-reaction-picker>

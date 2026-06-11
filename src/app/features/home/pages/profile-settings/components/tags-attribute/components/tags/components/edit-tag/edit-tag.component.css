@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  background-color: var(--color-bg-secondary);
+}
+
+:host-context(.dark) {
+  background-color: var(--color-bg-secondary);
+}
+

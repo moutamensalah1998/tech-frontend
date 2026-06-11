@@ -1,0 +1,117 @@
+<div [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="md:col-span-1">
+    <label for="templateName"
+      class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+      'broadcast.createTemplate.basicInfo.templateName' | translate }} <span
+        class="text-danger dark:text-danger-dark">{{ 'broadcast.createTemplate.basicInfo.templateNameRequired' |
+        translate }}</span></label>
+    <input id="templateName" type="text" formControlName="templateName"
+      class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary"
+      [placeholder]="'broadcast.createTemplate.basicInfo.templateNamePlaceholder' | translate" />
+    <div *ngIf="getFieldError('templateName')" class="mt-1 text-sm text-danger dark:text-danger-dark">{{
+      getFieldError('templateName') }}</div>
+    <p class="mt-1 text-xs text-text-tertiary dark:text-dark-text-tertiary">{{
+      'broadcast.createTemplate.basicInfo.templateNameHint' | translate }}</p>
+  </div>
+
+  <div class="md:col-span-1">
+    <label for="category" class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+      'broadcast.createTemplate.basicInfo.category' | translate }} <span class="text-danger dark:text-danger-dark">{{
+        'broadcast.createTemplate.basicInfo.categoryRequired' | translate }}</span></label>
+    <select id="category" formControlName="category"
+      class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary transition-colors">
+      <option value="" disabled>{{ 'broadcast.createTemplate.basicInfo.categoryPlaceholder' | translate }}</option>
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+    <div *ngIf="getFieldError('category')" class="mt-1 text-sm text-danger dark:text-danger-dark">{{
+      getFieldError('category') }}</div>
+
+    <div class="mt-1 text-xs" [ngSwitch]="form.get('category')?.value">
+      <p *ngSwitchCase="'Marketing'" class="text-green-600 dark:text-green-400 flex items-center">
+        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        {{ 'broadcast.createTemplate.basicInfo.categoryMarketingHint' | translate }}
+      </p>
+      <p *ngSwitchCase="'Authentication'" class="text-amber-600 dark:text-amber-400 flex items-center">
+        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.98-.833-2.75 0L4.064 16.5c-.77.833.192 2.5 1.732 2.5z">
+          </path>
+        </svg>
+        {{ 'broadcast.createTemplate.basicInfo.categoryAuthHint' | translate }}
+      </p>
+      <p *ngSwitchCase="'Utility'" class="text-blue-600 dark:text-blue-400 flex items-center">
+        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {{ 'broadcast.createTemplate.basicInfo.categoryUtilityHint' | translate }}
+      </p>
+      <p *ngSwitchDefault class="text-text-tertiary dark:text-dark-text-tertiary">{{
+        'broadcast.createTemplate.basicInfo.categoryDefaultHint' | translate }}</p>
+    </div>
+  </div>
+
+  <div class="md:col-span-1">
+    <label for="language" class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">{{
+      'broadcast.createTemplate.basicInfo.language' | translate }} <span class="text-danger dark:text-danger-dark">{{
+        'broadcast.createTemplate.basicInfo.languageRequired' | translate }}</span></label>
+    <select id="language" formControlName="language"
+      class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary transition-colors">
+      <option value="" disabled>{{ 'broadcast.createTemplate.basicInfo.languagePlaceholder' | translate }}</option>
+      <option *ngFor="let lang of languages" [value]="lang.code">{{ lang.name }}</option>
+    </select>
+    <div *ngIf="getFieldError('language')" class="mt-1 text-sm text-danger dark:text-danger-dark">{{
+      getFieldError('language') }}</div>
+  </div>
+</div>
+
+<div *ngIf="form.get('category')?.value" class="mt-6 p-4 rounded-lg border-l-4"
+  [class.border-green-400]="form.get('category')?.value === 'Marketing'"
+  [class.bg-green-50]="form.get('category')?.value === 'Marketing'"
+  [class.border-amber-400]="form.get('category')?.value === 'Authentication'"
+  [class.bg-amber-50]="form.get('category')?.value === 'Authentication'"
+  [class.border-blue-400]="form.get('category')?.value === 'Utility'"
+  [class.bg-blue-50]="form.get('category')?.value === 'Utility'">
+  <div [ngSwitch]="form.get('category')?.value">
+    <div *ngSwitchCase="'Marketing'">
+      <h4 class="text-sm font-semibold text-green-800 dark:text-green-300 mb-2">{{
+        'broadcast.createTemplate.basicInfo.categoryInfo.marketing.title' | translate }}</h4>
+      <ul class="text-sm text-green-700 dark:text-green-200 space-y-1">
+        <li class="flex items-start"><span class="text-green-500 dark:text-green-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.marketing.item1' | translate }}</li>
+        <li class="flex items-start"><span class="text-green-500 dark:text-green-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.marketing.item2' | translate }}</li>
+        <li class="flex items-start"><span class="text-green-500 dark:text-green-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.marketing.item3' | translate }}</li>
+      </ul>
+    </div>
+    <div *ngSwitchCase="'Authentication'">
+      <h4 class="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-2">{{
+        'broadcast.createTemplate.basicInfo.categoryInfo.authentication.title' | translate }}</h4>
+      <ul class="text-sm text-amber-700 dark:text-amber-200 space-y-1">
+        <li class="flex items-start"><span class="text-amber-500 dark:text-amber-400 mr-2">-</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.authentication.item1' | translate }}</li>
+        <li class="flex items-start"><span class="text-amber-500 dark:text-amber-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.authentication.item2' | translate }}</li>
+        <li class="flex items-start"><span class="text-amber-500 dark:text-amber-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.authentication.item3' | translate }}</li>
+      </ul>
+    </div>
+    <div *ngSwitchCase="'Utility'">
+      <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-2">{{
+        'broadcast.createTemplate.basicInfo.categoryInfo.utility.title' | translate }}</h4>
+      <ul class="text-sm text-blue-700 dark:text-blue-200 space-y-1">
+        <li class="flex items-start"><span class="text-blue-500 dark:text-blue-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.utility.item1' | translate }}</li>
+        <li class="flex items-start"><span class="text-blue-500 dark:text-blue-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.utility.item2' | translate }}</li>
+        <li class="flex items-start"><span class="text-danger dark:text-danger-dark mr-2">-</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.utility.item3' | translate }}</li>
+        <li class="flex items-start"><span class="text-blue-500 dark:text-blue-400 mr-2">+</span>{{
+          'broadcast.createTemplate.basicInfo.categoryInfo.utility.item4' | translate }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

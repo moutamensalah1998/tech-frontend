@@ -1,0 +1,76 @@
+<!-- Top Toolbar with Controls -->
+<div class="flex-1 mb-6 mt-2 h-[2%] flex justify-between items-center">
+  <!-- Left side - Zoom Controls, Undo/Redo, and First Node Status -->
+  <div class="flex items-center gap-4">
+    <app-zoom-controls
+      [config]="zoomConfig"
+      (zoomChange)="onZoomChange($event)">
+    </app-zoom-controls>
+
+    <!-- Undo/Redo Buttons -->
+    <div class="flex items-center gap-2 bg-surface dark:bg-dark-surface rounded-lg border border-border dark:border-dark-border shadow-sm dark:shadow-dark-sm px-2 py-1">
+      <button
+        (click)="onUndo()"
+        [disabled]="!undoRedoState.canUndo"
+        [title]="'chatbot.builder.toolbar.undo' | translate"
+        class="p-1 rounded hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        type="button">
+        <span class="material-icons text-lg text-text-primary dark:text-dark-text-primary">undo</span>
+      </button>
+      <button
+        (click)="onRedo()"
+        [disabled]="!undoRedoState.canRedo"
+        [title]="'chatbot.builder.toolbar.redo' | translate"
+        class="p-1 rounded hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        type="button">
+        <span class="material-icons text-lg text-text-primary dark:text-dark-text-primary">redo</span>
+      </button>
+    </div>
+
+    <!-- Grid Toggle -->
+    <button
+      (click)="onToggleGrid()"
+      [title]="(gridConfig.enabled ? 'chatbot.builder.toolbar.disableGridSnapping' : 'chatbot.builder.toolbar.enableGridSnapping') | translate"
+      [class.bg-primary]="gridConfig.enabled"
+      [class.dark:bg-primary-dark]="gridConfig.enabled"
+      [class.text-white]="gridConfig.enabled"
+      [class.bg-surface]="!gridConfig.enabled"
+      [class.dark:bg-dark-surface]="!gridConfig.enabled"
+      [class.text-text-primary]="!gridConfig.enabled"
+      [class.dark:text-dark-text-primary]="!gridConfig.enabled"
+      class="px-3 py-1.5 rounded-lg border border-border dark:border-dark-border shadow-sm dark:shadow-dark-sm hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors"
+      type="button">
+      <span class="material-icons text-lg">grid_on</span>
+    </button>
+
+    <!-- First Node Status Indicator -->
+    <div
+      class="bg-surface dark:bg-dark-surface rounded-lg px-3 py-2 border border-border dark:border-dark-border shadow-sm dark:shadow-dark-sm">
+      <div class="flex items-center gap-2 text-sm">
+        <span
+          class="material-icons text-success dark:text-success-dark text-base">play_arrow</span>
+        <span class="text-text-primary dark:text-dark-text-primary">{{ 'chatbot.builder.toolbar.startingNode' | translate }}</span>
+        <span class="font-medium text-success dark:text-success-dark"
+          *ngIf="firstNodeTitle; else noFirstNode">
+          {{ firstNodeTitle }}
+        </span>
+        <ng-template #noFirstNode>
+          <span class="text-danger dark:text-danger-dark font-medium">{{ 'chatbot.builder.toolbar.noneSelected' | translate }}</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right side - Add Node Menu Toggle with dropdown -->
+  <div class="relative">
+    <button
+      (click)="onAddNodeClick($event)"
+      class="flex w-auto items-center px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition z-50"
+      [title]="'chatbot.builder.toolbar.addNode' | translate"
+      type="button">
+      <span class="material-icons text-lg mr-2">add</span>
+      {{ 'chatbot.builder.toolbar.addNode' | translate }}
+    </button>
+  </div>
+</div>
+

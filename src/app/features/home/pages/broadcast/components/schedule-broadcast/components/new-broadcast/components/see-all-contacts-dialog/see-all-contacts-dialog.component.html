@@ -1,0 +1,250 @@
+<!-- See All Selected Contacts Dialog -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <!-- Dialog Container -->
+  <div
+    class="bg-surface dark:bg-dark-surface rounded-xl shadow-2xl dark:shadow-dark-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold">{{ 'broadcast.create.recipients.seeAll.title' | translate }}</h2>
+          <p class="text-blue-100 dark:text-blue-200 mt-1">{{ 'broadcast.create.recipients.seeAll.subtitle' |
+            translate:{count:
+            data.contacts.length} }}</p>
+        </div>
+        <button (click)="closeDialog()"
+          class="text-white hover:text-blue-100 transition-colors p-2 rounded-full hover:bg-white/10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Controls -->
+    <div class="p-6 bg-surface-secondary dark:bg-dark-surface-secondary border-b border-border dark:border-dark-border">
+      <div class="flex items-center justify-between gap-4">
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-md">
+          <input type="text" [placeholder]="'broadcast.create.recipients.seeAll.searchPlaceholder' | translate"
+            [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)"
+            class="w-full pl-10 pr-4 py-3 border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" />
+          <svg
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-tertiary dark:text-dark-text-tertiary"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <button *ngIf="searchTerm" (click)="clearSearch()"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-tertiary dark:text-dark-text-tertiary hover:text-text-secondary dark:hover:text-dark-text-secondary">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Summary Info -->
+        <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+          {{ 'broadcast.create.recipients.seeAll.viewingSummary' | translate:{filtered: filteredContacts.length, total:
+          data.contacts.length} }}
+          <span *ngIf="searchTerm" class="text-text-tertiary dark:text-dark-text-tertiary ml-2">
+            ({{ 'broadcast.create.recipients.seeAll.filteredBy' | translate:{term: searchTerm} }})
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-h-[calc(95vh-200px)] overflow-y-auto">
+      <!-- Contact Table -->
+      <div class="bg-surface dark:bg-dark-surface">
+        <div class="overflow-x-auto">
+          <table class="w-full divide-y divide-border dark:divide-dark-border">
+            <thead class="bg-surface-secondary dark:bg-dark-surface-secondary sticky top-0 z-10">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">#
+                </th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.create.contactSelection.table.contact' | translate }}</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.create.contactSelection.table.phoneNumber' | translate }}</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.create.contactSelection.table.status' | translate }}</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.create.contactSelection.table.permissions' | translate }}</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.create.contactSelection.table.tags' | translate }}</th>
+                <th class="px-6 py-4 text-center text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+                  'broadcast.common.actions' |
+                  translate }}</th>
+              </tr>
+            </thead>
+            <tbody class="bg-surface dark:bg-dark-surface divide-y divide-border dark:divide-dark-border">
+              <tr *ngFor="let contact of filteredContacts; trackBy: trackByContactId; let i = index"
+                class="hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors duration-200">
+
+                <!-- Row Number -->
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-sm text-text-tertiary dark:text-dark-text-tertiary font-medium">
+                  {{getRowNumber(i)}}
+                </td>
+
+                <!-- Contact Info -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-10 h-10 bg-gradient-to-br from-primary to-primary-hover dark:from-primary-dark dark:to-primary rounded-full flex items-center justify-center text-white font-medium text-sm">
+                      {{getContactInitials(contact.name)}}
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-text-primary dark:text-dark-text-primary">{{contact.name}}
+                      </div>
+                      <div class="text-xs text-text-tertiary dark:text-dark-text-tertiary">{{ 'broadcast.common.id' |
+                        translate }}: {{contact.id}}</div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Phone Number -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-text-primary dark:text-dark-text-primary font-mono">{{contact.country_code}}
+                    {{contact.phone_number}}</div>
+                </td>
+
+                <!-- Status -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
+                          'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300': contact.status === 'valid',
+                          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': contact.status === 'invalid',
+                          'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300': contact.status !== 'valid' && contact.status !== 'invalid'
+                        }">
+                    <div class="w-1.5 h-1.5 rounded-full mr-1.5" [ngClass]="{
+                           'bg-green-500': contact.status === 'valid',
+                           'bg-red-500': contact.status === 'invalid',
+                           'bg-gray-500': contact.status !== 'valid' && contact.status !== 'invalid'
+                         }"></div>
+                    {{contact.status | titlecase}}
+                  </span>
+                </td>
+
+                <!-- Permissions -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-3 text-xs">
+                    <span class="flex items-center"
+                      [ngClass]="{'text-green-600 dark:text-green-400': contact.allow_broadcast, 'text-red-600 dark:text-red-400': !contact.allow_broadcast}">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd" *ngIf="contact.allow_broadcast"></path>
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clip-rule="evenodd" *ngIf="!contact.allow_broadcast"></path>
+                      </svg>
+                      {{ 'broadcast.create.contactSelection.table.permission.broadcast' | translate }}
+                    </span>
+                    <span class="flex items-center"
+                      [ngClass]="{'text-green-600 dark:text-green-400': contact.allow_sms, 'text-red-600 dark:text-red-400': !contact.allow_sms}">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd" *ngIf="contact.allow_sms"></path>
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clip-rule="evenodd" *ngIf="!contact.allow_sms"></path>
+                      </svg>
+                      {{ 'broadcast.create.contactSelection.table.permission.sms' | translate }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Tags -->
+                <td class="px-6 py-4">
+                  <div class="flex flex-wrap gap-1 max-w-xs">
+                    <span *ngFor="let tag of contact.tag_links; let i = index" [class.hidden]="i >= 2"
+                      class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                      {{tag.tag?.name}}
+                    </span>
+                    <span *ngIf="contact.tag_links!.length > 2"
+                      class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                      +{{contact.tag_links.length - 2}}
+                    </span>
+                    <span *ngIf="!contact.tag_links || contact.tag_links.length === 0"
+                      class="text-xs text-text-tertiary dark:text-dark-text-tertiary italic">
+                      {{ 'broadcast.create.recipients.seeAll.noTags' | translate }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Remove Action -->
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                  <button (click)="removeContact(contact)"
+                    class="inline-flex items-center px-3 py-1.5 text-sm text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-lg border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700"
+                    [title]="'broadcast.create.recipients.seeAll.removeAction' | translate">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                      </path>
+                    </svg>
+                    {{ 'broadcast.common.remove' | translate }}
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Empty State - No Search Results -->
+              <tr *ngIf="filteredContacts.length === 0 && data.contacts.length > 0">
+                <td colspan="7" class="px-6 py-12 text-center text-text-secondary dark:text-dark-text-secondary">
+                  <div class="flex flex-col items-center">
+                    <svg class="w-12 h-12 text-text-tertiary dark:text-dark-text-tertiary mb-4" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <p class="text-lg font-medium">{{ 'broadcast.create.contactSelection.noContacts' | translate }}</p>
+                    <p class="text-sm">{{ 'broadcast.create.contactSelection.adjustSearch' | translate }}</p>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Empty State - No Contacts Selected -->
+              <tr *ngIf="data.contacts.length === 0">
+                <td colspan="7" class="px-6 py-12 text-center text-text-secondary dark:text-dark-text-secondary">
+                  <div class="flex flex-col items-center">
+                    <svg class="w-12 h-12 text-text-tertiary dark:text-dark-text-tertiary mb-4" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.196-2.121M17 20v-2a3 3 0 00-5.196-2.121M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.196-2.121M7 20v-2m0 0v-5a2 2 0 012-2h6a2 2 0 012 2v5m-8 0h8m-8 0H2m8 0v2m0-2a2 2 0 100-4m0 4a2 2 0 100-4">
+                      </path>
+                    </svg>
+                    <p class="text-lg font-medium">{{ 'broadcast.create.recipients.seeAll.noContactsSelected' |
+                      translate }}</p>
+                    <p class="text-sm">{{ 'broadcast.create.recipients.seeAll.goBackMessage' | translate }}</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="bg-surface-secondary dark:bg-dark-surface-secondary px-6 py-5 border-t border-border dark:border-dark-border">
+      <div class="flex items-center justify-between">
+        <!-- Summary -->
+        <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+          <span class="font-medium text-primary dark:text-primary-dark">{{data.contacts.length}}</span>
+          {{ 'broadcast.create.recipients.seeAll.footerSummary' | translate }}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-3">
+          <button (click)="closeDialog()"
+            class="px-6 py-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-secondary dark:text-dark-text-secondary rounded-lg hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated transition-colors font-medium">
+            {{ 'broadcast.common.close' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

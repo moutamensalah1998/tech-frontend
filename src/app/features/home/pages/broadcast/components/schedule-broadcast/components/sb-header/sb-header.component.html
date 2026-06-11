@@ -1,0 +1,51 @@
+<div
+  class="bg-surface dark:bg-dark-surface rounded-lg shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border mb-6">
+  <div class="px-8 py-6 border-b border-border dark:border-dark-border">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+        <h1 class="text-3xl font-bold text-text-primary dark:text-dark-text-primary">{{ 'broadcast.scheduled.title' |
+          translate }}</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <button (click)="newClick.emit()"
+          class="bg-primary dark:bg-primary-dark hover:bg-primary-hover dark:hover:bg-primary text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark-surface">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          {{ 'broadcast.scheduled.newBroadcast' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Sort Bar -->
+  <div
+    class="px-8 py-4 bg-surface-secondary dark:bg-dark-surface-secondary border-b border-border dark:border-dark-border">
+    <div class="flex items-center justify-between gap-4">
+      <!-- Search -->
+      <div class="relative flex-1 max-w-md">
+        <input type="text" [placeholder]="'broadcast.scheduled.searchPlaceholder' | translate" [(ngModel)]="searchTerm"
+          (ngModelChange)="onInputChange($event)"
+          class="w-full border border-border dark:border-dark-border rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary" />
+        <svg class="w-5 h-5 text-text-tertiary dark:text-dark-text-tertiary absolute left-3 top-3" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-4.35-4.35m0 0A7.47 7.47 0 1010.53 3a7.47 7.47 0 006.12 13.65z"></path>
+        </svg>
+      </div>
+
+      <!-- Sort Filter -->
+      <div class="flex items-center gap-3">
+        <label class="text-text-secondary dark:text-dark-text-secondary font-medium">{{ 'broadcast.common.filterBy' |
+          translate }}:</label>
+        <select [ngModel]="sortedBy" (ngModelChange)="onSortChange($event)"
+          class="border border-border dark:border-dark-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary min-w-[140px]">
+          <option value="NONE">{{ 'broadcast.common.none' | translate }}</option>
+          <option value="ASCENDING">{{ 'broadcast.common.ascending' | translate }}</option>
+          <option value="DESCENDING">{{ 'broadcast.common.descending' | translate }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div
+  class="h-full flex flex-col bg-[#F5F6FF] dark:bg-dark-surface border border-[#E6E8FF] dark:border-dark-border shadow-md dark:shadow-dark-md sticky top-6 p-6 rounded-xl">
+  <!-- Title -->
+  <div class="mb-20">
+    <h1 class="text-2xl lg:text-3xl font-bold text-black dark:text-dark-text-primary select-none">Contacts</h1>
+    <p class="text-black dark:text-dark-text-secondary text-sm select-none">Contact list stores the numbers you've
+      interacted with.</p>
+  </div>
+
+  <!-- Search -->
+  <div class="relative w-full select-none mb-10">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+      <span class="text-black dark:text-dark-text-tertiary text-lg">🔍</span>
+    </div>
+    <input type="text" placeholder="Search contacts..." [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      class="w-full border border-gray-300 dark:border-dark-border rounded-lg pl-10 pr-3 py-2.5 text-base text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-dark-surface-secondary placeholder-gray-500 dark:placeholder-dark-text-tertiary" />
+  </div>
+
+  <!-- Sort By -->
+  <div class="flex items-center gap-3 mb-60 select-none">
+    <p class="text-black dark:text-dark-text-primary font-medium whitespace-nowrap select-none">Sort by:</p>
+    <select [(ngModel)]="selectedSort" (ngModelChange)="onSortedByChange($event)"
+      class="w-44 bg-white dark:bg-dark-surface-secondary border border-gray-300 dark:border-dark-border text-black dark:text-dark-text-primary rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+      <option value="">None</option>
+      <option value="ASCENDING">Ascending</option>
+      <option value="DESCENDING">Descending</option>
+    </select>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-col sm:flex-row w-full">
+    <button (click)="addContactDialogHandler()"
+      class="w-full text-white px-5 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 bg-indigo-300 dark:bg-indigo-600 border border-[#E6E8FF] dark:border-indigo-500 hover:bg-[#4A5BD1] dark:hover:bg-indigo-500 transition-colors duration-200 focus:outline-none">
+      <span class="text-xl font-bold">+</span>
+      Add Contact
+    </button>
+  </div>
+</div>
+
+@if (addContactDialog) {
+<app-contact-header-add-contact-dialog
+  (closeDialog)="addContactDialogHandler()"></app-contact-header-add-contact-dialog>
+}

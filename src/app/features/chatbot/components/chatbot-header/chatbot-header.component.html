@@ -1,0 +1,15 @@
+<div class="mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-text-primary dark:text-dark-text-primary">{{ 'chatbot.list.title' | translate }}</h1>
+      <p class="text-text-secondary dark:text-dark-text-secondary mt-1">{{ 'chatbot.list.subtitle' | translate }}</p>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button
+        (click)="addChatbot()"
+        class="px-4 py-2 bg-primary dark:bg-primary-dark hover:bg-primary-hover dark:hover:bg-primary text-white rounded-lg font-medium transition-colors">
+        {{ 'chatbot.list.addChatbot' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

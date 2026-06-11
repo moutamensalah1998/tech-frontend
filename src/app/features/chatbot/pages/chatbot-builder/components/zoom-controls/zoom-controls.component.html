@@ -1,0 +1,22 @@
+    <div class="flex items-center gap-2 mb-4">
+      <button
+        (click)="zoomOut()"
+        [disabled]="config.level <= config.min"
+        class="px-3 py-1 bg-surface-tertiary dark:bg-dark-surface-tertiary rounded hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-text-primary dark:text-dark-text-primary">
+        -
+      </button>
+      <button
+        (click)="resetZoom()"
+        class="px-3 py-1 bg-surface-tertiary dark:bg-dark-surface-tertiary rounded hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated transition-colors text-text-primary dark:text-dark-text-primary">
+        Reset
+      </button>
+      <button
+        (click)="zoomIn()"
+        [disabled]="config.level >= config.max"
+        class="px-3 py-1 bg-surface-tertiary dark:bg-dark-surface-tertiary rounded hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-text-primary dark:text-dark-text-primary">
+        +
+      </button>
+      <span class="ml-2 text-text-primary dark:text-dark-text-primary">
+        {{ (config.level * 100) | number : "1.0-0" }}%
+      </span>
+    </div>

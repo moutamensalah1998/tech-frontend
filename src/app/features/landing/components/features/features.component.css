@@ -1,0 +1,12 @@
+   .feature-card {
+        @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-500;
+    }
+    .feature-icon {
+        @apply flex items-center justify-center h-12 w-12 rounded-lg bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 mb-4;
+    }
+    .feature-title {
+        @apply text-xl font-semibold text-gray-900 dark:text-white;
+    }
+    .feature-description {
+        @apply mt-2 text-gray-600 dark:text-gray-300;
+    }

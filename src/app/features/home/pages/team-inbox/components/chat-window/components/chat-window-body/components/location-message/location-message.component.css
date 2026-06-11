@@ -1,0 +1,11 @@
+  .location-message {
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .location-message:hover {
+      transform: translateY(-1px);
+    }
+
+    .maps-link:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }

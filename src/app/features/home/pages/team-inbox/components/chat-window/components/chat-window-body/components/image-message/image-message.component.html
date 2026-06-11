@@ -1,0 +1,24 @@
+    <div
+      class="rounded-lg p-3 max-w-xs shadow-md"
+      [ngClass]="
+        message.is_from_contact
+          ? 'bg-white text-gray-900'
+          : 'bg-green-100 text-gray-900'
+      "
+    >
+      <div class="text-[10px] text-gray-400 mb-1">
+        {{ message.message_type }}
+      </div>
+      <img
+        [src]="message.content?.cdn_url"
+        alt="image"
+        class="rounded mb-1 max-w-full max-h-48 cursor-pointer hover:opacity-80 transition-opacity"
+        (click)="onImageClick()"
+      />
+      <div
+        *ngIf="message.content?.caption"
+        class="text-xs text-gray-600 mt-1"
+      >
+        {{ message.content.caption }}
+      </div>
+    </div>

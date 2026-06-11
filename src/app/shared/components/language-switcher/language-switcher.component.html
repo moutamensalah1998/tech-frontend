@@ -1,0 +1,13 @@
+<div class="flex items-center space-x-2 rtl:space-x-reverse">
+    <button (click)="switchLanguage('en')" [class.font-bold]="currentLang === 'en'"
+        [class.text-blue-600]="currentLang === 'en'" [class.dark:text-blue-400]="currentLang === 'en'"
+        class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
+        English
+    </button>
+    <span class="text-gray-300 dark:text-gray-600">|</span>
+    <button (click)="switchLanguage('ar')" [class.font-bold]="currentLang === 'ar'"
+        [class.text-blue-600]="currentLang === 'ar'" [class.dark:text-blue-400]="currentLang === 'ar'"
+        class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 font-cairo">
+        العربية
+    </button>
+</div>

@@ -1,0 +1,134 @@
+<div class="p-6 max-w-lg w-full bg-surface dark:bg-dark-surface rounded-lg">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-semibold text-text-primary dark:text-dark-text-primary">{{
+      'chatDetails.attributesDialog.title' | translate }}</h2>
+    <button (click)="onClose()"
+      class="text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary transition-colors">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="mb-4">
+    <p class="text-sm text-text-secondary dark:text-dark-text-secondary mb-2">{{
+      'chatDetails.attributesDialog.attributesFor' | translate }} <span
+        class="font-medium text-text-primary dark:text-dark-text-primary">{{ data.contactName }}</span></p>
+  </div>
+
+  <div class="space-y-4 max-h-96 overflow-y-auto">
+    <div *ngIf="data.attributes.length === 0" class="text-center py-8">
+      <div class="text-text-tertiary dark:text-dark-text-tertiary mb-2">
+        <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+      </div>
+      <p class="text-text-secondary dark:text-dark-text-secondary">{{ 'chatDetails.attributesDialog.noAttributesFound' |
+        translate }}</p>
+    </div>
+
+    <div *ngIf="data.attributes.length > 0" class="space-y-3">
+      <div *ngFor="let attribute of data.attributes"
+        class="p-4 bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg border border-border dark:border-dark-border">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-2">
+              <div class="w-2 h-2 bg-primary dark:bg-primary-dark rounded-full"></div>
+              <span class="text-sm font-semibold text-primary dark:text-primary-dark">{{ attribute.name }}</span>
+            </div>
+
+            <!-- Display attribute value -->
+            <div *ngIf="editingAttributeId !== attribute.id"
+              class="text-sm text-text-primary dark:text-dark-text-primary">
+              {{ attribute.value }}
+            </div>
+
+            <!-- Edit form -->
+            <div *ngIf="editingAttributeId === attribute.id" class="space-y-2">
+              <form [formGroup]="editForm" (ngSubmit)="saveEditAttribute(attribute)">
+                <div class="space-y-2">
+                  <div>
+                    <input type="text" formControlName="name"
+                      class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent placeholder-text-tertiary dark:placeholder-dark-text-tertiary"
+                      [placeholder]="'chatDetails.attributesDialog.enterAttributeName' | translate">
+                    <div *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched"
+                      class="text-danger dark:text-danger-dark text-xs mt-1">
+                      <div *ngIf="editForm.get('name')?.errors?.['required']">{{
+                        'chatDetails.attributesDialog.attributeNameRequired' | translate }}</div>
+                      <div *ngIf="editForm.get('name')?.errors?.['minlength']">{{
+                        'chatDetails.attributesDialog.attributeNameMinLength' | translate }}</div>
+                      <div *ngIf="editForm.get('name')?.errors?.['maxlength']">{{
+                        'chatDetails.attributesDialog.attributeNameMaxLength' | translate }}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <input type="text" formControlName="value"
+                      class="w-full px-3 py-2 border border-border dark:border-dark-border rounded-md bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent placeholder-text-tertiary dark:placeholder-dark-text-tertiary"
+                      [placeholder]="'chatDetails.attributesDialog.enterAttributeValue' | translate">
+                    <div *ngIf="editForm.get('value')?.invalid && editForm.get('value')?.touched"
+                      class="text-danger dark:text-danger-dark text-xs mt-1">
+                      <div *ngIf="editForm.get('value')?.errors?.['required']">{{
+                        'chatDetails.attributesDialog.attributeValueRequired' | translate }}</div>
+                      <div *ngIf="editForm.get('value')?.errors?.['minlength']">{{
+                        'chatDetails.attributesDialog.attributeValueMinLength' | translate }}</div>
+                      <div *ngIf="editForm.get('value')?.errors?.['maxlength']">{{
+                        'chatDetails.attributesDialog.attributeValueMaxLength' | translate }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex space-x-2 mt-2">
+                  <button type="submit" [disabled]="!editForm.valid || loading"
+                    class="px-3 py-1 bg-primary dark:bg-primary-dark text-white text-xs rounded hover:bg-primary-hover dark:hover:bg-primary disabled:opacity-50">
+                    {{ loading ? ('chatDetails.attributesDialog.saving' | translate) :
+                    ('chatDetails.attributesDialog.save' | translate) }}
+                  </button>
+                  <button type="button" (click)="cancelEditAttribute()"
+                    class="px-3 py-1 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary text-xs rounded hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated border border-border dark:border-dark-border">
+                    {{ 'chatDetails.attributesDialog.cancel' | translate }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div *ngIf="editingAttributeId !== attribute.id" class="flex space-x-1 ml-2">
+            <button (click)="startEditAttribute(attribute)"
+              class="p-1 text-text-secondary dark:text-dark-text-secondary hover:text-primary dark:hover:text-primary-dark transition-colors"
+              [attr.title]="'chatDetails.attributesDialog.editAttribute' | translate">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+              </svg>
+            </button>
+            <button (click)="deleteAttribute(attribute)"
+              class="p-1 text-text-secondary dark:text-dark-text-secondary hover:text-danger dark:hover:text-danger-dark transition-colors"
+              [attr.title]="'chatDetails.attributesDialog.deleteAttribute' | translate">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                </path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 pt-4 border-t border-border dark:border-dark-border">
+    <div class="flex space-x-3">
+      <button (click)="onClose()"
+        class="flex-1 px-4 py-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary rounded-lg hover:bg-surface-elevated dark:hover:bg-dark-surface-elevated transition-colors border border-border dark:border-dark-border">
+        {{ 'chatDetails.attributesDialog.close' | translate }}
+      </button>
+      <button (click)="onAddNewAttribute()"
+        class="flex-1 px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:from-primary-hover hover:to-primary transition-colors">
+        {{ 'chatDetails.attributesDialog.addNewAttribute' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

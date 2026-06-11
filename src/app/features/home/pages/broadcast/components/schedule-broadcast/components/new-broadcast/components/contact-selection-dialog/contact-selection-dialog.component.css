@@ -1,0 +1,107 @@
+/* Contact Selection Dialog Styles */
+.contact-selection-dialog {
+  padding: 0 !important;
+  max-width: none !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.contact-selection-dialog .mat-dialog-container {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Custom scrollbar for contact list */
+.contact-selection-dialog ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contact-selection-dialog ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.contact-selection-dialog ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.contact-selection-dialog ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animation for contact cards */
+.contact-selection-dialog .contact-card {
+  transition: all 0.2s ease;
+}
+
+.contact-selection-dialog .contact-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bar animation */
+.contact-selection-dialog .progress-bar {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Checkbox styling */
+.contact-selection-dialog input[type="checkbox"] {
+  transition: all 0.2s ease;
+}
+
+.contact-selection-dialog input[type="checkbox"]:checked {
+  transform: scale(1.1);
+}
+
+/* Button hover effects */
+.contact-selection-dialog button {
+  transition: all 0.2s ease;
+}
+
+.contact-selection-dialog button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Badge animations */
+.contact-selection-dialog .status-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Selection indicator animation */
+.contact-selection-dialog .selection-indicator {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+}

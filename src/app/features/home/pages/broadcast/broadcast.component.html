@@ -1,0 +1,10 @@
+<app-loader [isLoading]="initialLoading" gifSrc="assets/features/loader.gif" message="Fetching data..." type="gif"
+  theme="dark" size="large">
+</app-loader>
+
+<app-shared-sidebar [title]="sidebarTitle" [subtitle]="sidebarSubtitle" [navigationItems]="navItems"
+  [(isOpen)]="isSidebarOpen">
+
+  <!-- Actual content -->
+  <router-outlet></router-outlet>
+</app-shared-sidebar>

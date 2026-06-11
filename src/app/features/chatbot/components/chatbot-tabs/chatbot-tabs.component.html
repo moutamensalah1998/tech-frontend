@@ -1,0 +1,24 @@
+<div class="border-b border-border dark:border-dark-border mb-6">
+  <nav class="-mb-px flex space-x-8">
+    <button [class]="'flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors ' + 
+              (activeTab === 'your-bots' 
+                ? 'border-success dark:border-success-dark text-success dark:text-success-dark' 
+                : 'border-transparent text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary hover:border-border dark:hover:border-dark-border')"
+      (click)="setActiveTab('your-bots')">
+      Your bots
+      <span class="ml-2 bg-success-light dark:bg-success-dark-light text-success dark:text-success-dark text-xs font-medium px-2 py-1 rounded-full">
+        5
+      </span>
+    </button>
+    <button [class]="'flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors ' + 
+              (activeTab === 'library' 
+                ? 'border-success dark:border-success-dark text-success dark:text-success-dark' 
+                : 'border-transparent text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary hover:border-border dark:hover:border-dark-border')"
+      (click)="setActiveTab('library')">
+      Library
+      <span class="ml-2 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary text-xs font-medium px-2 py-1 rounded-full">
+        9
+      </span>
+    </button>
+  </nav>
+</div>

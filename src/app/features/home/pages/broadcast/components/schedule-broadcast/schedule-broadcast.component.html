@@ -1,0 +1,20 @@
+<div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 bg-surface dark:bg-dark-surface min-h-screen relative">
+
+  <app-loader *ngIf="loading$ | async" type="gif" gifSrc="assets/features/loader.gif"
+    [message]="'broadcast.scheduled.loadingBroadcasts' | translate" theme="dark" size="large"
+    class="absolute inset-0 flex items-center justify-center z-50 bg-black/80">
+  </app-loader>
+
+  <sb-header (newClick)="onNewBroadcast()" (searchChange)="onSearchChanged($event)"
+    (sortChange)="onSortByChange($event)"></sb-header>
+
+  <sb-table [broadcasts]="(broadcasts$ | async) || []" [loading]="(loading$ | async) || false"
+    [error]="(error$ | async)" [deleteLoading]="(deleteLoading$ | async) || false" (view)="onViewBroadcast($event)"
+    (edit)="onEditBroadcast($event)" (retry)="onRetryBroadcast($event)" (duplicate)="onDuplicateBroadcast($event)"
+    (delete)="onDeleteBroadcast($event.id, $event.name)"></sb-table>
+
+  <div class="mt-6 sticky bottom-0 bg-surface dark:bg-dark-surface pb-4 backdrop-blur-sm z-20">
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" [limit]="limit"
+      (pageChange)="onPageChange($event)" (limitChange)="onLimitChange($event)"></app-pagination>
+  </div>
+</div>

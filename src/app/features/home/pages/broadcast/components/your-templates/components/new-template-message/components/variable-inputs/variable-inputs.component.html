@@ -1,0 +1,166 @@
+<div *ngIf="variables.length > 0"
+  class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/20 rounded-xl p-6 mt-6">
+  <div class="flex items-center mb-4">
+    <div class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center mr-3">
+      <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+        </path>
+      </svg>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold text-amber-800 dark:text-amber-300">{{ 'broadcast.createTemplate.variables.title'
+        | translate }}</h3>
+      <p class="text-sm text-amber-700 dark:text-amber-200/80">{{ 'broadcast.createTemplate.variables.subtitle' |
+        translate }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="hasAnyFormControls()">
+    <form [formGroup]="variableForm" class="space-y-6">
+      <div *ngFor="let fieldType of getFieldTypes()" class="space-y-4">
+        <h4
+          class="text-md font-semibold text-text-primary dark:text-dark-text-primary border-b border-border dark:border-dark-border pb-2">
+          {{ getFieldTypeLabel(fieldType) }} {{ 'broadcast.createTemplate.variables.variablesLabel' | translate }}</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let variable of getVariablesForFieldType(fieldType); trackBy: trackByVariable"
+            class="bg-surface dark:bg-dark-surface border border-amber-200 dark:border-amber-800/50 rounded-lg p-4 relative"
+            [class.ring-2]="isVariableUsedInMultipleFields(variable)"
+            [class.ring-blue-300]="isVariableUsedInMultipleFields(variable)"
+            [class.border-red-300]="isVariableEmpty(variable)" [class.bg-red-50]="isVariableEmpty(variable)">
+            <div *ngIf="isVariableUsedInMultipleFields(variable)"
+              class="absolute -top-2 -right-2 w-6 h-6 bg-primary dark:bg-primary-dark rounded-full flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                </path>
+              </svg>
+            </div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                  <span class="text-xs font-bold text-blue-600 dark:text-blue-400">V</span>
+                </div>
+                <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary font-medium">{{
+                  getFieldTypeLabel(variable.fieldType) }}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="w-4 h-4 rounded-full flex items-center justify-center"
+                  [class.bg-green-500]="!isVariableEmpty(variable) && hasFormControl(variable.id)"
+                  [class.bg-yellow-500]="!hasFormControl(variable.id)"
+                  [class.bg-red-500]="isVariableEmpty(variable) && hasFormControl(variable.id)">
+                  <span class="text-xs text-white">{{ !hasFormControl(variable.id) ? '?' : (isVariableEmpty(variable) ?
+                    '!' : '✓') }}</span>
+                </div>
+                <button *ngIf="!isAuthenticationTemplate" type="button" (click)="removeVariable(variable)"
+                  class="text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-400 text-xs p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  [class.bg-red-100]="isVariableUsedInMultipleFields(variable)"
+                  [title]="isVariableUsedInMultipleFields(variable) ? ('broadcast.createTemplate.variables.removeFromAll' | translate) : ('broadcast.createTemplate.variables.removeVariable' | translate)">X</button>
+              </div>
+            </div>
+            <div *ngIf="isVariableUsedInMultipleFields(variable)" class="mb-2">
+              <div
+                class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full inline-flex items-center">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                  </path>
+                </svg>
+                {{ getVariableDisplayInfo(variable) }}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="block text-xs font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+                'broadcast.createTemplate.variables.variableName' | translate }}</label>
+              <div class="relative">
+                <input type="text" [value]="variable.name" (input)="onVariableNameChange(variable, $event)"
+                  (blur)="validateVariableName(variable, $event)"
+                  class="w-full px-6 py-1 text-sm border border-border dark:border-dark-border rounded focus:ring-1 focus:ring-primary focus:border-primary font-mono text-center bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary"
+                  [placeholder]="'broadcast.createTemplate.variables.variableNamePlaceholder' | translate"
+                  [class.border-red-300]="!isValidName(variable.name)"
+                  [class.bg-red-50]="!isValidName(variable.name)" />
+                <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                  <span class="text-text-tertiary dark:text-dark-text-tertiary text-sm">&#123;&#123;</span>
+                </div>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <span class="text-text-tertiary dark:text-dark-text-tertiary text-sm">&#125;&#125;</span>
+                </div>
+              </div>
+              <div *ngIf="!isValidName(variable.name)" class="text-xs text-danger dark:text-danger-dark mt-1">{{
+                'broadcast.createTemplate.variables.variableNameHint' | translate }}</div>
+              <div *ngIf="isVariableUsedInMultipleFields(variable)"
+                class="text-xs text-blue-600 dark:text-blue-400 mt-1">{{
+                'broadcast.createTemplate.variables.variableNameMultiHint' | translate }}</div>
+            </div>
+            <div *ngIf="hasFormControl(variable.id)">
+              <label class="block text-xs font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
+                'broadcast.createTemplate.variables.value' | translate }} <span
+                  class="text-danger dark:text-danger-dark">{{ 'broadcast.createTemplate.variables.valueRequired' |
+                  translate }}</span><span *ngIf="isVariableUsedInMultipleFields(variable)"
+                  class="text-blue-600 dark:text-blue-400">{{ 'broadcast.createTemplate.variables.valueGlobal' |
+                  translate }}</span></label>
+              <input type="text" [formControlName]="variable.id" (input)="onVariableValueChange(variable, $event)"
+                class="w-full px-2 py-1 text-sm border border-border dark:border-dark-border rounded focus:ring-1 focus:ring-primary focus:border-primary bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary"
+                [class.border-red-300]="isVariableEmpty(variable)" [class.bg-red-50]="isVariableEmpty(variable)"
+                [placeholder]="('broadcast.createTemplate.variables.valuePlaceholder' | translate) + ' ' + variable.placeholder" />
+              <div *ngIf="variableForm.get(variable.id)?.invalid && variableForm.get(variable.id)?.touched"
+                class="text-xs text-danger dark:text-danger-dark mt-1">{{
+                'broadcast.createTemplate.variables.valueRequiredError' | translate }}</div>
+              <div *ngIf="isVariableEmpty(variable)" class="text-xs text-danger dark:text-danger-dark mt-1">{{
+                'broadcast.createTemplate.variables.valueNeededWarning' | translate }}</div>
+            </div>
+            <div *ngIf="!hasFormControl(variable.id)"
+              class="p-3 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800/20 rounded">
+              <label class="block text-xs font-medium text-yellow-800 dark:text-yellow-300 mb-1">{{
+                'broadcast.createTemplate.variables.value' | translate }} <span
+                  class="text-danger dark:text-danger-dark">{{ 'broadcast.createTemplate.variables.valueRequired' |
+                  translate }}</span> <span class="text-yellow-600 dark:text-yellow-400">({{
+                  'broadcast.createTemplate.variables.formControlLoading' | translate }})</span></label>
+              <input type="text" [value]="variable.value" (input)="onDirectVariableValueChange(variable, $event)"
+                class="w-full px-2 py-1 text-sm border border-yellow-300 dark:border-yellow-700 rounded focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-text-primary dark:text-dark-text-primary"
+                [placeholder]="('broadcast.createTemplate.variables.valuePlaceholder' | translate) + ' ' + variable.placeholder" />
+              <div class="text-xs text-yellow-600 dark:text-yellow-400 mt-1">{{
+                'broadcast.createTemplate.variables.formControlSyncing' | translate }}</div>
+              <button type="button" (click)="forceUpdateControls()"
+                class="mt-2 text-xs bg-yellow-200 dark:bg-yellow-800/40 hover:bg-yellow-300 dark:hover:bg-yellow-800/60 px-2 py-1 rounded text-yellow-900 dark:text-yellow-100">{{
+                'broadcast.createTemplate.variables.refreshControls' | translate }}</button>
+            </div>
+            <div class="mt-2 p-2 bg-surface-secondary dark:bg-dark-surface-secondary rounded text-xs">
+              <span class="text-text-secondary dark:text-dark-text-secondary">{{
+                'broadcast.createTemplate.variables.preview' | translate }} </span>
+              <span class="font-mono text-blue-600 dark:text-blue-400">{{ variable.placeholder }}</span>
+              <span class="text-text-secondary dark:text-dark-text-secondary"> - </span>
+              <span class="font-medium" [class.text-danger]="isVariableEmpty(variable)"
+                [class.text-text-primary]="!isVariableEmpty(variable)">{{ variable.value ||
+                ('broadcast.createTemplate.variables.previewEnterValue' | translate) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="!hasAnyFormControls()"
+    class="p-6 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800/20 rounded-lg text-center">
+    <div class="text-yellow-800 dark:text-yellow-300 mb-4">
+      <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.98-.833-2.75 0L4.064 16.5c-.77.833.192 2.5 1.732 2.5z">
+        </path>
+      </svg>
+      <h4 class="text-lg font-semibold">{{ 'broadcast.createTemplate.variables.formControlsLoading.title' | translate }}
+      </h4>
+    </div>
+    <p class="text-yellow-700 dark:text-yellow-400 mb-4">{{
+      'broadcast.createTemplate.variables.formControlsLoading.message' | translate }}</p>
+    <div class="space-y-2 text-sm text-yellow-600 dark:text-yellow-500">
+      <div>{{ 'broadcast.createTemplate.variables.formControlsLoading.variablesDetected' | translate }} {{
+        variables.length }}</div>
+      <div>{{ 'broadcast.createTemplate.variables.formControlsLoading.formControls' | translate }} {{
+        getFormControlCount() }}</div>
+    </div>
+    <button type="button" (click)="forceUpdateControls()"
+      class="mt-4 bg-yellow-200 dark:bg-yellow-800/40 hover:bg-yellow-300 dark:hover:bg-yellow-800/60 text-yellow-800 dark:text-yellow-100 px-4 py-2 rounded text-sm font-medium">{{
+      'broadcast.createTemplate.variables.formControlsLoading.forceRefresh' | translate }}</button>
+  </div>
+</div>

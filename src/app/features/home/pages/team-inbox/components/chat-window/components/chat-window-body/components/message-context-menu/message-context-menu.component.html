@@ -1,0 +1,23 @@
+  <div
+      *ngIf="isVisible"
+      class="context-menu"
+      [style.left.px]="position.x"
+      [style.top.px]="position.y">
+
+      <div class="context-menu-item" (click)="onReply()">
+        <svg class="context-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/>
+        </svg>
+        <span>Reply</span>
+      </div>
+
+      <div class="context-menu-item" (click)="onCopy()">
+        <svg class="context-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span>Copy</span>
+      </div>
+    </div>
+
+    <div *ngIf="isVisible" class="context-menu-backdrop" (click)="close()"></div>

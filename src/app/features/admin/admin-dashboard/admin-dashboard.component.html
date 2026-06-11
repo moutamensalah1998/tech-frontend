@@ -1,0 +1,154 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <!-- Background decorative elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      class="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-2xl opacity-60 animate-pulse">
+    </div>
+    <div
+      class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-100 dark:bg-indigo-900/20 rounded-full blur-2xl opacity-60 animate-pulse">
+    </div>
+  </div>
+
+  <div class="relative container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Admin Dashboard
+          </h1>
+          <p class="text-gray-600 dark:text-gray-300">
+            Manage your WhatsApp Business integration
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="p-6 lg:p-8">
+        <!-- WhatsApp Integration Section -->
+        <div class="max-w-2xl mx-auto">
+          <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full mb-4">
+              <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              WhatsApp Business Integration
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+              Connect your WhatsApp Business account to start managing conversations
+            </p>
+          </div>
+
+          <!-- HTTPS Warning (non-localhost HTTP) -->
+          <div *ngIf="!isHttpsOrLocalhost" 
+               class="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <div class="flex items-start text-sm text-yellow-700 dark:text-yellow-300">
+              <svg class="w-5 h-5 me-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l5.516 9.8c.75 1.333-.213 2.99-1.743 2.99H4.484c-1.53 0-2.493-1.657-1.743-2.99l5.516-9.8zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <p class="font-semibold mb-1">HTTPS Required</p>
+                <p>WhatsApp connection requires HTTPS. Please use HTTPS or access via localhost.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Connection Status -->
+          <div class="mb-6">
+            <ng-container *ngIf="isConnectedWhatsApp$ | async; else notConnectedWhatsApp">
+              <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 text-center">
+                <div class="flex items-center justify-center mb-3">
+                  <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-full">
+                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="text-lg font-semibold text-green-900 dark:text-green-100 mb-1">
+                  WhatsApp Connected
+                </h3>
+                <p class="text-sm text-green-700 dark:text-green-300">
+                  Your WhatsApp Business account is successfully connected
+                </p>
+              </div>
+            </ng-container>
+            <ng-template #notConnectedWhatsApp>
+              <div class="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg p-6 text-center">
+                <div class="flex items-center justify-center mb-3">
+                  <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full">
+                    <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  Not Connected
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Connect your WhatsApp Business account to get started
+                </p>
+                <button
+                  type="button"
+                  (click)="connectWhatsApp()"
+                  [disabled]="(isSigningUpWhatsApp$ | async) || !isHttpsOrLocalhost"
+                  class="inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-md hover:shadow-lg disabled:transform-none">
+                  <svg *ngIf="!(isSigningUpWhatsApp$ | async)" class="w-5 h-5 me-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                  <svg *ngIf="isSigningUpWhatsApp$ | async" class="animate-spin h-5 w-5 me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span *ngIf="!(isSigningUpWhatsApp$ | async)">Connect WhatsApp Business</span>
+                  <span *ngIf="isSigningUpWhatsApp$ | async">Connecting...</span>
+                </button>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- WhatsApp Success Message -->
+          <div *ngIf="whatsappSuccessMessage$ | async as message" 
+               class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div class="flex items-center text-sm text-green-700 dark:text-green-300">
+              <svg class="w-5 h-5 me-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div>{{ message }}</div>
+            </div>
+          </div>
+
+          <!-- WhatsApp Error Message -->
+          <div *ngIf="whatsappError$ | async as error" 
+               class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div class="flex items-start text-sm text-red-700 dark:text-red-300">
+              <svg class="w-5 h-5 me-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div class="flex-1">
+                <div *ngIf="error?.error === 'HTTPS_REQUIRED' || error?.error_description?.includes('HTTPS')" class="font-semibold mb-1">
+                  HTTPS Required
+                </div>
+                <div>{{ error?.error_description || error?.message || error?.error?.message || 'Failed to connect WhatsApp' }}</div>
+                <div *ngIf="error?.error === 'HTTPS_REQUIRED' || error?.error_description?.includes('HTTPS')" class="mt-2 text-xs">
+                  <strong>Solution:</strong> Access this page via HTTPS or use localhost for development.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

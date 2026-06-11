@@ -1,0 +1,93 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  <!-- Open Tickets Card -->
+  <div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+      <div class="w-12 h-12 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+        </svg>
+      </div>
+      <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary">{{ 'reports.overview.openTickets' | translate }}</h3>
+    </div>
+    <div *ngIf="loading$ | async" class="h-8">
+      <app-loader></app-loader>
+    </div>
+    <div *ngIf="error$ | async" class="text-sm text-red-600 dark:text-red-400">
+      {{ 'reports.error.loadFailed' | translate }}
+    </div>
+    <div *ngIf="!(loading$ | async) && !(error$ | async)">
+      <p class="text-3xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">
+        {{ (overview$ | async)?.open_tickets ?? 0 | number }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Pending Tickets Card -->
+  <div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+      <div class="w-12 h-12 bg-orange-100 dark:bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary">{{ 'reports.overview.pendingTickets' | translate }}</h3>
+    </div>
+    <div *ngIf="loading$ | async" class="h-8">
+      <app-loader></app-loader>
+    </div>
+    <div *ngIf="error$ | async" class="text-sm text-red-600 dark:text-red-400">
+      {{ 'reports.error.loadFailed' | translate }}
+    </div>
+    <div *ngIf="!(loading$ | async) && !(error$ | async)">
+      <p class="text-3xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">
+        {{ (overview$ | async)?.pending_tickets ?? 0 | number }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Solved Tickets Card -->
+  <div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+      <div class="w-12 h-12 bg-green-100 dark:bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary">{{ 'reports.overview.solvedTickets' | translate }}</h3>
+    </div>
+    <div *ngIf="loading$ | async" class="h-8">
+      <app-loader></app-loader>
+    </div>
+    <div *ngIf="error$ | async" class="text-sm text-red-600 dark:text-red-400">
+      {{ 'reports.error.loadFailed' | translate }}
+    </div>
+    <div *ngIf="!(loading$ | async) && !(error$ | async)">
+      <p class="text-3xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">
+        {{ (overview$ | async)?.solved_tickets ?? 0 | number }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Missed Chats Card -->
+  <div class="bg-white dark:bg-dark-surface-elevated rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+      <div class="w-12 h-12 bg-red-100 dark:bg-red-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary">{{ 'reports.overview.missedChats' | translate }}</h3>
+    </div>
+    <div *ngIf="loading$ | async" class="h-8">
+      <app-loader></app-loader>
+    </div>
+    <div *ngIf="error$ | async" class="text-sm text-red-600 dark:text-red-400">
+      {{ 'reports.error.loadFailed' | translate }}
+    </div>
+    <div *ngIf="!(loading$ | async) && !(error$ | async)">
+      <p class="text-3xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">
+        {{ (overview$ | async)?.missed_chats ?? 0 | number }}
+      </p>
+    </div>
+  </div>
+</div>

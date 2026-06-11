@@ -1,0 +1,86 @@
+    <div
+      class="bg-gray-50 border border-gray-200 rounded-lg shadow-sm p-4 max-w-md document-message"
+      [ngClass]="getMessageClasses()"
+    >
+      <div class="flex items-center space-x-3">
+        <!-- File Icon -->
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              [ngSwitch]="getFileType()"
+            >
+              <!-- PDF Icon -->
+              <path *ngSwitchCase="'pdf'" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z M9 8a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z M9 12a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" />
+
+              <!-- Image Icon -->
+              <path *ngSwitchCase="'image'" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
+
+              <!-- Video Icon -->
+              <path *ngSwitchCase="'video'" d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+
+              <!-- Audio Icon -->
+              <path *ngSwitchCase="'audio'" d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+
+              <!-- Generic Document Icon -->
+              <path *ngSwitchDefault d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- File Info -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between">
+            <div class="flex-1 min-w-0">
+              <!-- File Name -->
+              <p class="text-sm font-medium text-gray-900 truncate">
+                {{ getFileName() }}
+              </p>
+
+              <!-- File Details -->
+              <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+                <span class="uppercase font-medium">{{ getFileExtension() }}</span>
+                <span *ngIf="getFileSize()" class="text-gray-400">•</span>
+                <span *ngIf="getFileSize()">{{ getFileSize() }}</span>
+              </div>
+
+              <!-- Caption -->
+              <div
+                *ngIf="message.content?.caption"
+                class="mt-2 text-xs text-gray-600 leading-relaxed"
+              >
+                {{ message.content.caption }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Download Button -->
+        <div class="flex-shrink-0">
+          <a
+            [href]="getDownloadUrl()"
+            [download]="getFileName()"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center w-10 h-10 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            [title]="'Download ' + getFileName()"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- File Preview (for images) -->
+      <div *ngIf="getFileType() === 'image' && message.content?.cdn_url" class="mt-3">
+        <img
+          [src]="message.content.cdn_url"
+          [alt]="getFileName()"
+          class="w-full h-32 object-cover rounded-md border border-gray-200"
+          (error)="onImageError($event)"
+        />
+      </div>
+    </div>

@@ -1,0 +1,384 @@
+.smooth-grid {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-image:
+    linear-gradient(to right, rgba(229, 231, 235, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(229, 231, 235, 0.3) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-attachment: local;
+  scroll-behavior: auto;
+  cursor: grab;
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+      background-clip: content-box;
+    }
+  }
+  &.panning {
+    cursor: grabbing !important;
+    user-select: none !important;
+
+    scroll-behavior: auto !important;
+
+    * {
+      user-select: none !important;
+    }
+  }
+
+  &:active {
+    user-select: none;
+  }
+}
+
+.infinite-canvas {
+  position: relative;
+  padding: 6px;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  transform-origin: top left;
+  width: 10000px;
+  height: 10000px;
+  will-change: transform;
+  contain: layout;
+}
+.node-container {
+  position: absolute !important;
+  z-index: 20 !important;
+  will-change: left, top, transform;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &.first-node {
+    z-index: 15 !important;
+    .node-card {
+      position: relative;
+      box-shadow:
+        0 0 0 2px rgba(34, 197, 94, 0.2),
+        0 0 20px rgba(34, 197, 94, 0.1),
+        0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.3) !important;
+      &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 20;
+      }
+      &::after {
+        content: '▶';
+        position: absolute;
+        top: -6px;
+        left: -4px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 8px;
+        font-weight: bold;
+        z-index: 21;
+      }
+    }
+    &:hover .node-card {
+      box-shadow:
+        0 0 0 3px rgba(34, 197, 94, 0.3),
+        0 0 30px rgba(34, 197, 94, 0.15),
+        0 8px 25px -5px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+  }
+
+  &.first-node.dragging .node-card {
+    box-shadow:
+      0 0 0 3px rgba(34, 197, 94, 0.4),
+      0 0 40px rgba(34, 197, 94, 0.2),
+      0 20px 40px -8px rgba(0, 0, 0, 0.3) !important;
+    transform: scale(1.05) !important;
+    border-color: rgba(34, 197, 94, 0.5) !important;
+  }
+}
+
+.first-node-checkbox {
+  input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+
+    &:checked {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: #16a34a;
+
+      &::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+
+    &:hover {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    }
+  }
+
+  label {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #16a34a !important;
+    }
+  }
+}
+
+.first-node-info {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid #bbf7d0;
+
+  .info-icon {
+    animation: pulse 2s infinite;
+  }
+}
+
+.connection-line {
+  &[data-from-first-node="true"] {
+    stroke: #22c55e !important;
+    stroke-width: 3;
+    filter: drop-shadow(0 2px 4px rgba(34, 197, 94, 0.3));
+
+    &::before {
+      content: 'START';
+      position: absolute;
+      background: #22c55e;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: bold;
+      z-index: 100;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .node-container.first-node .node-card {
+    &::before {
+      width: 20px;
+      height: 20px;
+      top: -6px;
+      left: -6px;
+    }
+
+    &::after {
+      top: -4px;
+      left: -2px;
+      width: 16px;
+      height: 16px;
+      font-size: 6px;
+    }
+  }
+}
+
+@media (prefers-contrast: high) {
+  .node-container.first-node .node-card {
+    border-width: 3px !important;
+    border-color: #15803d !important;
+
+    &::before {
+      border-width: 3px;
+      background: #15803d;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node-container,
+  .node-container.first-node .node-card,
+  .first-node-checkbox input,
+  .first-node-info .info-icon {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+.node-container {
+  position: absolute !important;
+  z-index: 10;
+  will-change: left, top, transform;
+  max-width: none;
+  max-height: none;
+  &:not(.dragging) {
+    transition:
+      left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+      top 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  &.dragging {
+    z-index: 1000 !important;
+    cursor: grabbing !important;
+    user-select: none;
+    transition: none !important;
+    transform: scale(1.05) !important;
+    filter: brightness(1.1) saturate(1.2);
+    box-shadow:
+      0 20px 40px -8px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(59, 130, 246, 0.2),
+      0 0 30px rgba(59, 130, 246, 0.15) !important;
+    * {
+      pointer-events: none;
+      user-select: none;
+    }
+    .connection-button {
+      pointer-events: auto !important;
+    }
+  }
+
+  display: block !important;
+
+  .node-card {
+    position: relative;
+    display: block;
+    width: auto;
+    min-width: 320px;
+  }
+}
+
+main {
+  position: relative;
+  overflow: hidden;
+}
+
+.transition-transform {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  min-width: 5000px;
+  min-height: 2000px;
+}
+
+.connection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5 !important;
+  pointer-events: none;
+  overflow: visible;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.flex-col,
+.flex-1 {
+  min-height: 0;
+}
+
+.h-\[82\%\] {
+  height: 82% !important;
+  position: relative;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .smooth-grid {
+    cursor: default;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .node-container.dragging {
+    transform: scale(1.08) !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-grid {
+    transform: translateZ(0);
+  }
+
+  .node-container.dragging {
+    will-change: transform, left, top;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .smooth-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .node-container.dragging {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smooth-grid {
+    scroll-behavior: auto !important;
+  }
+
+  .node-container {
+    transition: none !important;
+  }
+
+  .infinite-canvas {
+    transition: none !important;
+  }
+}
+
+.smooth-grid.selecting-disabled {
+  user-select: none !important;
+
+  * {
+    user-select: none !important;
+  }
+}
+
+

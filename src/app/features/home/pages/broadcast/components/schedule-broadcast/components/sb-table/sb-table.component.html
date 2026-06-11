@@ -1,0 +1,86 @@
+<div
+  class="bg-surface dark:bg-dark-surface rounded-lg shadow-sm dark:shadow-dark-sm border border-border dark:border-dark-border">
+  <div class="h-[calc(45vh)] overflow-y-auto">
+    <table class="w-full divide-y divide-border dark:divide-dark-border">
+      <thead class="bg-surface-secondary dark:bg-dark-surface-secondary">
+        <tr>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+            'broadcast.scheduled.table.broadcastName' | translate
+            }}</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+            'broadcast.scheduled.table.template' | translate }}
+          </th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+            'broadcast.scheduled.table.scheduledTime' | translate
+            }}</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+            'broadcast.common.status' | translate }}</th>
+          <th class="px-6 py-4 text-right text-sm font-semibold text-text-primary dark:text-dark-text-primary">{{
+            'broadcast.common.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody class="bg-surface dark:bg-dark-surface divide-y divide-border dark:divide-dark-border">
+        <tr *ngIf="loading">
+          <td colspan="5" class="text-center py-12 text-text-secondary dark:text-dark-text-secondary">{{
+            'broadcast.scheduled.loadingBroadcasts' | translate
+            }}</td>
+        </tr>
+
+        <tr *ngIf="error">
+          <td colspan="5" class="text-center py-12 text-danger dark:text-danger-dark">{{
+            'broadcast.scheduled.errorLoading' | translate:{error:
+            error?.message || error} }}</td>
+        </tr>
+
+        <tr *ngIf="!loading && !error && broadcasts.length === 0">
+          <td colspan="5" class="text-center py-12 text-text-secondary dark:text-dark-text-secondary">{{
+            'broadcast.scheduled.noBroadcasts' | translate }}</td>
+        </tr>
+
+        <tr *ngFor="let b of broadcasts; trackBy: trackById"
+          class="hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors duration-200">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex flex-col">
+              <span
+                class="text-primary dark:text-primary-dark font-medium hover:text-primary-hover dark:hover:text-primary cursor-pointer hover:underline">{{
+                b.name
+                || ('broadcast.scheduled.unnamedBroadcast' | translate) }}</span>
+              <!-- <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary mt-1">{{ 'broadcast.common.id' |
+                translate }}: {{ b.id }}</span> -->
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-text-secondary dark:text-dark-text-secondary">{{ b.template_name
+            || ('broadcast.scheduled.noTemplate' | translate)
+            }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex flex-col">
+              <span class="text-text-primary dark:text-dark-text-primary font-medium">{{ b.scheduled_time | date:'MMM d,
+                y' }}</span>
+              <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary">{{ b.scheduled_time | date:'h:mm a'
+                }}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <sb-status-badge [status]="b.status"></sb-status-badge>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right">
+            <div class="flex items-center justify-end gap-2">
+              <button (click)="view.emit(b)"
+                class="bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200">{{
+                'broadcast.common.view' | translate }}</button>
+              <button *ngIf="b.status === 'scheduled'" (click)="edit.emit(b)"
+                class="bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200">{{
+                'broadcast.common.edit' | translate }}</button>
+              <button *ngIf="b.status === 'failed'" (click)="retry.emit(b)"
+                class="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200">{{
+                'broadcast.common.retry' | translate }}</button>
+              <button (click)="delete.emit(b)" [disabled]="deleteLoading"
+                class="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 disabled:opacity-50">{{
+                'broadcast.common.delete' | translate }}</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

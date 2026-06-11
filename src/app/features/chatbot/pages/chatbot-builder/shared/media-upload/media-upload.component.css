@@ -1,0 +1,24 @@
+ .upload-area {
+      cursor: pointer;
+      user-select: none;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-area:hover {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+
+    .media-upload-container {
+      width: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .upload-area,
+      .h-2 {
+        transition: none;
+      }
+    }

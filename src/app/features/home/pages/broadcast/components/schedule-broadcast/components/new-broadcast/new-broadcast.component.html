@@ -1,0 +1,105 @@
+<div class="h-screen bg-surface dark:bg-dark-surface flex">
+  <div class="flex-1 flex flex-col lg:flex-row max-w-8xl mx-auto h-full">
+    <!-- Left Panel: Form -->
+    <div class="flex-1 flex flex-col bg-surface dark:bg-dark-surface shadow-sm dark:shadow-dark-sm h-full">
+      <!-- Header -->
+      <div class="flex-shrink-0 p-6 lg:p-8 border-b border-border dark:border-dark-border">
+        <app-progress-header [progress]="getProgress()" (cancel)="onCancel()">
+        </app-progress-header>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="flex-1 overflow-y-auto min-h-0">
+        <div class="p-6 lg:p-8">
+          <!-- Form Steps -->
+          <div class="space-y-8">
+            <!-- Broadcast Details -->
+            <app-broadcast-details [form]="broadcastForm" (templateSelected)="onTemplateSelected($event)"
+              (addNewTemplate)="onAddNewTemplate()" (headerMediaUploaded)="onHeaderMediaUploaded($event)">
+            </app-broadcast-details>
+
+            <!--Recipients -->
+            <app-recipient-selection [selectedContacts]="selectedContacts" (contactsChanged)="onContactsChanged($event)"
+              (openContactDialog)="openContactSelectionDialog()">
+            </app-recipient-selection>
+
+            <!-- Schedule -->
+            <app-schedule-config [form]="broadcastForm" (scheduleChanged)="onScheduleChanged($event)">
+            </app-schedule-config>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer with Action Buttons -->
+      <div
+        class="flex-shrink-0 p-6 lg:p-8 border-t border-border dark:border-dark-border bg-surface dark:bg-dark-surface">
+        <div class="flex items-center justify-between">
+          <button type="button" (click)="onCancel()"
+            class="px-6 py-2 mb-10 text-text-secondary dark:text-dark-text-secondary bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors font-medium">
+            {{ 'broadcast.common.cancel' | translate }}
+          </button>
+
+          <div class="flex space-x-4 pb-10">
+            <button type="button" (click)="onSubmit()" [disabled]="!canSubmit() || (publishLoading$ | async)"
+              class="px-8 py-3 bg-primary dark:bg-primary-dark text-white rounded-lg hover:bg-primary-hover dark:hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center space-x-2">
+              <span *ngIf="!(publishLoading$ | async)">
+                {{ (broadcastForm.get('is_now')?.value ? 'broadcast.create.buttons.sendBroadcast' :
+                'broadcast.create.buttons.scheduleBroadcast') | translate }}
+              </span>
+              <span *ngIf="publishLoading$ | async" class="flex items-center space-x-2">
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+                <span>{{ 'broadcast.create.buttons.processing' | translate }}</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Preview -->
+    <div
+      class="w-full lg:w-96 bg-surface-secondary dark:bg-dark-surface-secondary border-l border-border dark:border-dark-border h-full overflow-y-auto">
+      <div class="sticky top-0 p-4">
+        <!-- WhatsApp Preview -->
+        <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.108" />
+          </svg>
+          {{ 'broadcast.create.preview.title' | translate }}
+        </h3>
+
+        <app-whatsapp-preview *ngIf="selectedTemplate" [header]="waHeader" [body]="waBody" [footer]="waFooter"
+          [buttons]="waButtons" [mediaUrl]="getPreviewMediaUrl()" [mediaType]="headerMediaType">
+        </app-whatsapp-preview>
+
+        <div *ngIf="!selectedTemplate"
+          class="bg-surface dark:bg-dark-surface rounded-lg border border-border dark:border-dark-border p-8 text-center">
+          <div class="text-text-tertiary dark:text-dark-text-tertiary mb-4">
+            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+              </path>
+            </svg>
+          </div>
+          <h4 class="text-lg font-medium text-text-primary dark:text-dark-text-primary mb-2">{{
+            'broadcast.create.preview.noTemplate' | translate }}
+          </h4>
+          <p class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.preview.selectTemplate' |
+            translate }}</p>
+        </div>
+
+        <!-- Broadcast Summary -->
+        <app-broadcast-summary *ngIf="selectedTemplate && selectedContacts.length > 0"
+          [contactCount]="selectedContacts.length" [templateName]="selectedTemplate.name || ''"
+          [isNow]="broadcastForm.get('is_now')?.value" [scheduledTime]="broadcastForm.get('scheduled_time')?.value">
+        </app-broadcast-summary>
+      </div>
+    </div>
+  </div>
+</div>

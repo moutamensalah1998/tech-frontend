@@ -1,0 +1,12 @@
+<router-outlet></router-outlet>
+<app-toast></app-toast>
+
+<!-- Loader always visible until auth.loading = false -->
+<app-loader
+  [isLoading]="initialLoading"
+  gifSrc="assets/features/loader.gif"
+  [message]="'app.loader.message' | translate"
+  type="gif"
+  theme="dark"
+  size="large">
+</app-loader>

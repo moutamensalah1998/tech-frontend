@@ -1,0 +1,98 @@
+<div
+  class="flex gap-4 p-4 cursor-pointer select-none border-b border-border dark:border-dark-border transition-all duration-200"
+  (click)="onClick()" [ngClass]="{
+    'bg-gradient-to-r from-primary to-secondary text-white rounded-sm hover:from-secondary hover:to-primary shadow-sm': isSelected,
+    'bg-surface hover:bg-surface-secondary dark:bg-dark-surface dark:hover:bg-dark-surface-secondary': !isSelected
+  }">
+
+  <!-- Avatar -->
+  <div
+    class="flex-shrink-0 w-10 h-10 bg-gradient-to-br rounded-full flex items-center justify-center shadow-lg dark:shadow-dark-md relative"
+    [ngClass]="{
+                     'from-blue-500 to-indigo-600': i % 3 === 0,
+                     'from-purple-500 to-pink-600': i % 3 === 1,
+                     'from-green-500 to-teal-600': i % 3 === 2
+                   }">
+    <span class="text-white text-sm font-semibold">
+      {{ getInitials(conversation.contact_name) }}
+    </span>
+
+    <!-- Chatbot Icon Badge -->
+    <div *ngIf="conversation.chatbot_triggered"
+      class="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center border-2 border-surface dark:border-dark-surface shadow-sm">
+      <span class="text-white text-xs font-semibold">C</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 min-w-0 select-none">
+
+    <!-- Name and Time Row -->
+    <div class="flex items-center justify-between mb-1">
+      <div class="flex items-center gap-2">
+        <h3 class="text-sm font-semibold truncate" [ngClass]="{
+        'text-white': isSelected,
+        'text-text-primary dark:text-dark-text-primary': !isSelected
+      }">
+          {{ conversation.contact_name }}
+        </h3>
+        <!-- Chatbot icon next to name -->
+        <svg *ngIf="conversation.chatbot_triggered" class="w-4 h-4 flex-shrink-0" [ngClass]="{
+          'text-orange-200': isSelected,
+          'text-orange-500': !isSelected
+        }" fill="currentColor" viewBox="-2.4 -2.4 28.80 28.80" xmlns="http://www.w3.org/2000/svg"
+          stroke="currentColor">
+          <path
+            d="M21.928 11.607c-.202-.488-.635-.605-.928-.633V8c0-1.103-.897-2-2-2h-6V4.61c.305-.274.5-.668.5-1.11a1.5 1.5 0 0 0-3 0c0 .442.195.836.5 1.11V6H5c-1.103 0-2 .897-2 2v2.997l-.082.006A1 1 0 0 0 1.99 12v2a1 1 0 0 0 1 1H3v5c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5a1 1 0 0 0 1-1v-1.938a1.006 1.006 0 0 0-.072-.455zM5 20V8h14l.001 3.996L19 12v2l.001.005.001 5.995H5z">
+          </path>
+          <ellipse cx="8.5" cy="12" rx="1.5" ry="2"></ellipse>
+          <ellipse cx="15.5" cy="12" rx="1.5" ry="2"></ellipse>
+          <path d="M8 16h8v2H8z"></path>
+        </svg>
+
+      </div>
+      <span class="text-xs font-medium whitespace-nowrap" [ngClass]="{
+      'text-blue-100': isSelected,
+      'text-primary dark:text-primary-dark': !isSelected
+    }">
+        {{ conversation.last_message_time | dateUtils : 'chat' }}
+      </span>
+    </div>
+
+    <!-- Message and Unread Count Row -->
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-sm truncate pr-2" [ngClass]="{
+      'text-blue-50': isSelected,
+      'text-text-secondary dark:text-dark-text-secondary': !isSelected
+    }">
+        {{ conversation.last_message }}
+      </p>
+      <span *ngIf="conversation.unread_count > 0 && !isSelected"
+        class="px-1 text-xs rounded-full font-semibold bg-orange-500 text-white whitespace-nowrap">
+        {{ conversation.unread_count }}
+      </span>
+    </div>
+
+    <!-- Status and Date Row -->
+    <div class="flex items-center justify-between">
+      <span class="px-2.5 py-1 text-xs rounded-full font-semibold" [ngClass]="{
+      'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300': conversation.status === 'OPEN' && !isSelected,
+      'bg-green-600 text-white': conversation.status === 'OPEN' && isSelected,
+      'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300': conversation.status === 'PENDING' && !isSelected,
+      'bg-orange-600 text-white': conversation.status === 'PENDING' && isSelected,
+      'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': conversation.status === 'EXPIRED' && !isSelected,
+      'bg-red-600 text-white': conversation.status === 'EXPIRED' && isSelected,
+      'bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary': conversation.status === 'SOLVED' && !isSelected,
+      'bg-white text-primary': conversation.status === 'SOLVED' && isSelected
+    }">
+        {{ conversation.status | titlecase }}
+      </span>
+      <span class="text-xs font-medium whitespace-nowrap" [ngClass]="{
+      'text-blue-100': isSelected,
+      'text-text-tertiary dark:text-dark-text-tertiary': !isSelected
+    }">
+        {{ conversation.updated_at | dateUtils: 'chat' }}
+      </span>
+    </div>
+  </div>
+</div>

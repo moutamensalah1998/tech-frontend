@@ -1,0 +1,21 @@
+<div class="mb-0">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-3xl font-bold text-text-primary dark:text-dark-text-primary">{{ 'broadcast.create.header.title' |
+        translate }}</h1>
+      <p class="text-text-secondary dark:text-dark-text-secondary mt-2">{{ 'broadcast.create.header.subtitle' |
+        translate }}</p>
+    </div>
+    <button (click)="cancel.emit()"
+      class="p-2 text-text-tertiary dark:text-dark-text-tertiary hover:text-text-secondary dark:hover:text-dark-text-secondary transition-colors">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="h-1 w-full bg-surface-tertiary dark:bg-dark-surface-tertiary rounded-full">
+    <div
+      class="h-1 bg-gradient-to-r from-primary to-primary-hover dark:from-primary-dark dark:to-primary rounded-full transition-all duration-300"
+      [style.width.%]="progress"></div>
+  </div>
+</div>

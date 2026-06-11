@@ -1,0 +1,32 @@
+    .drag-drop-area {
+      position: relative;
+    }
+
+    .drag-active {
+      position: relative;
+    }
+
+    .drag-active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(59, 130, 246, 0.1);
+      border: 2px dashed #3b82f6;
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    .drag-overlay {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(2px);
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }

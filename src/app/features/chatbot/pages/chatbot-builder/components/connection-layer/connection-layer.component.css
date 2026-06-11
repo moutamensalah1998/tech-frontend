@@ -1,0 +1,82 @@
+.connection-overlay {
+  z-index: 5 !important;
+  pointer-events: none;
+}
+
+.connection-line {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  pointer-events: none;
+}
+
+.connection-line:hover {
+  stroke-width: 4;
+  filter: brightness(1.2) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.connection-line-clickable {
+  pointer-events: auto !important;
+  z-index: 6 !important;
+}
+
+.connection-preview-line {
+  animation: dashMove 1.5s linear infinite;
+  z-index: 8 !important;
+}
+
+
+.circular-indicator {
+  animation: circularPulse 2s ease-in-out infinite;
+}
+
+.circular-label {
+  animation: circularSpin 3s linear infinite;
+}
+
+@keyframes dashMove {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 9;
+  }
+}
+
+@keyframes circularPulse {
+  0%, 100% {
+    opacity: 0.6;
+    r: 8;
+  }
+  50% {
+    opacity: 1;
+    r: 10;
+  }
+}
+
+@keyframes circularSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.connection-label {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  z-index: 2 !important;
+}
+
+.circular-connection {
+  stroke-width: 3;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.connection-delete-button {
+  z-index: 50 !important;
+}
+
+marker polygon {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}

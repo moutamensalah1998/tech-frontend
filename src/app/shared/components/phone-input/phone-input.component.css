@@ -1,0 +1,8 @@
+.ngx-tel-input {
+  @apply border-gray-300 rounded-lg p-2 w-full;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}

@@ -1,0 +1,15 @@
+<div class="flex flex-row h-full bg-surface dark:bg-dark-surface">
+  <app-chat-list class="w-[20%]" [selectedConversationId]="selectedConversation?.id || null"
+    (selectConversation)="onSelectConversation($event)" (i)="i = $event"></app-chat-list>
+  <ng-container *ngIf="selectedConversation">
+    <app-chat-window class="w-[60%]" [conversation]="selectedConversation" [expiry_time]="expiryTime"
+      [reset_counter]="reset_counter" [isExpired]="is_expired"></app-chat-window>
+    <app-chat-details class="w-[20%]" [conversation]="selectedConversation" [i]="i"></app-chat-details>
+  </ng-container>
+  <ng-container *ngIf="!selectedConversation">
+    <div
+      class="w-[80%] flex items-center justify-center text-center text-text-secondary dark:text-dark-text-secondary h-[calc(100vh-64px)]">
+      {{ 'teamInbox.noConversationSelected' | translate }}
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,205 @@
+<div [formGroup]="form" class="space-y-6">
+  <!-- Header Section -->
+  <div
+    class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-100 dark:border-blue-800/20">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary">{{
+          'broadcast.templateButtons.title' | translate }}</h3>
+        <p class="text-sm text-text-secondary dark:text-dark-text-secondary">
+          {{ 'broadcast.templateButtons.subtitle' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Master Toggle -->
+    <div class="flex items-center space-x-3">
+      <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
+        'broadcast.templateButtons.enableButtons' | translate }}</span>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" class="sr-only peer" [checked]="buttonsEnabled" (change)="toggleButtons($event)"
+          [disabled]="!categoryRestrictions.allowsButtons || isAuthenticationCategory" />
+        <div
+          class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer transition-all duration-300 peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-primary dark:peer-checked:bg-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed shadow-inner">
+        </div>
+        <span class="ml-3 text-lg font-bold" [ngClass]="{
+            'text-primary dark:text-primary-dark': buttonsEnabled,
+            'text-text-disabled dark:text-dark-text-disabled': !buttonsEnabled
+          }">
+          {{ buttonsEnabled ? ('broadcast.templateButtons.on' | translate) : ('broadcast.templateButtons.off' |
+          translate) }}
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Category-Specific Notices -->
+  <div *ngIf="isAuthenticationCategory"
+    class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400 dark:border-amber-600 p-4 rounded-r-lg">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <svg class="w-6 h-6 text-amber-400 dark:text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h4 class="text-sm font-semibold text-amber-800 dark:text-amber-300">
+          {{ 'broadcast.templateButtons.authRestriction' | translate }}
+        </h4>
+        <p class="text-sm text-amber-700 dark:text-amber-200/80 mt-1">
+          {{ categoryRestrictions.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isUtilityCategory"
+    class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-600 p-4 rounded-r-lg">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <svg class="w-6 h-6 text-blue-400 dark:text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-300">
+          {{ 'broadcast.templateButtons.utilityRestrictions' | translate }}
+        </h4>
+        <p class="text-sm text-blue-700 dark:text-blue-200/80 mt-1">
+          {{ categoryRestrictions.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isMarketingCategory && buttonsEnabled"
+    class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400 dark:border-green-600 p-4 rounded-r-lg">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <svg class="w-6 h-6 text-green-400 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h4 class="text-sm font-semibold text-green-800 dark:text-green-300">
+          {{ 'broadcast.templateButtons.marketingRequirement' | translate }}
+        </h4>
+        <p class="text-sm text-green-700 dark:text-green-200/80 mt-1">
+          {{ categoryRestrictions.description }}
+        </p>
+        <div class="mt-2 flex items-center">
+          <span class="text-sm font-medium text-green-800 dark:text-green-300">{{
+            'broadcast.templateButtons.currentButtons' | translate }}
+          </span>
+          <span class="ml-2 px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+              'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300': getButtonCount() > 0,
+              'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': getButtonCount() === 0
+            }">
+            {{ getButtonCount() }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isMarketingCategory && !hasAnyButtons && !buttonsEnabled"
+    class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-r-lg">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <svg class="w-6 h-6 text-red-400 dark:text-red-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h4 class="text-sm font-semibold text-red-800 dark:text-red-300">
+          {{ 'broadcast.templateButtons.marketingError' | translate }}
+        </h4>
+        <p class="text-sm text-red-700 dark:text-red-200/80 mt-1">
+          {{ 'broadcast.templateButtons.marketingErrorMsg' | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+  @if (!isAuthenticationCategory) {
+  <!-- Button Configuration Panel -->
+  <div *ngIf="buttonsEnabled && categoryRestrictions.allowsButtons">
+    <!-- Action Buttons (Phone & Copy) -->
+    <div class="mb-6">
+      <app-action-buttons [form]="form"></app-action-buttons>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" *ngIf="buttonsEnabled && categoryRestrictions.allowsButtons">
+    <!-- Website Buttons -->
+    <div class="mb-6">
+      <app-website-buttons></app-website-buttons>
+    </div>
+
+    <!-- Quick Reply Buttons -->
+    <app-quick-reply-buttons [form]="form"></app-quick-reply-buttons>
+  </div>
+
+
+  <!-- Disabled State Message -->
+  <div *ngIf="!buttonsEnabled && categoryRestrictions.allowsButtons"
+    class="text-center py-12 bg-surface-secondary dark:bg-dark-surface-secondary rounded-xl border-2 border-dashed border-border dark:border-dark-border">
+    <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-text-primary dark:text-dark-text-primary mb-2">
+      {{ 'broadcast.templateButtons.buttonsDisabled' | translate }}
+    </h3>
+    <p class="text-text-secondary dark:text-dark-text-secondary mb-4">
+      {{ 'broadcast.templateButtons.enableToggle' | translate }}
+    </p>
+    <div class="flex flex-wrap justify-center gap-2 text-xs text-text-tertiary dark:text-dark-text-tertiary">
+      <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">{{
+        'broadcast.templateButtons.websiteLinks' | translate }}</span>
+      <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded">{{
+        'broadcast.templateButtons.phoneCalls' | translate }}</span>
+      <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded"
+        *ngIf="categoryRestrictions.allowsCopyCode">{{ 'broadcast.templateButtons.copyCodes' | translate }}</span>
+      <span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">{{
+        'broadcast.templateButtons.quickReplies' | translate }}</span>
+    </div>
+    <div *ngIf="isMarketingCategory"
+      class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+      <p class="text-sm text-yellow-800 dark:text-yellow-300 font-medium">
+        {{ 'broadcast.templateButtons.marketingWarning' | translate }}
+      </p>
+    </div>
+  </div>
+  }
+  <!-- Completely Disabled State for AUTH -->
+  <div *ngIf="!categoryRestrictions.allowsButtons"
+    class="text-center py-12 bg-surface-secondary dark:bg-dark-surface-secondary rounded-xl border-2 border-dashed border-border dark:border-dark-border">
+    <div class="w-16 h-16 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-text-primary dark:text-dark-text-primary mb-2">{{
+      'broadcast.templateButtons.buttonsNotAllowed' | translate }}</h3>
+    <p class="text-text-secondary dark:text-dark-text-secondary mb-4">
+      {{ categoryRestrictions.description }}
+    </p>
+    <div
+      class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-3 max-w-md mx-auto">
+      <p class="text-sm text-amber-800 dark:text-amber-300">
+        <strong>{{ currentCategory }}</strong> {{ 'broadcast.templateButtons.cannotInclude' | translate }}
+      </p>
+    </div>
+  </div>
+</div>

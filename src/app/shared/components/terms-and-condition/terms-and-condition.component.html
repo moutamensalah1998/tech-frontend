@@ -1,0 +1,88 @@
+<!-- src/app/shared/components/terms-and-condition/terms-and-condition.component.html -->
+<div class="h-screen overflow-hidden" [class.dark]="false">
+  <div class="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900">
+
+    <!-- header fixed -->
+    <header #appHeader class="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/80 border-b">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+            <span [innerHTML]=""></span>
+          </div>
+          <h1 class="text-xl font-bold">شروط الخدمة — مؤسسة بوابة البرمجة</h1>
+        </div>
+        <div>
+          <button (click)="goToPrivacy()" class="px-3 py-2 rounded bg-gray-100 text-sm">انتقل إلى سياسة الخصوصية</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- main content -->
+    <main #mainContent (scroll)="onScroll($event)" class="flex-1 overflow-y-auto" dir="rtl" [style.paddingTop.px]="headerHeight">
+      <div class="max-w-4xl mx-auto px-6 py-8 space-y-6">
+
+        <div *ngFor="let s of termsSections; let i = index; trackBy: trackByIndex"
+             #sectionAnchor
+             class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all overflow-hidden border border-gray-200">
+
+          <!-- header/button -->
+          <button
+            (click)="toggleSection(i)"
+            class="w-full p-6 flex items-center justify-between"
+            [attr.aria-expanded]="expandedSection === i"
+            [attr.aria-controls]="'section-content-' + i"
+          >
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                <span [innerHTML]=""></span>
+              </div>
+              <h2 class="text-xl font-bold">{{ s.title }}</h2>
+            </div>
+            <div class="w-6 h-6 transition-transform duration-300" [class.rotate-180]="expandedSection === i">
+              <span [innerHTML]=""></span>
+            </div>
+          </button>
+
+          <!-- content block (measured height for smooth animation) -->
+          <div
+            #sectionContent
+            id="section-content-{{i}}"
+            class="overflow-hidden transition-all duration-300"
+            [style.maxHeight.px]="expandedSection === i ? contentHeights[i] || 0 : 0"
+            [attr.aria-hidden]="expandedSection !== i"
+          >
+            <div class="px-6 pb-6 text-lg leading-relaxed">
+              <p *ngIf="s.content" class="mb-4 whitespace-pre-line">{{ s.content }}</p>
+
+              <div *ngIf="s.items" class="grid gap-3">
+                <div *ngFor="let item of s.items; let idx = index" class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full font-bold text-sm">
+                    {{ idx + 1 }}
+                  </div>
+                  <p class="pt-1">{{ item }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="s.coloredItems" class="space-y-3 mt-4">
+                <div *ngFor="let ci of s.coloredItems" class="p-4 rounded-lg border-l-4">
+                  {{ ci.text }}
+                </div>
+              </div>
+
+              <div *ngIf="s.note" class="mt-4 p-4 rounded-lg border-l-4">
+                <strong *ngIf="s.noteColor==='amber'">ملاحظة: </strong>{{ s.note }}
+              </div>
+
+              <div *ngIf="s.contact" class="mt-4 p-4 rounded-lg border-l-4">
+                <a href="mailto:admin&#64;prog-gate.cloud" class="text-blue-600">admin&#64;prog-gate.cloud</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<div class="flex flex-col md:flex-row min-h-screen bg-surface-secondary dark:bg-dark-surface-secondary">
+  <!-- Desktop Sidebar -->
+  <aside
+    class="hidden md:flex transition-all duration-300 ease-in-out bg-surface-secondary dark:bg-dark-surface-secondary flex-col border-r border-border dark:border-dark-border relative md:h-screen overflow-hidden"
+    [ngClass]="{ 
+      'w-[280px]': isOpen, 
+      'w-16': !isOpen
+    }">
+
+    <!-- Sidebar Header (Title & Subtitle) - Desktop only -->
+    <div *ngIf="isOpen && (title || subtitle)" 
+      class="px-4 py-4 sm:py-5 border-b border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary flex-shrink-0">
+      <h2 class="text-lg sm:text-xl font-semibold text-text-primary dark:text-dark-text-primary mb-1">
+        {{ title | translate }}
+      </h2>
+      <p *ngIf="subtitle" class="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary">
+        {{ subtitle | translate }}
+      </p>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="flex-1 px-3 py-4 flex flex-col overflow-y-auto min-h-0" style="-webkit-overflow-scrolling: touch;">
+      <ul class="space-y-1 flex flex-col flex-1 min-h-0">
+        <li *ngFor="let item of navigationItems; let i = index" [ngClass]="item.liClass">
+          <!-- Use router link if useRouterLinks is true and no custom navigation handler -->
+          <a *ngIf="useRouterLinks && navigationItemClicked.observers.length === 0" [routerLink]="item.routerLink"
+            routerLinkActive="!bg-primary dark:!bg-primary-dark !text-white hover:!bg-primary-hover dark:hover:!bg-primary-dark-hover"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
+            [ngClass]="item.className || 'text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary'"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out min-h-[44px]">
+            <span class="flex-shrink-0" [innerHTML]="item.icon"></span>
+            <span *ngIf="isOpen" class="text-sm font-medium">
+              {{ item.translateLabel ? (item.label | translate) : item.label }}
+            </span>
+          </a>
+          <!-- Use button for custom navigation -->
+          <button *ngIf="!useRouterLinks || navigationItemClicked.observers.length > 0"
+            (click)="onNavigationClick(item, i, $event)"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out min-h-[44px]"
+            [ngClass]="(item.className || 'text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary') + (isActiveRoute(item.routerLink) && activeTabIndex === undefined ? ' bg-primary dark:bg-primary-dark !text-white hover:!bg-primary-hover dark:hover:!bg-primary-dark-hover' : '')">
+            <span class="flex-shrink-0" [innerHTML]="item.icon"></span>
+            <span *ngIf="isOpen" class="text-sm font-medium">
+              {{ item.translateLabel ? (item.label | translate) : item.label }}
+            </span>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Footer Content Slot (pushed to bottom) -->
+      <div class="mt-auto pt-4 pb-4">
+        <ng-content select="[slot=sidebar-footer]"></ng-content>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Mobile Sidebar Drawer -->
+  <div *ngIf="isMobile" 
+    class="md:hidden fixed inset-0 z-50"
+    [ngClass]="{'pointer-events-none': !isMobileOpen, 'pointer-events-auto': isMobileOpen}">
+    <!-- Backdrop -->
+    <div 
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"
+      [ngClass]="{'opacity-0': !isMobileOpen, 'opacity-100': isMobileOpen}"
+      (click)="toggle()">
+    </div>
+
+    <!-- Drawer -->
+    <aside
+      class="fixed inset-y-0 left-0 w-[85%] max-w-[320px] bg-surface-secondary dark:bg-dark-surface-secondary flex flex-col shadow-2xl transform transition-transform duration-300 ease-out z-50"
+      [class.-translate-x-full]="!isMobileOpen"
+      [class.translate-x-0]="isMobileOpen">
+      
+      <!-- Mobile Header -->
+      <div class="px-5 py-5 border-b border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary flex-shrink-0">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-text-primary dark:text-dark-text-primary">
+            {{ title | translate }}
+          </h2>
+          <button 
+            (click)="toggle()"
+            class="p-2 rounded-lg hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            [attr.aria-label]="'Close menu'">
+            <svg class="w-6 h-6 text-text-primary dark:text-dark-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <p *ngIf="subtitle" class="text-sm text-text-secondary dark:text-dark-text-secondary">
+          {{ subtitle | translate }}
+        </p>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <nav class="flex-1 px-3 py-4 overflow-y-auto" style="-webkit-overflow-scrolling: touch;">
+        <ul class="space-y-1">
+          <li *ngFor="let item of navigationItems; let i = index" [ngClass]="item.liClass">
+            <!-- Use router link if useRouterLinks is true and no custom navigation handler -->
+            <a *ngIf="useRouterLinks && navigationItemClicked.observers.length === 0" 
+              [routerLink]="item.routerLink"
+              routerLinkActive="!bg-primary dark:!bg-primary-dark !text-white hover:!bg-primary-hover dark:hover:!bg-primary-dark-hover"
+              [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
+              [ngClass]="item.className || 'text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary'"
+              class="flex items-center gap-3 px-4 py-3.5 rounded-lg transition-all duration-200 ease-in-out min-h-[48px] active:scale-[0.98]"
+              (click)="closeMobileSidebar()">
+              <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center" [innerHTML]="item.icon"></span>
+              <span class="text-base font-medium flex-1">
+                {{ item.translateLabel ? (item.label | translate) : item.label }}
+              </span>
+            </a>
+            <!-- Use button for custom navigation -->
+            <button *ngIf="!useRouterLinks || navigationItemClicked.observers.length > 0"
+              (click)="onNavigationClick(item, i, $event)"
+              class="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg transition-all duration-200 ease-in-out min-h-[48px] active:scale-[0.98]"
+              [ngClass]="(item.className || 'text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary') + (isActiveRoute(item.routerLink) && activeTabIndex === undefined ? ' bg-primary dark:bg-primary-dark !text-white hover:!bg-primary-hover dark:hover:!bg-primary-dark-hover' : '')">
+              <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center" [innerHTML]="item.icon"></span>
+              <span class="text-base font-medium flex-1 text-left">
+                {{ item.translateLabel ? (item.label | translate) : item.label }}
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <!-- Footer Content Slot -->
+        <div class="mt-6 pt-4 border-t border-border dark:border-dark-border">
+          <ng-content select="[slot=sidebar-footer]"></ng-content>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 bg-surface dark:bg-dark-surface md:overflow-y-auto md:h-screen md:ml-0 w-full min-h-0" style="-webkit-overflow-scrolling: touch;">
+    <ng-content></ng-content>
+  </main>
+</div>

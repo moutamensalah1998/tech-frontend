@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-surface dark:bg-dark-surface">
+  <app-shared-sidebar [title]="'userManagement.title'" [subtitle]="'userManagement.subtitle'"
+    [navigationItems]="navigationItems" [isOpen]="sidebarOpen" [activeTabIndex]="activeTab === 'users' ? 0 : 1"
+    (sidebarToggled)="onSidebarToggled($event)" (navigationItemClicked)="onNavigationItemClicked($event)">
+
+    <!-- Main Content -->
+    <div class="flex flex-col h-screen bg-surface dark:bg-dark-surface">
+      <!-- Header with Search and Actions -->
+      <div
+        class="bg-surface dark:bg-dark-surface border-b border-border dark:border-dark-border px-6 py-2 shadow-sm dark:shadow-dark-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <!-- Left side - Title and Tab indicator -->
+          <div class="flex items-center gap-4">
+            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <h1 class="text-2xl font-bold text-text-primary dark:text-dark-text-primary">
+              {{ (activeTab === 'users' ? 'userManagement.usersManagement' : 'userManagement.teamsManagement') |
+              translate }}
+            </h1>
+            <span
+              class="text-sm text-primary dark:text-primary-dark bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-full border border-blue-200 dark:border-blue-800">
+              {{ activeTab === 'users'
+              ? ((users$ | async)?.length || 0) + ' ' + ('userManagement.users' | translate)
+              : ((teams$ | async)?.length || 0) + ' ' + ('userManagement.teams' | translate)
+              }}
+            </span>
+          </div>
+          <!-- Right side - Search and Actions -->
+          <app-user-management-header [activeTab]="activeTab" (tabChanged)="onTabChanged($event)"
+            (createUser)="createUserDialogHandler()" (createTeam)="addTeamDialogHandler()"
+            (searchChanged)="onSearchChange($event)" (sortChanged)="onSortChanged($event)">
+          </app-user-management-header>
+        </div>
+      </div>
+
+      <!-- Table Content -->
+      <div class="overflow-hidden">
+        <app-user-management-table [activeTab]="activeTab" (editUserHandler)="editUserClick($event)"
+          (editTeamHandler)="editTeamClick($event)" [searchQuery]="searchQuery" [sortBy]="sortQuery"
+          (deleteTeamDialog)="deleteTeamDialogHandler($event)">
+        </app-user-management-table>
+      </div>
+    </div>
+
+  </app-shared-sidebar>
+</div>
+
+<!-- Dialogs remain the same -->
+@if (createUserDialog) {
+<app-create-user-dialog (close)="createUserDialogHandler()"></app-create-user-dialog>
+}
+
+@if (editUserDialog && user) {
+<app-edit-user-dialog [user]="user" (close)="editUserDialogHandler()"></app-edit-user-dialog>
+}
+
+@if (addTeamDialog) {
+<app-add-team (close)="addTeamDialogHandler()"></app-add-team>
+}
+
+@if (editTeamDialog && team) {
+<app-edit-team [team]="team" (close)="editTeamDialogHandler()"></app-edit-team>
+}
+
+@if(deleteTeamDialog){
+<app-confirm-dialog [header]="'userManagement.deleteTeam' | translate"
+  [message]="'userManagement.deleteTeamMessage' | translate" [confirmText]="'common.buttons.delete' | translate"
+  [cancelText]="'common.buttons.cancel' | translate" [dialogStyle]="'danger'" (cancelled)="deleteTeamDialogHandler('')"
+  (confirmed)="confirmDeleteTeam()">
+</app-confirm-dialog>
+}

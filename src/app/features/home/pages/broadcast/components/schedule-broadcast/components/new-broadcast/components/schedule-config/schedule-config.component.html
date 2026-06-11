@@ -1,0 +1,53 @@
+<div class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-xl p-6"
+  [formGroup]="form">
+  <div class="flex items-center mb-6">
+    <div
+      class="w-8 h-8 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center text-sm font-medium">
+      3
+    </div>
+    <h2 class="ml-3 text-xl font-semibold text-text-primary dark:text-dark-text-primary">{{
+      'broadcast.create.steps.schedule' | translate }}</h2>
+  </div>
+
+  <div class="space-y-4">
+    <!-- Send Now Option -->
+    <label
+      class="flex items-center p-4 border border-border dark:border-dark-border rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors">
+      <input type="radio" name="schedule" [checked]="form.get('is_now')?.value" (change)="onScheduleChange(true)"
+        class="h-4 w-4 text-primary dark:text-primary-dark focus:ring-primary border-border dark:border-dark-border" />
+      <div class="ml-4">
+        <div class="text-sm font-medium text-text-primary dark:text-dark-text-primary">{{
+          'broadcast.create.schedule.sendNow' | translate }}</div>
+        <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{
+          'broadcast.create.schedule.sendNowDescription' | translate }}</div>
+      </div>
+    </label>
+
+    <!-- Schedule for Later Option -->
+    <label
+      class="flex items-center p-4 border border-border dark:border-dark-border rounded-lg cursor-pointer hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors">
+      <input type="radio" name="schedule" [checked]="!form.get('is_now')?.value" (change)="onScheduleChange(false)"
+        class="h-4 w-4 text-primary dark:text-primary-dark focus:ring-primary border-border dark:border-dark-border" />
+      <div class="ml-4 flex-1">
+        <div class="text-sm font-medium text-text-primary dark:text-dark-text-primary">{{
+          'broadcast.create.schedule.scheduleLater' | translate }}</div>
+        <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{
+          'broadcast.create.schedule.scheduleLaterDescription' | translate }}</div>
+      </div>
+    </label>
+
+    <!-- DateTime Input -->
+    <div *ngIf="!form.get('is_now')?.value" class="ml-8 mt-4">
+      <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-2">
+        {{ 'broadcast.create.schedule.dateTime' | translate }} <span class="text-danger dark:text-danger-dark">*</span>
+      </label>
+      <input type="datetime-local" formControlName="scheduled_time"
+        class="px-4 py-3 border border-border dark:border-dark-border rounded-lg bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+        [min]="getMinDateTime()" />
+      <div *ngIf="form.get('scheduled_time')?.invalid && form.get('scheduled_time')?.touched"
+        class="mt-2 text-sm text-danger dark:text-danger-dark">
+        {{ 'broadcast.create.schedule.timeRequired' | translate }}
+      </div>
+    </div>
+  </div>
+</div>

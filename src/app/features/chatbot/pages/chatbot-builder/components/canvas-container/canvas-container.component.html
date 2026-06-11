@@ -1,0 +1,79 @@
+<!-- Main Grid Container with Panning Support -->
+<div
+  #gridContainer
+  class="h-full w-full overflow-auto smooth-grid relative"
+  [class.panning]="isPanning"
+  [class.selecting-disabled]="isPanning"
+  [ngStyle]="getGridStyle()"
+  (click)="onCanvasClick($event)"
+  (contextmenu)="$event.preventDefault()">
+
+  <!-- Zoomable Content Area -->
+  <div
+    class="h-[10000px] w-[10000px] relative p-6 transition-transform origin-top-left infinite-canvas"
+    [style.transform]="getTransformStyle()">
+
+    <!-- Connection Lines Layer (Behind everything) -->
+    <app-connection-layer
+      [connections]="connections"
+      [previewLine]="previewLine"
+      [deleteButton]="deleteButton"
+      [zoomLevel]="zoomConfig.level"
+      (connectionClick)="onConnectionClick($event.connection, $event.event)"
+      (deleteConnection)="onConnectionDelete()">
+    </app-connection-layer>
+
+    <!-- Nodes Layer (Above connections) -->
+    <ng-container *ngFor="let node of nodes; trackBy: trackByNodeId">
+      <div
+        class="node-container absolute"
+        [style.left.px]="node.position.x"
+        [style.top.px]="node.position.y"
+        [style.z-index]="getNodeZIndex(node, isDragging, draggedNodeId, isNodeFirst)"
+        [attr.data-node-id]="node.id"
+        [attr.data-is-first]="isNodeFirst(node.id)"
+        [class.first-node]="isNodeFirst(node.id)"
+        [class.dragging]="isDragging && draggedNodeId === node.id"
+        [class.no-transition]="isDragging && draggedNodeId === node.id">
+
+        <!-- Message Node -->
+        <app-message-node
+          *ngIf="node.type === 'message'"
+          [node]="node"
+          [isDragging]="isDragging && draggedNodeId === node.id"
+          [zoomLevel]="zoomConfig.level"
+          (onConnectionStart)="onNodeConnectionStart(node, $event)"
+          (onAddNode)="onNodeAdd(node)"
+          (onDelete)="onNodeDelete(node)"
+          (onContentChange)="onNodeContentChange()">
+        </app-message-node>
+
+        <!-- Question Node -->
+        <app-question-node
+          *ngIf="node.type === 'question'"
+          [node]="node"
+          [isDragging]="isDragging && draggedNodeId === node.id"
+          [zoomLevel]="zoomConfig.level"
+          (onConnectionStart)="onNodeConnectionStart(node, $event)"
+          (onAddNode)="onNodeAdd(node)"
+          (onDelete)="onNodeDelete(node)"
+          (onContentChange)="onNodeContentChange()">
+        </app-question-node>
+
+        <!-- Interactive Buttons Node -->
+        <app-interactive-buttons-node
+          *ngIf="node.type === 'interactive_buttons'"
+          [node]="node"
+          [isDragging]="isDragging && draggedNodeId === node.id"
+          [zoomLevel]="zoomConfig.level"
+          (onConnectionStart)="onNodeConnectionStart(node, $event)"
+          (onAddNode)="onNodeAdd(node)"
+          (onDelete)="onNodeDelete(node)"
+          (onContentChange)="onNodeContentChange()">
+        </app-interactive-buttons-node>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+

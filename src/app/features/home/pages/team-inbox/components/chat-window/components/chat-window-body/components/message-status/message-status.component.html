@@ -1,0 +1,86 @@
+    <div class="flex items-center space-x-1">
+      <ng-container [ngSwitch]="status">
+        <!-- Loading: spinner -->
+        <div
+          *ngSwitchCase="'loading'"
+          class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+        ></div>
+
+        <!-- Sent: single check -->
+        <svg
+          *ngSwitchCase="'sent'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-2 h-2 text-gray-600"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="1 7 4 10 11 3"></polyline>
+        </svg>
+
+        <!-- Delivered: double check -->
+        <svg
+          *ngSwitchCase="'delivered'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-2 h-2 text-gray-600"
+          viewBox="0 0 14 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="1 7 4 10 11 3"></polyline>
+          <polyline points="3 7 6 10 13 3"></polyline>
+        </svg>
+
+        <!-- Read: double check in blue -->
+        <svg
+          *ngSwitchCase="'read'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-2 h-2 text-blue-500"
+          viewBox="0 0 14 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="1 7 4 10 11 3"></polyline>
+          <polyline points="3 7 6 10 13 3"></polyline>
+        </svg>
+
+        <!-- Failed: X icon -->
+        <svg
+          *ngSwitchCase="'failed'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-2 h-2 text-red-500"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="1" y1="1" x2="11" y2="11"></line>
+          <line x1="11" y1="1" x2="1" y2="11"></line>
+        </svg>
+      </ng-container>
+
+      <span
+        class="text-xs"
+        [ngClass]="{
+          'text-red-500': status === 'failed',
+          'text-gray-600': status !== 'failed'
+        }"
+      >
+        {{
+          status === "failed"
+            ? "Failed"
+            : (status | titlecase)
+        }}
+      </span>
+    </div>

@@ -1,0 +1,51 @@
+@if (isVisible) {
+  <div class="minimap-container fixed bg-white border border-gray-300 rounded-lg shadow-lg p-2 z-40 select-none" 
+       [ngStyle]="getPositionStyle()"
+       [class.dragging]="isDragging"
+       style="width: 200px; height: 150px;">
+    <div class="flex items-center justify-between mb-1 cursor-grab active:cursor-grabbing"
+         (mousedown)="onHeaderMouseDown($event)"
+         [title]="'chatbot.builder.minimap.dragToMove' | translate">
+      <span class="text-xs font-medium text-gray-700 flex items-center gap-1">
+        <span class="material-icons text-sm">drag_indicator</span>
+        {{ 'chatbot.builder.minimap.title' | translate }}
+      </span>
+      <button
+        (click)="toggle()"
+        (mousedown)="$event.stopPropagation()"
+        class="text-gray-500 hover:text-gray-700 text-xs cursor-pointer z-10"
+        [title]="'chatbot.builder.minimap.hide' | translate">
+        <span class="material-icons text-sm">close</span>
+      </button>
+    </div>
+    <div 
+      class="relative w-full h-full border border-gray-200 rounded bg-gray-50 overflow-hidden cursor-pointer"
+      (click)="onMinimapClick($event)"
+      style="height: calc(100% - 24px);">
+      <!-- Viewport indicator -->
+      @if (viewportBounds && contentBounds) {
+        <div
+          class="absolute border-2 border-blue-500 bg-blue-200 bg-opacity-30 pointer-events-none"
+          [style.left.px]="(viewportBounds.x - contentBounds.minX) * scale"
+          [style.top.px]="(viewportBounds.y - contentBounds.minY) * scale"
+          [style.width.px]="viewportBounds.width * scale"
+          [style.height.px]="viewportBounds.height * scale">
+        </div>
+      }
+      <!-- Nodes -->
+      @for (nodePos of nodePositions; track nodePos.id) {
+        @if (nodePos.width > 0 && nodePos.height > 0) {
+          <div
+            class="absolute rounded pointer-events-none border border-gray-600"
+            [ngClass]="getNodeClass(nodePos.id)"
+            [style.left.px]="nodePos.x"
+            [style.top.px]="nodePos.y"
+            [style.width.px]="nodePos.width"
+            [style.height.px]="nodePos.height">
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+

@@ -1,0 +1,153 @@
+<!-- Main SVG Container with dynamic viewBox matching canvas -->
+<svg
+  class="connection-overlay absolute inset-0 w-full h-full"
+  viewBox="0 0 10000 10000"
+  preserveAspectRatio="none"
+  style="z-index: 5; pointer-events: none; position: absolute; top: 0; left: 0;">
+
+  <!-- Definitions -->
+  <defs>
+    <!-- Default arrow marker -->
+    <marker
+      id="arrowhead"
+      markerWidth="10"
+      markerHeight="7"
+      refX="9"
+      refY="3.5"
+      orient="auto"
+      markerUnits="strokeWidth">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280" />
+    </marker>
+
+    <!-- Preview arrow marker -->
+    <marker
+      id="preview-arrowhead"
+      markerWidth="12"
+      markerHeight="8"
+      refX="11"
+      refY="4"
+      orient="auto"
+      markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#3b82f6" />
+    </marker>
+
+    <!-- Button-specific arrow markers -->
+    <marker
+      id="button-arrowhead-0"
+      markerWidth="10"
+      markerHeight="7"
+      refX="9"
+      refY="3.5"
+      orient="auto"
+      markerUnits="strokeWidth">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
+    </marker>
+
+    <marker
+      id="button-arrowhead-1"
+      markerWidth="10"
+      markerHeight="7"
+      refX="9"
+      refY="3.5"
+      orient="auto"
+      markerUnits="strokeWidth">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+    </marker>
+
+    <marker
+      id="button-arrowhead-2"
+      markerWidth="10"
+      markerHeight="7"
+      refX="9"
+      refY="3.5"
+      orient="auto"
+      markerUnits="strokeWidth">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+
+  <!-- Connection lines -->
+  <g *ngFor="let connection of connections; trackBy: trackByConnection; let i = index"
+     class="connection-group">
+
+
+    <!-- Clickable area (invisible but wider for easier clicking) -->
+    <path
+      class="connection-line-clickable"
+      [attr.d]="getConnectionPath(connection)"
+      stroke="rgba(0,0,255,0.1)"
+      stroke-width="15"
+      fill="none"
+      style="pointer-events: auto; cursor: pointer;"
+      (click)="onConnectionClick(connection, $event)" />
+
+    <!-- Main visible connection line -->
+    <path
+      class="connection-line"
+      [attr.d]="getConnectionPath(connection)"
+      [attr.stroke]="getConnectionColor(connection)"
+      [attr.stroke-width]="getStrokeWidth(connection)"
+      [attr.stroke-dasharray]="getStrokeDashArray(connection)"
+      [attr.marker-end]="getMarkerEnd(connection)"
+      fill="none"
+      opacity="0.9"
+      style="pointer-events: none;" />
+
+    <!-- Connection label for button connections -->
+    <g *ngIf="isButtonConnection(connection) && getLabelPosition(connection)"
+       class="connection-label-group">
+      <rect
+        [attr.x]="getLabelPosition(connection)!.x - 25"
+        [attr.y]="getLabelPosition(connection)!.y - 8"
+        width="50"
+        height="16"
+        rx="8"
+        fill="white"
+        fill-opacity="0.95"
+        [attr.stroke]="getConnectionColor(connection)"
+        stroke-width="1" />
+
+      <text
+        [attr.x]="getLabelPosition(connection)!.x"
+        [attr.y]="getLabelPosition(connection)!.y + 3"
+        text-anchor="middle"
+        [attr.fill]="getConnectionColor(connection)"
+        font-size="9"
+        font-weight="600">
+        {{ getButtonLabel(connection) }}
+      </text>
+    </g>
+  </g>
+
+  <!-- Connection preview line (when dragging to create connection) -->
+  <g *ngIf="previewLine" class="preview-group">
+    <path
+      class="connection-preview-line"
+      [attr.d]="getPreviewPath()"
+      stroke="#3b82f6"
+      stroke-width="3"
+      stroke-dasharray="8,4"
+      fill="none"
+      marker-end="url(#preview-arrowhead)"
+      opacity="0.8">
+      <animate
+        attributeName="stroke-dashoffset"
+        values="0;-12"
+        dur="1s"
+        repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>
+
+<!-- Connection Delete Button -->
+<div
+  *ngIf="deleteButton"
+  class="absolute w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white cursor-pointer shadow-lg transition-all duration-200 border-2 border-white"
+  [style.left.px]="deleteButton.x - 16"
+  [style.top.px]="deleteButton.y - 16"
+  [style.z-index]="100"
+  (click)="deleteConnection.emit()"
+  title="Delete connection">
+  <span class="material-icons text-sm">close</span>
+</div>

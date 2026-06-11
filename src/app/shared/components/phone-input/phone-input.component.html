@@ -1,0 +1,71 @@
+
+<div [class]="containerClass">
+  <form [formGroup]="phoneForm" class="w-full ">
+    <!-- Label Section (only shows when phone input is empty) -->
+    <div class="flex items-start mb-1">
+      <label [for]="id" class=" justify-start items-start block text-sm font-medium" [class]="labelClass">
+        {{ label }}
+      </label>
+    </div>
+
+    <!-- Input Container -->
+    <div [class]="inputContainerClass">
+      <!-- Country Select -->
+      <div class="relative w-16 " [class]="selectWidth">
+        <select
+          [id]="id + '-country'"
+          formControlName="country"
+          (change)="onCountryChange($event)"
+          class="w-full h-full px-2 py-2 border rounded-l-md focus:outline-none  focus:border-black appearance-none cursor-pointer  bg-blue-100"
+          [class]="selectClass"
+        >
+          <option class="bg-white" *ngFor="let country of countries" [value]="country.code">
+          {{ country.flag }}  {{ country.name }} {{ country.dialCode }}
+          </option>
+        </select>
+        <div class="absolute inset-x-3 inset-y-0 right-0 flex items-start px-2 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </svg>
+        </div>
+
+      </div>
+
+<!-- Phone Input -->
+<div class="relative flex-grow rounded-xl">
+  <!-- Dial Code Prefix -->
+  <div class="absolute inset-y-0 left-0 flex items-center justify-center pointer-events-none w-12 bg-transparent  ml-1">
+    <span class="block text-gray-600 text-sm text-center">
+      {{ selectedCountry?.dialCode }}
+    </span>
+  </div>
+  <!-- Phone Input Field -->
+  <input
+    [id]="id + '-phone'"
+    type="tel"
+    formControlName="phone"
+    phoneFormat
+    [countryCode]="selectedCountry?.code || defaultCountry"
+    (phoneNumberValid)="onPhoneValidityChange($event)"
+    class="w-full pl-12 pr-3 py-2 border rounded-r-md focus:outline-none  focus:border-black"
+    [class]="inputClass"
+    [attr.aria-label]="label || 'Phone number'"
+    [attr.aria-required]="required"
+  >
+</div>
+
+
+    </div>
+
+    <!-- Error Messages -->
+    <div *ngIf="showErrors && phoneForm.get('phone')?.errors && phoneForm.get('phone')?.touched"
+        class="mt-1 text-sm text-red-500" [class]="errorClass">
+      <span *ngIf="phoneForm.get('phone')?.errors?.['required']">
+        {{ requiredMessage }}
+      </span>
+      <span *ngIf="phoneForm.get('phone')?.errors?.['invalidPhone']">
+        {{ invalidMessage }}
+      </span>
+    </div>
+  </form>
+</div>

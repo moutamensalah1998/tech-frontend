@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+button:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(59, 130, 246, 0.5);
+}

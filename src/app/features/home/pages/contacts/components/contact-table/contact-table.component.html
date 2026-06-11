@@ -1,0 +1,221 @@
+<!-- Contacts Grid/List -->
+<!-- Contacts Grid/List -->
+<div
+  class="bg-surface dark:bg-dark-surface rounded-2xl shadow-sm dark:shadow-dark-sm border border-gray-200/50 dark:border-dark-border overflow-hidden">
+  <!-- Loading / Content switch -->
+  <ng-container *ngIf="loading$ | async as isLoading; else content">
+    <div class="p-12 text-center" aria-busy="true" role="status">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-4 border-primary dark:border-primary-dark border-t-transparent mx-auto">
+      </div>
+      <p class="mt-4 text-gray-500 dark:text-dark-text-secondary font-medium">{{ 'contacts.loadingContacts' | translate
+        }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #content>
+    <!-- Table Header -->
+    <div
+      class="bg-neutral-bg dark:bg-dark-surface-secondary border-b border-gray-200/50 dark:border-dark-border px-6 py-4">
+      <div
+        class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider">
+        <div class="md:col-span-1">{{ 'contacts.tableHeaders.contactInfo' | translate }}</div>
+        <div class="hidden md:block">{{ 'contacts.tableHeaders.phone' | translate }}</div>
+        <div class="hidden md:block">{{ 'contacts.tableHeaders.source' | translate }}</div>
+        <div class="hidden md:block">{{ 'contacts.tableHeaders.attributes' | translate }}</div>
+        <div class="hidden md:block text-right">{{ 'contacts.tableHeaders.actions' | translate }}</div>
+      </div>
+    </div>
+
+    <!-- Contact Items -->
+    <div class="divide-y divide-gray-200/50 dark:divide-dark-border max-h-[45vh] overflow-y-auto">
+      <ng-container *ngIf="(contacts$ | async) as contacts">
+        <div *ngFor="let contact of contacts; let i = index; trackBy: trackByContactId"
+          class="contact-item group hover:bg-gradient-to-r hover:from-primary/10 hover:to-secondary/10 dark:hover:from-primary-dark/10 dark:hover:to-secondary-text/10 transition-all duration-200 relative overflow-hidden">
+
+          <!-- Hover effect overlay -->
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 dark:via-primary-dark/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform -translate-x-full group-hover:translate-x-full">
+          </div>
+
+          <div class="px-6 py-4 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+              <!-- Contact Info -->
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex-shrink-0 w-10 h-10 bg-gradient-to-br rounded-full flex items-center justify-center shadow-lg dark:shadow-dark-lg"
+                  [ngClass]="{
+                     'from-blue-500 to-indigo-600': i % 3 === 0,
+                       'from-purple-500 to-pink-600': i % 3 === 1,
+                       'from-green-500 to-teal-600': i % 3 === 2
+                    }">
+                  <span class="text-white text-sm font-semibold">
+                    {{ getInitials(contact.name) }}
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold text-text-primary dark:text-dark-text-primary truncate">{{
+                    contact.name }}</p>
+                  <p class="text-xs text-gray-500 dark:text-dark-text-tertiary md:hidden">({{
+                    contact.country_code }}) {{ contact.phone_number }}</p>
+                </div>
+              </div>
+
+              <!-- Phone (Desktop) -->
+              <div class="hidden md:block">
+                <p class="text-sm text-text-primary dark:text-dark-text-primary">({{ contact.country_code
+                  }}) {{ contact.phone_number }}</p>
+              </div>
+
+              <!-- Source -->
+              <div class="hidden md:flex">
+                <div
+                  class="flex items-center justify-center w-8 h-8 bg-accent/10 dark:bg-accent/20 rounded-lg hover:bg-accent/15 dark:hover:bg-accent/25 transition-colors"
+                  aria-hidden="true">
+                  <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Attributes -->
+              <div class="hidden md:block">
+                <span *ngIf="contact.attribute_links && contact.attribute_links.length > 0"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [ngClass]="getAttributeBadgeClass(contact.attribute_links[0]?.value)">
+                  {{ contact.attribute_links[0]?.value }}
+                </span>
+                <span *ngIf="!contact.attribute_links || contact.attribute_links.length === 0"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-bg dark:bg-dark-surface-secondary text-text-primary/70 dark:text-dark-text-secondary">
+                  {{ 'contacts.noAttributes' | translate }}
+                </span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex items-center justify-end space-x-2">
+                <button type="button" (click)="editContact(contact)"
+                  [attr.aria-label]="'contacts.editContactAriaLabel' | translate: {name: contact.name}"
+                  class="opacity-0 group-hover:opacity-100 p-2 text-text-primary dark:text-dark-text-primary hover:text-secondary dark:hover:text-primary hover:bg-secondary/10 dark:hover:bg-primary/10 rounded-lg transition-all duration-200 transform hover:scale-110">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button type="button" (click)="deleteOpenDialog(contact.id)"
+                  [attr.aria-label]="'contacts.deleteContactAriaLabel' | translate: {name: (contact?.name ?? '')}"
+                  class="opacity-0 group-hover:opacity-100 p-2 text-gray-400 dark:text-dark-text-tertiary hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 transform hover:scale-110">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile Expanded View -->
+            <div id="contact-{{contact.id}}-panel" *ngIf="expandedContactId === contact.id"
+              class="md:hidden mt-4 pt-4 border-t border-gray-200/50 dark:border-dark-border space-y-3 animate-in slide-in-from-top duration-300"
+              role="region" [attr.aria-labelledby]="'contact-'+contact.id+'-label'">
+              <div class="flex justify-between items-center">
+                <span id="contact-{{contact.id}}-label" class="text-sm text-gray-500 dark:text-dark-text-secondary">{{
+                  'contacts.tableHeaders.source' | translate }}</span>
+                <div class="flex items-center justify-center w-8 h-8 bg-accent/10 dark:bg-accent/20 rounded-lg">
+                  <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382..." />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-dark-text-secondary">{{ 'contacts.tableHeaders.attributes'
+                  | translate }}</span>
+                <span *ngIf="contact.attribute_links && contact.attribute_links.length > 0"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [ngClass]="getAttributeBadgeClass(contact.attribute_links[0]?.value)">
+                  {{ contact.attribute_links[0]?.value }}
+                </span>
+                <span *ngIf="!contact.attribute_links || contact.attribute_links.length === 0"
+                  class="text-sm text-gray-400 dark:text-dark-text-tertiary">{{ 'contacts.noAttributes' | translate
+                  }}</span>
+              </div>
+              <div class="flex justify-between items-center pt-2">
+                <span class="text-sm text-gray-500 dark:text-dark-text-secondary">{{ 'contacts.tableHeaders.actions' |
+                  translate }}</span>
+                <div class="flex gap-2">
+                  <button type="button" (click)="editContact(contact)"
+                    class="p-2 text-text-primary dark:text-dark-text-primary hover:text-secondary dark:hover:text-primary hover:bg-secondary/10 dark:hover:bg-primary/10 rounded-full transition-all duration-200"
+                    [attr.aria-label]="'contacts.editContactAriaLabel' | translate: {name: (contact?.name ?? '')}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button type="button" (click)="deleteOpenDialog(contact.id)"
+                    class="p-2 text-gray-500 dark:text-dark-text-tertiary hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all duration-200"
+                    [attr.aria-label]="'contacts.deleteContactAriaLabel' | translate: {name: (contact?.name ?? '')}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Toggle Buttons -->
+          <button type="button" *ngIf="expandedContactId !== contact.id" (click)="toggleExpanded(contact.id)"
+            class="md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 dark:text-dark-text-tertiary hover:text-gray-600 dark:hover:text-dark-text-secondary transition-colors rounded-lg hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary"
+            [attr.aria-expanded]="false" [attr.aria-controls]="'contact-'+contact.id+'-panel'"
+            [attr.aria-label]="'contacts.expandContact' | translate">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <button type="button" *ngIf="expandedContactId === contact.id" (click)="toggleExpanded(contact.id)"
+            class="md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 dark:text-dark-text-tertiary hover:text-gray-600 dark:hover:text-dark-text-secondary transition-all duration-200 rounded-lg hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary"
+            [attr.aria-expanded]="true" [attr.aria-controls]="'contact-'+contact.id+'-panel'"
+            [attr.aria-label]="'contacts.collapseContact' | translate">
+            <svg class="w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Empty State (when the contacts array is empty) -->
+        <div *ngIf="contacts?.length === 0" class="text-center py-16">
+          <div
+            class="mx-auto w-24 h-24 bg-neutral-bg dark:bg-dark-surface-secondary rounded-full flex items-center justify-center mb-6">
+            <svg class="w-12 h-12 text-gray-400 dark:text-dark-text-tertiary" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-text-primary dark:text-dark-text-primary mb-2">{{
+            'contacts.emptyState.title' | translate }}</h3>
+          <p class="text-gray-500 dark:text-dark-text-secondary mb-6 max-w-md mx-auto">
+            <span *ngIf="searchTerm">{{ 'contacts.emptyState.messageWithSearch' | translate }}</span>
+            <span *ngIf="!searchTerm">{{ 'contacts.emptyState.messageWithoutSearch' | translate }}</span>
+          </p>
+          <button type="button" (click)="addContactDialogHandler()"
+            class="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-surface px-6 py-3 rounded-xl font-medium shadow-lg transition-all duration-200">
+            {{ 'contacts.emptyState.addFirstContact' | translate }}
+          </button>
+          @if (addContactDialog) {
+          <app-contact-header-add-contact-dialog
+            (closeDialog)="addContactDialogHandler()"></app-contact-header-add-contact-dialog>
+          }
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirm-dialog *ngIf="deleteDialog" [header]="'contacts.deleteDialog.header' | translate"
+  [message]="'contacts.deleteDialog.message' | translate" [confirmText]="'contacts.deleteDialog.confirm' | translate"
+  [cancelText]="'contacts.deleteDialog.cancel' | translate" [dialogStyle]="'danger'" (confirmed)="deleteContact()"
+  (cancelled)="deleteCloseDialog()">
+</app-confirm-dialog>

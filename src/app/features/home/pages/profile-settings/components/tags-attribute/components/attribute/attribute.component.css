@@ -1,0 +1,74 @@
+/* Responsive container styles */
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-secondary);
+}
+
+:host-context(.dark) {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Ensure proper spacing and layout */
+.attributes-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .attributes-container {
+    padding: 1rem;
+  }
+  
+  /* Adjust header layout for mobile */
+  .header-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Make search bar full width on mobile */
+  .search-container {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  /* Adjust button sizing for mobile */
+  .add-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .attributes-container {
+    padding: 1.5rem;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1024px) {
+  .attributes-container {
+    padding: 1.5rem;
+  }
+}
+
+/* Ensure table is responsive */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure pagination is responsive */
+.pagination-container {
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .pagination-container {
+    margin-top: 0.75rem;
+  }
+}

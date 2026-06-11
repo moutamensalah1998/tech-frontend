@@ -1,0 +1,287 @@
+<!-- recipient-selection.component.html -->
+<div class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-xl mb-4 p-6">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center">
+      <div
+        class="w-8 h-8 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center text-sm font-medium">
+        2
+      </div>
+      <h2 class="ml-3 text-xl font-semibold text-text-primary dark:text-dark-text-primary">{{
+        'broadcast.create.steps.recipients' | translate }}</h2>
+    </div>
+    <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+      <span class="font-medium text-primary dark:text-primary-dark">{{selectedContacts.length}}</span> / 1000 {{
+      'broadcast.create.recipients.selected' | translate }}
+    </div>
+  </div>
+
+  <!-- Contact Selection Area -->
+  <div *ngIf="selectedContacts.length === 0"
+    class="border-2 border-dashed border-border dark:border-dark-border rounded-lg p-8 text-center hover:border-primary dark:hover:border-primary-dark transition-colors">
+    <div class="flex flex-col items-center">
+      <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-primary dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.196-2.121M17 20v-2a3 3 0 00-5.196-2.121M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.196-2.121M7 20v-2m0 0v-5a2 2 0 012-2h6a2 2 0 012 2v5m-8 0h8m-8 0H2m8 0v2m0-2a2 2 0 100-4m0 4a2 2 0 100-4">
+          </path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-text-primary dark:text-dark-text-primary mb-2">{{
+        'broadcast.create.recipients.selectTitle' | translate }}
+      </h3>
+      <p class="text-text-secondary dark:text-dark-text-secondary mb-6 max-w-md">
+        {{ 'broadcast.create.recipients.selectDescription' | translate }}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button type="button" (click)="openContactDialog.emit()"
+          class="px-8 py-3 bg-primary dark:bg-primary-dark text-white rounded-lg hover:bg-primary-hover dark:hover:bg-primary transition-colors font-medium flex items-center justify-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>{{ 'broadcast.create.recipients.selectButton' | translate }}</span>
+        </button>
+        <button type="button" (click)="importContacts()" [disabled]="isImporting"
+          class="px-8 py-3 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg *ngIf="!isImporting" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+          </svg>
+          <svg *ngIf="isImporting" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          <span>{{ (isImporting ? 'broadcast.create.recipients.importing' : 'broadcast.create.recipients.importButton')
+            | translate }}</span>
+        </button>
+      </div>
+      <div class="mt-4 text-center">
+        <button type="button" (click)="downloadSample()"
+          class="text-sm text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary font-medium transition-colors flex items-center justify-center space-x-1 mx-auto">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          <span>{{ 'broadcast.create.recipients.downloadSample' | translate }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected Contacts Display -->
+  <div *ngIf="selectedContacts.length > 0">
+    <!-- Header with actions -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center space-x-4">
+        <h3 class="text-lg font-medium text-text-primary dark:text-dark-text-primary">{{
+          'broadcast.create.recipients.selectedTitle' | translate }}</h3>
+        <div class="flex space-x-2">
+          <button type="button" (click)="openContactDialog.emit()"
+            class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-primary dark:text-primary-dark border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors font-medium flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+              </path>
+            </svg>
+            <span>{{ 'broadcast.create.recipients.addMore' | translate }}</span>
+          </button>
+
+          <button type="button" (click)="importContacts()" [disabled]="isImporting"
+            class="px-4 py-2 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg *ngIf="!isImporting" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+            </svg>
+            <svg *ngIf="isImporting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            <span>{{ (isImporting ? 'broadcast.create.recipients.importing' : 'broadcast.create.recipients.import') |
+              translate }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button type="button" (click)="downloadSample()"
+          class="text-sm text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary font-medium transition-colors flex items-center space-x-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          <span>{{ 'broadcast.create.recipients.sample' | translate }}</span>
+        </button>
+
+        <button type="button" (click)="clearAllContacts()"
+          class="text-sm text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors flex items-center space-x-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+            </path>
+          </svg>
+          <span>{{ 'broadcast.create.recipients.clearAll' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <app-contact-progress-bar [currentValue]="selectedContacts.length" [maxValue]="1000">
+    </app-contact-progress-bar>
+
+    <!-- Selected Contacts Table -->
+    <div class="mt-6">
+      <div
+        class="bg-surface dark:bg-dark-surface rounded-lg border border-border dark:border-dark-border overflow-hidden">
+        <!-- Table Header -->
+        <div
+          class="bg-surface-secondary dark:bg-dark-surface-secondary px-6 py-3 border-b border-border dark:border-dark-border">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">
+              {{selectedContacts.length}} {{ 'broadcast.create.recipients.contactsSelected' | translate }}
+            </span>
+            <div class="flex items-center space-x-2">
+              <button *ngIf="selectedContacts.length > maxDisplayedContacts" (click)="openSeeAllDialog()"
+                class="text-sm text-primary dark:text-primary-dark hover:text-primary-hover dark:hover:text-primary font-medium transition-colors">
+                {{ 'broadcast.create.recipients.seeAll' | translate:{count: selectedContacts.length} }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Rows -->
+        <div class="divide-y divide-border dark:divide-dark-border">
+          <div *ngFor="let contact of getDisplayedContacts(); let i = index; trackBy: trackByContactId"
+            class="px-6 py-4 hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary transition-colors duration-200 group">
+
+            <!-- Contact Row -->
+            <div class="flex items-center justify-between">
+              <!-- Contact Info -->
+              <div class="flex items-center space-x-4 flex-1 min-w-0">
+                <!-- Avatar -->
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-primary to-primary-hover dark:from-primary-dark dark:to-primary rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                  {{getContactInitials(contact.name)}}
+                </div>
+
+                <!-- Contact Details -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <div class="min-w-0 flex-1">
+                      <h4 class="text-sm font-medium text-text-primary dark:text-dark-text-primary truncate">
+                        {{contact.name}}</h4>
+                      <p class="text-sm text-text-secondary dark:text-dark-text-secondary mt-1">{{contact.country_code}}
+                        {{contact.phone_number}}</p>
+                    </div>
+
+                    <!-- Status and Permissions -->
+                    <div class="flex items-center space-x-4 ml-4">
+                      <!-- Status Badge -->
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
+                              'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300': contact.status === 'valid',
+                              'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': contact.status === 'invalid',
+                              'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300': contact.status !== 'valid' && contact.status !== 'invalid'
+                            }">
+                        <div class="w-1.5 h-1.5 rounded-full mr-1.5" [ngClass]="{
+                               'bg-green-500': contact.status === 'valid',
+                               'bg-red-500': contact.status === 'invalid',
+                               'bg-gray-500': contact.status !== 'valid' && contact.status !== 'invalid'
+                             }"></div>
+                        {{contact.status | titlecase}}
+                      </span>
+
+                      <!-- Permissions -->
+                      <div class="flex items-center space-x-2 text-xs">
+                        <span class="flex items-center"
+                          [ngClass]="{'text-green-600 dark:text-green-400': contact.allow_broadcast, 'text-red-600 dark:text-red-400': !contact.allow_broadcast}">
+                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clip-rule="evenodd" *ngIf="contact.allow_broadcast"></path>
+                            <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd" *ngIf="!contact.allow_broadcast"></path>
+                          </svg>
+                          {{ 'broadcast.create.contactSelection.table.permission.broadcast' | translate }}
+                        </span>
+                        <span class="flex items-center"
+                          [ngClass]="{'text-green-600 dark:text-green-400': contact.allow_sms, 'text-red-600 dark:text-red-400': !contact.allow_sms}">
+                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clip-rule="evenodd" *ngIf="contact.allow_sms"></path>
+                            <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd" *ngIf="!contact.allow_sms"></path>
+                          </svg>
+                          {{ 'broadcast.create.contactSelection.table.permission.sms' | translate }}
+                        </span>
+                      </div>
+
+                      <!-- Tags -->
+                      <div *ngIf="contact.tag_links.length > 0" class="flex items-center">
+                        <div class="flex flex-wrap gap-1">
+                          <span *ngFor="let tag of contact.tag_links.slice(0, 2)"
+                            class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                            {{tag.tag?.name}}
+                          </span>
+                          <span *ngIf="contact.tag_links.length > 2"
+                            class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                            +{{contact.tag_links.length - 2}}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Remove Button -->
+                      <button type="button" (click)="removeContact(getOriginalIndex(contact))"
+                        class="opacity-0 group-hover:opacity-100 text-danger dark:text-danger-dark hover:text-red-700 dark:hover:text-red-300 transition-all duration-200 p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Show Message if Truncated -->
+        <div *ngIf="selectedContacts.length > maxDisplayedContacts"
+          class="bg-surface-secondary dark:bg-dark-surface-secondary px-6 py-3 border-t border-border dark:border-dark-border">
+          <div class="text-center">
+            <button (click)="openSeeAllDialog()"
+              class="text-sm text-primary dark:text-primary-dark hover:text-primary-hover dark:hover:text-primary font-medium transition-colors">
+              {{ 'broadcast.create.recipients.showingContacts' | translate:{count: maxDisplayedContacts, total:
+              selectedContacts.length} }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Loading Overlay -->
+  <div *ngIf="isImporting" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-surface dark:bg-dark-surface rounded-lg p-8 max-w-md w-full mx-4 text-center">
+      <div class="flex items-center justify-center mb-4">
+        <svg class="animate-spin h-8 w-8 text-primary dark:text-primary-dark" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-2">{{
+        'broadcast.create.recipients.importingTitle' | translate
+        }}</h3>
+      <p class="text-text-secondary dark:text-dark-text-secondary">{{ 'broadcast.create.recipients.importingDescription'
+        | translate }}</p>
+    </div>
+  </div>
+</div>

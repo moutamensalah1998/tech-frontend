@@ -1,0 +1,127 @@
+<div [formGroup]="form" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Phone Button Card -->
+  <div class="p-2">
+    <button type="button" (click)="toggleButton('phone')" [disabled]="!isPhoneButtonAllowed"
+      class="w-full p-6 rounded-xl border-2 transition-all duration-300" [ngClass]="{
+        'border-green-500 bg-gradient-to-br from-green-50 dark:from-green-900/20 to-emerald-50 dark:to-emerald-900/20': buttonService.hasPhoneButton && isPhoneButtonAllowed,
+        'border-border dark:border-dark-border hover:border-gray-400 dark:hover:border-gray-500': !buttonService.hasPhoneButton && isPhoneButtonAllowed,
+        'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 cursor-not-allowed opacity-60': !isPhoneButtonAllowed
+      }">
+      <div class="text-center">
+        <div class="text-lg font-semibold mb-2" [ngClass]="{
+            'text-green-700 dark:text-green-300': buttonService.hasPhoneButton && isPhoneButtonAllowed,
+            'text-text-secondary dark:text-dark-text-secondary': !buttonService.hasPhoneButton && isPhoneButtonAllowed,
+            'text-danger dark:text-danger-dark': !isPhoneButtonAllowed
+          }">
+          {{ 'broadcast.createTemplate.actionButtons.callButton' | translate }}
+        </div>
+        <div class="text-sm mb-3" [ngClass]="{
+               'text-text-tertiary dark:text-dark-text-tertiary': isPhoneButtonAllowed,
+               'text-danger dark:text-danger-dark': !isPhoneButtonAllowed
+             }">
+          <span *ngIf="isPhoneButtonAllowed">{{ 'broadcast.createTemplate.actionButtons.callButtonDescription' |
+            translate }}</span>
+          <span *ngIf="!isPhoneButtonAllowed">{{ 'broadcast.createTemplate.actionButtons.callButtonNotAllowed' |
+            translate }} {{ currentCategory }} {{ 'broadcast.createTemplate.actionButtons.callButtonTemplates' |
+            translate }}</span>
+        </div>
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+            'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200': buttonService.hasPhoneButton && isPhoneButtonAllowed,
+            'bg-gray-100 dark:bg-gray-700 text-text-tertiary dark:text-dark-text-tertiary': !buttonService.hasPhoneButton && isPhoneButtonAllowed,
+            'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200': !isPhoneButtonAllowed
+          }">
+          <span *ngIf="isPhoneButtonAllowed">{{ buttonService.hasPhoneButton ?
+            ('broadcast.createTemplate.actionButtons.callButtonEnabled' | translate) :
+            ('broadcast.createTemplate.actionButtons.callButtonDisabled' | translate) }}</span>
+          <span *ngIf="!isPhoneButtonAllowed">{{ 'broadcast.createTemplate.actionButtons.callButtonRestricted' |
+            translate }}</span>
+        </div>
+      </div>
+    </button>
+
+    <!-- Phone Button Configuration -->
+    <div *ngIf="buttonService.hasPhoneButton && isPhoneButtonAllowed"
+      class="mt-6 space-y-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800/50">
+      <div>
+        <label class="block text-sm font-medium text-green-800 dark:text-green-300 mb-2">{{
+          'broadcast.createTemplate.actionButtons.buttonText' | translate }}</label>
+        <input type="text" formControlName="callButtonText"
+          [placeholder]="'broadcast.createTemplate.actionButtons.buttonTextPlaceholder' | translate" maxlength="20"
+          class="w-full px-3 py-2 text-sm border border-green-300 dark:border-green-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-dark-surface text-text-primary dark:text-dark-text-primary" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-800 dark:text-green-300 mb-2">{{
+          'broadcast.createTemplate.actionButtons.phoneNumber' | translate }}</label>
+        <input type="tel" formControlName="phoneNumber"
+          [placeholder]="'broadcast.createTemplate.actionButtons.phoneNumberPlaceholder' | translate"
+          class="w-full px-3 py-2 text-sm border border-green-300 dark:border-green-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-dark-surface text-text-primary dark:text-dark-text-primary" />
+        <div *ngIf="
+            form.get('phoneNumber')?.invalid &&
+            form.get('phoneNumber')?.touched
+          " class="text-xs text-danger dark:text-danger-dark mt-1 flex items-center">
+          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          {{ 'broadcast.createTemplate.actionButtons.phoneNumberError' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy Code Button Card (Marketing/Utility only) -->
+  <div class="p-2" *ngIf="isCopyButtonAllowed">
+    <button type="button" (click)="toggleButton('copy')"
+      class="w-full p-6 rounded-xl border-2 transition-all duration-300" [ngClass]="{
+        'border-purple-500 bg-gradient-to-br from-purple-50 dark:from-purple-900/20 to-indigo-50 dark:to-indigo-900/20': buttonService.hasCopyButton,
+        'border-border dark:border-dark-border hover:border-gray-400 dark:hover:border-gray-500': !buttonService.hasCopyButton
+      }">
+      <div class="text-center">
+        <div class="text-lg font-semibold mb-2" [ngClass]="{
+            'text-purple-700 dark:text-purple-300': buttonService.hasCopyButton,
+            'text-text-secondary dark:text-dark-text-secondary': !buttonService.hasCopyButton
+          }">
+          {{ 'broadcast.createTemplate.actionButtons.copyCodeButton' | translate }}
+        </div>
+        <div class="text-sm mb-3 text-text-tertiary dark:text-dark-text-tertiary">
+          {{ 'broadcast.createTemplate.actionButtons.copyCodeDescription' | translate }}
+        </div>
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+             'bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200': buttonService.hasCopyButton,
+             'bg-gray-100 dark:bg-gray-700 text-text-tertiary dark:text-dark-text-tertiary': !buttonService.hasCopyButton
+          }">
+          {{ buttonService.hasCopyButton ? ('broadcast.createTemplate.actionButtons.callButtonEnabled' | translate) :
+          ('broadcast.createTemplate.actionButtons.callButtonDisabled' | translate) }}
+        </div>
+      </div>
+    </button>
+
+    <!-- Copy Code Configuration -->
+    <div *ngIf="buttonService.hasCopyButton"
+      class="mt-6 space-y-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800/50">
+      <div>
+        <label class="block text-sm font-medium text-purple-800 dark:text-purple-300 mb-2">{{
+          'broadcast.createTemplate.actionButtons.offerCode' | translate }}</label>
+        <input type="text" formControlName="offerCode"
+          [placeholder]="'broadcast.createTemplate.actionButtons.offerCodePlaceholder' | translate" maxlength="15"
+          (input)="onOfferCodeInput($event)" inputmode="latin" pattern="[A-Za-z0-9]*"
+          class="w-full px-3 py-2 text-sm border border-purple-300 dark:border-purple-700 rounded-lg
+                focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-dark-surface text-text-primary dark:text-dark-text-primary" />
+        <div class="text-xs mt-1">
+          <div class="text-purple-600 dark:text-purple-400">{{ 'broadcast.createTemplate.actionButtons.offerCodeHint' |
+            translate }}</div>
+
+          <div *ngIf="form.get('offerCode')?.touched && form.get('offerCode')?.invalid"
+            class="text-xs text-danger dark:text-danger-dark mt-1">
+            <div *ngIf="form.get('offerCode')?.errors?.['pattern']">
+              {{ 'broadcast.createTemplate.actionButtons.offerCodePatternError' | translate }}
+            </div>
+            <div *ngIf="form.get('offerCode')?.errors?.['maxlength']">
+              {{ 'broadcast.createTemplate.actionButtons.offerCodeMaxLengthError' | translate }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>

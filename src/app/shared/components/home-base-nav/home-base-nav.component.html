@@ -1,0 +1,134 @@
+<!-- HTML Template -->
+<nav
+  class="relative top-0 w-full bg-surface-secondary dark:bg-dark-surface-secondary text-gray-900 dark:text-dark-text-primary font-sans border-b border-border dark:border-dark-border transition-colors duration-200 z-50 select-none">
+  <div class="mx-auto flex items-center justify-between px-3 sm:px-4 py-2">
+    <!-- Left Section - Logo and Navigation -->
+    <div class="flex items-center gap-6 rtl:space-x-reverse rtl:gap-6">
+      <!-- Logo -->
+      <a href="/dashboard" class="flex items-center min-h-[44px]">
+        <img src="assets/features/logo-cropped.svg" alt="Prog GATE Logo" class="h-8 sm:h-10 w-auto dark:brightness-110" />
+      </a>
+
+      <div class="hidden md:block w-px h-6 bg-border dark:bg-dark-border"></div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:block">
+        <ul class="flex items-center gap-1 rtl:space-x-reverse rtl:gap-1">
+          <!-- Dynamic navigation items based on user roles -->
+          <li *ngFor="let navItem of visibleNavItems">
+            <a [routerLink]="navItem.route" routerLinkActive="bg-primary dark:bg-primary-dark text-white hover:bg-primary-hover dark:hover:bg-primary-dark-hover"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-text-secondary dark:text-dark-text-secondary hover:text-text-primary dark:hover:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary">
+              {{ navItem.label | translate }}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Right Section - Connection Status and Profile -->
+    <div class="flex items-center gap-4 rtl:space-x-reverse rtl:gap-4">
+
+      <!-- Connection Status Indicator -->
+      <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-lg border border-border dark:border-dark-border bg-surface dark:bg-dark-surface-tertiary">
+        <!-- Status Dot -->
+        <span class="relative flex h-3 w-3 flex-shrink-0">
+          <span *ngIf="isOnline"
+            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3" [ngClass]="{
+                  'bg-green-500': isOnline,
+                  'bg-red-500': !isOnline
+                }"></span>
+        </span>
+        <!-- Status Text and Phone Number - Stacked -->
+        <div class="flex flex-col items-start leading-tight">
+          <span class="text-xs font-semibold uppercase tracking-wide" [ngClass]="{
+                  'text-green-600 dark:text-green-400': isOnline,
+                  'text-red-600 dark:text-red-400': !isOnline
+                }">
+            {{ isOnline ? ('navigation.connected' | translate) : ('navigation.notConnected' | translate) }}
+          </span>
+          <!-- <span *ngIf="phoneNumber" class="text-sm text-text-secondary dark:text-dark-text-secondary font-medium">
+            {{ phoneNumber }}
+          </span> -->
+        </div>
+      </div>
+
+      <div class="hidden md:block w-px h-6 bg-border dark:bg-dark-border"></div>
+
+      <!-- Settings Button (Mobile only - for profile settings sidebar) -->
+      <button 
+        *ngIf="isSettingsPage()"
+        type="button"
+        (click)="toggleSettingsSidebar()"
+        class="md:hidden flex items-center justify-center min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-primary-light dark:hover:bg-primary-dark/10 transition-colors duration-200"
+        [attr.aria-label]="'navigation.settings' | translate">
+        <svg class="h-6 w-6 text-primary dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16" />
+        </svg>
+      </button>
+
+      <!-- Profile Button -->
+      <button [routerLink]="['/dashboard', 'settings', 'business-profile']" type="button"
+        class="flex items-center justify-center min-w-[44px] min-h-[44px] w-9 h-9 md:w-10 md:h-10 rounded-full border border-border dark:border-dark-border hover:border-primary dark:hover:border-primary-dark hover:bg-primary-light dark:hover:bg-primary-dark/10 transition-all duration-200"
+        [attr.aria-label]="'navigation.profile' | translate">
+        <svg class="h-5 w-5 text-text-secondary dark:text-dark-text-secondary" fill="currentColor" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M7.5 0C8.49456 0 9.44839 0.395088 10.1517 1.09835C10.8549 1.80161 11.25 2.75544 11.25 3.75C11.25 4.74456 10.8549 5.69839 10.1517 6.40165C9.44839 7.10491 8.49456 7.5 7.5 7.5C6.50544 7.5 5.55161 7.10491 4.84835 6.40165C4.14509 5.69839 3.75 4.74456 3.75 3.75C3.75 2.75544 4.14509 1.80161 4.84835 1.09835C5.55161 0.395088 6.50544 0 7.5 0ZM7.5 9.375C11.6438 9.375 15 11.0531 15 13.125V15H0V13.125C0 11.0531 3.35625 9.375 7.5 9.375Z">
+          </path>
+        </svg>
+      </button>
+
+      <!-- Mobile Menu Button (only visible on small screens) -->
+      <button type="button"
+        class="lg:hidden flex items-center justify-center min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary transition-colors duration-200"
+        (click)="toggleMobileMenu()"
+        [attr.aria-label]="isMobileMenuOpen ? ('navigation.closeMenu' | translate) : ('navigation.openMenu' | translate)"
+        [attr.aria-expanded]="isMobileMenuOpen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-text-secondary dark:text-dark-text-secondary" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu (hidden by default) -->
+  <div class="lg:hidden transition-all duration-300 ease-in-out overflow-hidden" 
+       [ngClass]="{'max-h-0 opacity-0': !isMobileMenuOpen, 'max-h-screen opacity-100': isMobileMenuOpen}">
+    <div class="px-3 pt-2 pb-3 space-y-1 bg-surface dark:bg-dark-surface-secondary border-t border-border dark:border-dark-border">
+      <!-- Dynamic mobile navigation items based on user roles -->
+      <a *ngFor="let navItem of visibleNavItems" [routerLink]="navItem.route"
+        routerLinkActive="text-primary dark:text-primary-dark bg-primary-light dark:bg-primary-dark/10 font-medium" [routerLinkActiveOptions]="{exact: false}"
+        class="block px-4 py-3 min-h-[44px] flex items-center text-sm text-text-secondary dark:text-dark-text-secondary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary hover:text-text-primary dark:hover:text-dark-text-primary rounded-lg transition-colors duration-200"
+        (click)="isMobileMenuOpen = false">
+        {{ navItem.label | translate }}
+      </a>
+
+      <!-- Mobile Connection Status -->
+      <div class="flex items-center gap-3 px-4 py-3 mt-2 min-h-[44px] rounded-lg border border-border dark:border-dark-border" [ngClass]="{
+             'bg-green-50 dark:bg-green-900/20': isOnline,
+             'bg-red-50 dark:bg-red-900/20': !isOnline
+           }">
+        <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5" [ngClass]="{
+                  'bg-green-500': isOnline,
+                  'bg-red-500': !isOnline
+                }"></span>
+        </span>
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="text-xs font-semibold uppercase truncate" [ngClass]="{
+                  'text-green-700 dark:text-green-400': isOnline,
+                  'text-red-700 dark:text-red-400': !isOnline
+                }">
+            {{ isOnline ? ('navigation.connected' | translate) : ('navigation.notConnected' | translate) }}
+          </span>
+          <span *ngIf="phoneNumber" class="text-xs text-text-secondary dark:text-dark-text-secondary truncate">
+            {{ phoneNumber }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,72 @@
+/* ===========================
+   PERSONAL PROFILE COMPONENT STYLES
+   =========================== */
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-secondary);
+    overflow-y: auto;
+}
+
+:host-context(.dark) {
+    background-color: var(--color-bg-secondary);
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1024px) {
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Form input placeholder styling */
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: var(--color-text-secondary);
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Smooth transitions for collapsible sections */
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Focus states for accessibility */
+input:focus,
+button:focus {
+    outline: none;
+}
+
+/* Disabled input styling */
+input:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}

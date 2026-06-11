@@ -1,0 +1,198 @@
+/* See All Contacts Dialog Styles */
+.see-all-contacts-dialog {
+  padding: 0 !important;
+  max-width: none !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.see-all-contacts-dialog .mat-dialog-container {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Custom scrollbar */
+.see-all-contacts-dialog ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.see-all-contacts-dialog ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.see-all-contacts-dialog ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.see-all-contacts-dialog ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animation for contact rows */
+.see-all-contacts-dialog tbody tr {
+  transition: all 0.2s ease;
+}
+
+.see-all-contacts-dialog tbody tr:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Checkbox styling */
+.see-all-contacts-dialog input[type="checkbox"] {
+  transition: all 0.2s ease;
+}
+
+.see-all-contacts-dialog input[type="checkbox"]:checked {
+  transform: scale(1.05);
+}
+
+/* Button hover effects */
+.see-all-contacts-dialog button {
+  transition: all 0.2s ease;
+}
+
+.see-all-contacts-dialog button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Status badge animations */
+.see-all-contacts-dialog .rounded-full {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Search input focus effects */
+.see-all-contacts-dialog input[type="text"]:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Table header sticky positioning */
+.see-all-contacts-dialog thead {
+  backdrop-filter: blur(8px);
+  background-color: rgba(249, 250, 251, 0.95);
+}
+
+/* Selected row styling */
+.see-all-contacts-dialog .bg-red-50 {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #fecaca;
+}
+
+/* Empty state styling */
+.see-all-contacts-dialog .text-gray-400 svg {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Avatar gradient animation */
+.see-all-contacts-dialog .bg-gradient-to-br {
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Tag styling with hover effects */
+.see-all-contacts-dialog .bg-purple-100 {
+  transition: all 0.2s ease;
+}
+
+.see-all-contacts-dialog .bg-purple-100:hover {
+  background-color: #e9d5ff;
+  transform: scale(1.05);
+}
+
+/* Loading states */
+.see-all-contacts-dialog button[disabled] {
+  position: relative;
+  overflow: hidden;
+}
+
+.see-all-contacts-dialog button[disabled]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .see-all-contacts-dialog .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .see-all-contacts-dialog .text-2xl {
+    font-size: 1.5rem;
+  }
+
+  .see-all-contacts-dialog .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .see-all-contacts-dialog .bg-blue-50 {
+    background: #ffffff;
+    border: 2px solid #1d4ed8;
+  }
+
+  .see-all-contacts-dialog .bg-red-50 {
+    background: #ffffff;
+    border: 2px solid #dc2626;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .see-all-contacts-dialog * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

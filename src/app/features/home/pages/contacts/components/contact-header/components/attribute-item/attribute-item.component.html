@@ -1,0 +1,83 @@
+<div class="mb-4" [formGroup]="$any(group)">
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Attribute column -->
+    <div class="flex flex-col">
+      <label class="pl-2 text-gray-500 dark:text-dark-text-secondary">Attribute</label>
+
+      <!-- Normal state: Select-like box -->
+      <div *ngIf="!addNewMode"
+        class="bg-gray-100 dark:bg-dark-surface-secondary p-2 border border-gray-200 dark:border-dark-border rounded-md">
+        <div role="button" tabindex="0" (click)="onToggle()" (keydown.enter)="onToggle()"
+          (keydown.space)="$event.preventDefault(); onToggle()" [attr.aria-expanded]="showDropdown"
+          class="cursor-pointer flex items-center justify-between">
+          <span class="text-gray-900 dark:text-dark-text-primary">
+            {{ attributeNameValue || 'Select Attribute' }}
+          </span>
+          <svg [class.rotate-180]="showDropdown"
+            class="w-4 h-4 text-gray-500 dark:text-dark-text-tertiary transition-transform" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Add New mode: Input field that replaces the select box -->
+      <div *ngIf="addNewMode"
+        class="bg-gray-100 dark:bg-dark-surface-secondary p-2 border border-gray-200 dark:border-dark-border rounded-md select-none">
+        <input #newAttributeInput type="text" [value]="newAttributeName" (input)="onInputChange($event)"
+          (focus)="onInputFocus()" (blur)="onInputBlur()" (keydown)="onNewAttributeKeyDown($event)"
+          placeholder="Enter new attribute name" aria-label="New attribute name"
+          class="w-full bg-transparent border-none outline-none text-gray-900 dark:text-dark-text-primary placeholder-gray-500 dark:placeholder-dark-text-tertiary"
+          autocomplete="off" />
+      </div>
+
+      <!-- Dropdown panel for selecting existing attributes -->
+      <div *ngIf="showDropdown && !addNewMode"
+        class="mt-1 border border-gray-200 dark:border-dark-border rounded-md overflow-hidden shadow-sm dark:shadow-dark-sm bg-white dark:bg-dark-surface z-10 relative">
+        <!-- Add new entry -->
+        <!-- <div class="p-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 text-blue-600 font-medium flex items-center"
+             (click)="onEnterAddNew()">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add New Attribute
+        </div> -->
+
+        <!-- Attribute list -->
+        <div class="max-h-48 overflow-y-auto">
+          <div *ngFor="let attr of attributes$ | async"
+            class="p-2 hover:bg-gray-100 dark:hover:bg-dark-surface-secondary cursor-pointer text-gray-900 dark:text-dark-text-primary"
+            (click)="onSelect(attr)">
+            {{ attr.name }}
+          </div>
+
+          <div *ngIf="loading$ | async" class="p-2 text-center text-gray-500 dark:text-dark-text-secondary">
+            Loading...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Value column -->
+    <div class="flex flex-col">
+      <label class="pl-2 text-gray-500 dark:text-dark-text-secondary">Value</label>
+      <input type="text" formControlName="value" placeholder="Value"
+        class="bg-gray-100 dark:bg-dark-surface-secondary p-2 border border-gray-200 dark:border-dark-border rounded-md focus:bg-white dark:focus:bg-dark-surface focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-dark transition-all text-gray-900 dark:text-dark-text-primary placeholder-gray-500 dark:placeholder-dark-text-tertiary">
+
+      <div *ngIf="$any(group)?.errors?.['invalidValue']" class="text-red-500 dark:text-danger-dark text-sm mt-1">
+        Value is required for selected attribute
+      </div>
+    </div>
+  </div>
+
+  <!-- Remove button -->
+  <button type="button" *ngIf="index > 0"
+    class="text-red-500 dark:text-danger-dark hover:text-red-700 dark:hover:text-red-400 text-sm mt-2 flex items-center"
+    (click)="onRemove()">
+    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+    Remove
+  </button>
+</div>

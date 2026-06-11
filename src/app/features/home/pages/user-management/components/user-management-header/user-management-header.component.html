@@ -1,0 +1,48 @@
+<div class="flex flex-wrap lg:flex-nowrap items-end gap-4 lg:gap-6 py-3">
+  <!-- Search Section -->
+  <div class="flex flex-col px-2 w-full lg:w-72">
+    <div class="relative">
+      <div
+        class="absolute inset-y-0 left-0 rtl:left-auto rtl:right-0 pl-3 rtl:pl-0 rtl:pr-3 flex items-center pointer-events-none text-text-tertiary dark:text-dark-text-tertiary">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+
+      <!-- use template ref variable to avoid EventTarget|null issues -->
+      <input #searchInput (input)="onSearchChange(searchInput.value)" type="text" autocomplete="off"
+        [placeholder]="(activeTab === 'users' ? 'userManagement.searchUsers' : 'userManagement.searchTeams') | translate"
+        class="w-full h-11 text-sm border border-border dark:border-dark-border rounded-lg
+            focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark
+            focus:border-transparent bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary transition-all
+            pl-10 rtl:pl-3 rtl:pr-10 rtl:text-right">
+
+    </div>
+  </div>
+
+  <!-- SORT SELECT -->
+  <div class="flex flex-col px-2 w-full sm:w-60 lg:w-44">
+    <select name="sort" [(ngModel)]="selectedSort" (ngModelChange)="onSortedByChange($event)" class="w-full h-11 bg-surface dark:bg-dark-surface border border-border dark:border-dark-border text-text-secondary dark:text-dark-text-secondary rounded-lg px-3
+             focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark rtl:text-right">
+      <option value="">{{ 'userManagement.sortBy' | translate }}</option>
+      <option value="ASCENDING">{{ 'userManagement.ascending' | translate }}</option>
+      <option value="DESCENDING">{{ 'userManagement.descending' | translate }}</option>
+    </select>
+  </div>
+
+  <!-- BUTTON -->
+  <div class="flex flex-col px-2 w-full sm:w-auto">
+    <button (click)="activeTab === 'users' ? openCreateUserDialog() : openCreateTeamDialog()" class="h-11 font-medium flex items-center justify-center gap-2
+           bg-primary dark:bg-primary-dark text-white px-4 py-2 rounded-md border border-primary dark:border-primary-dark
+           hover:bg-primary-hover dark:hover:bg-primary transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:ring-offset-2
+           rtl:flex-row-reverse">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m-0-6h6m-6 0H6" />
+      </svg>
+      {{ (activeTab === 'users' ? 'userManagement.addNewUser' : 'userManagement.createTeam') | translate }}
+    </button>
+  </div>
+
+</div>

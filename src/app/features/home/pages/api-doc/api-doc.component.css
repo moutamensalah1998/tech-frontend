@@ -1,0 +1,91 @@
+/* API Documentation Component Styles */
+.swagger-container {
+  min-height: calc(100vh - 64px); /* Subtract header height */
+  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.swagger-container.hidden {
+  display: none;
+}
+
+/* Override Swagger UI styles to match app theme */
+:host ::ng-deep .swagger-ui {
+  font-family: inherit;
+}
+
+:host ::ng-deep .swagger-ui .topbar {
+  display: none; /* Hide Swagger UI topbar if you want to use your own header */
+}
+
+#swagger-ui {
+  min-height: 600px;
+}
+
+/* Dark mode overrides for Swagger UI */
+:host-context(.dark) ::ng-deep .swagger-ui {
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .info .title,
+:host-context(.dark) ::ng-deep .swagger-ui .info h1,
+:host-context(.dark) ::ng-deep .swagger-ui .info h2,
+:host-context(.dark) ::ng-deep .swagger-ui .info h3,
+:host-context(.dark) ::ng-deep .swagger-ui .info h4,
+:host-context(.dark) ::ng-deep .swagger-ui .info h5 {
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .info p,
+:host-context(.dark) ::ng-deep .swagger-ui .info li,
+:host-context(.dark) ::ng-deep .swagger-ui .info table {
+  color: #A0A0A0;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .scheme-container {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .opblock .opblock-section-header {
+  background-color: #1A1F26; /* dark-surface-secondary */
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .opblock .opblock-summary-operation-id,
+:host-context(.dark) ::ng-deep .swagger-ui .opblock .opblock-summary-path,
+:host-context(.dark) ::ng-deep .swagger-ui .opblock .opblock-summary-path__deprecated {
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui table thead tr td,
+:host-context(.dark) ::ng-deep .swagger-ui table thead tr th {
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .response-col_status {
+  color: #A0A0A0;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui .tab li {
+  color: #E8E8E8;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui select {
+  background-color: #1A1F26;
+  color: #E8E8E8;
+  border-color: #2D3748;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui input[type=text] {
+  background-color: #1A1F26;
+  color: #E8E8E8;
+  border-color: #2D3748;
+}
+
+:host-context(.dark) ::ng-deep .swagger-ui textarea {
+  background-color: #1A1F26;
+  color: #E8E8E8;
+  border-color: #2D3748;
+}

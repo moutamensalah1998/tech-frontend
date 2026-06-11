@@ -1,0 +1,87 @@
+<!-- ChatListHeaderComponent -->
+<div class="px-4 pt-4 pb-2 border-b border-border dark:border-dark-border bg-surface dark:bg-dark-surface select-none">
+  <div
+    class="flex items-stretch bg-surface-secondary dark:bg-dark-surface-secondary rounded-lg ring-1 ring-border dark:ring-dark-border focus-within:ring-2 focus-within:ring-primary dark:focus-within:ring-primary-dark transition-all">
+    <div class="flex items-center flex-1 pl-3 pr-2 gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-5 h-5 text-primary dark:text-primary-dark shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+      <input type="text" [placeholder]="'chat.search' | translate"
+        class="bg-transparent placeholder-text-tertiary dark:placeholder-dark-text-tertiary focus:outline-none w-full py-2.5 text-xs text-text-primary dark:text-dark-text-primary"
+        (input)="onSearchChange($event)">
+    </div>
+
+    <div class="w-px bg-border dark:bg-dark-border my-2"></div>
+
+    <div class="relative flex items-center pr-1 pl-1">
+      <div class="bg-transparent text-text-primary dark:text-dark-text-primary text-xs font-sans">
+        {{ 'chat.namePhone' | translate }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="px-4 py-3 flex items-center justify-between bg-surface-secondary dark:bg-dark-surface-secondary border-b border-border dark:border-dark-border">
+  <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+    <div class="relative">
+      <button (click)="toggleDropdown()"
+        class="flex items-center gap-1.5 px-3 py-1.5 text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary rounded-md transition-colors font-medium">
+        <span class="text-sm">{{ 'chat.all' | translate }}</span>
+        <svg [ngClass]="{'rotate-180': isDropdownOpen}"
+          class="w-4 h-4 text-primary dark:text-primary-dark transition-transform" viewBox="0 0 12 7"
+          fill="currentColor">
+          <path
+            d="M1.23481 0.674227C1.57635 0.330264 2.13237 0.329282 2.47512 0.672035L5.16301 3.35993C5.55354 3.75045 6.1867 3.75045 6.57722 3.35992L9.26511 0.672035C9.60787 0.329281 10.1639 0.330264 10.5054 0.674227C10.8453 1.01647 10.8443 1.56912 10.5032 1.91016L6.57722 5.83617C6.1867 6.2267 5.55353 6.2267 5.16301 5.83617L1.237 1.91016C0.895951 1.56912 0.894975 1.01647 1.23481 0.674227Z" />
+        </svg>
+      </button>
+
+      <div *ngIf="isDropdownOpen"
+        class="absolute mt-1.5 z-10 w-32 bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg shadow-lg dark:shadow-dark-lg overflow-hidden">
+        <div class="py-1">
+          <button (click)="selectFilter('Open')"
+            class="w-full px-3 py-2 text-left text-sm hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary transition-colors">{{
+            'chat.open' | translate }}</button>
+          <button (click)="selectFilter('Solved')"
+            class="w-full px-3 py-2 text-left text-sm hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary transition-colors">{{
+            'chat.solved' | translate }}</button>
+          <button (click)="selectFilter('Pending')"
+            class="w-full px-3 py-2 text-left text-sm hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary transition-colors">{{
+            'chat.pending' | translate }}</button>
+          <button (click)="selectFilter('All')"
+            class="w-full px-3 py-2 text-left text-sm hover:bg-surface-secondary dark:hover:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary transition-colors">{{
+            'chat.all' | translate }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-xs text-primary dark:text-primary-dark font-medium">
+      <div>{{ 'chat.chats' | translate }} {{ totalItems$ | async }}</div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button
+      class="p-2 hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary rounded-md transition-colors group">
+      <svg
+        class="w-4 h-4 text-primary dark:text-primary-dark group-hover:text-primary-hover dark:group-hover:text-primary-active"
+        viewBox="0 0 12 12">
+        <path fill="currentColor"
+          d="M4.95001 11C4.87951 11 4.80901 10.9835 4.74391 10.9502C4.59421 10.8728 4.50001 10.7186 4.50001 10.55V6.01761L1.45921 3.64521C0.912606 3.21471 0.600006 2.57031 0.600006 1.87671V0.950012C0.600006 0.536312 0.936606 0.200012 1.35001 0.200012H10.65C11.0634 0.200012 11.4 0.536312 11.4 0.950012V1.87671C11.4 2.57061 11.0874 3.21471 10.5426 3.64401L7.50001 6.01761V9.05001C7.50001 9.19521 7.42981 9.33171 7.31161 9.41631L5.21161 10.9163C5.13391 10.9718 5.04211 11 4.95001 11Z" />
+      </svg>
+    </button>
+    <button (click)="onNewChat()"
+      class="p-2 hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary rounded-md transition-colors group">
+      <svg
+        class="w-4 h-4 text-success dark:text-success-light group-hover:text-success-dark dark:group-hover:text-success"
+        viewBox="0 0 24 24">
+        <path fill="currentColor"
+          d="M12 0C5.3832 0 0 5.3832 0 12C0 18.6168 5.3832 24 12 24C18.6168 24 24 18.6168 24 12C24 5.3832 18.6168 0 12 0ZM17.1 12.9H12.9V17.1C12.9 17.5974 12.4974 18 12 18C11.5026 18 11.1 17.5974 11.1 17.1V12.9H6.9C6.4026 12.9 6 12.4974 6 12C6 11.5026 6.4026 11.1 6.9 11.1H11.1V6.9C11.1 6.4026 11.5026 6 12 6C12.4974 6 12.9 6.4026 12.9 6.9V11.1H17.1C17.5974 11.1 18 11.5026 18 12C18 12.4974 17.5974 12.9 17.1 12.9Z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<hr class="border-border dark:border-dark-border">

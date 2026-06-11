@@ -1,0 +1,22 @@
+  .button-message {
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .button-message:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-reply {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }

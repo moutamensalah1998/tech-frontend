@@ -1,0 +1,38 @@
+<div *ngIf="isLoading" [ngClass]="containerClasses" role="status" aria-live="polite" class="select-none">
+  <div [ngClass]="contentClasses">
+    
+    <!-- GIF Loader -->
+    <ng-container *ngIf="type === 'gif'">
+      <img
+        [src]="gifSrc"
+        alt="Loading"
+        [ngClass]="gifClasses"
+        loading="eager"
+      />
+    </ng-container>
+
+    <!-- Spinner -->
+    <ng-container *ngIf="type === 'spinner'">
+      <div [ngClass]="spinnerClasses"></div>
+    </ng-container>
+
+    <!-- Dots -->
+    <ng-container *ngIf="type === 'dots'">
+      <div class="flex gap-2">
+        <div [ngClass]="dotClasses"></div>
+        <div [ngClass]="dotClasses" class="animation-delay-200"></div>
+        <div [ngClass]="dotClasses" class="animation-delay-400"></div>
+      </div>
+    </ng-container>
+
+    <!-- Pulse -->
+    <ng-container *ngIf="type === 'pulse'">
+      <div [ngClass]="pulseClasses"></div>
+    </ng-container>
+
+    <!-- Message -->
+    <p *ngIf="showMessage && message" [ngClass]="messageClasses">
+      {{ message }}
+    </p>
+  </div>
+</div>
