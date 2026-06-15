@@ -20,6 +20,7 @@ import { BroadcastResponse, BroadcastData } from '../../../../../../core/models/
 import { ToastService } from '../../../../../../core/services/toast-message.service';
 import { PaginationComponent } from '../../../../../../shared/components/pagination/pagination.component';
 import { BroadcastDetailsDialogComponent, BroadcastDialogData } from './components/broadcast-details-dialog/broadcast-details-dialog.component';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SbHeaderComponent } from './components/sb-header/sb-header.component';
 import { SbTableComponent } from './components/sb-table/sb-table.component';
 import { LoaderComponent } from "../../../../../../shared/components/loader/loader.component";
@@ -37,7 +38,8 @@ import { TranslatePipe } from '../../../../../../core/pipes/translate.pipe';
     SbTableComponent,
     PaginationComponent,
     LoaderComponent,
-    TranslatePipe
+    TranslatePipe,
+    ConfirmDialogComponent
   ],
   templateUrl: './schedule-broadcast.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -59,6 +61,10 @@ export class ScheduleBroadcastComponent implements OnInit, OnDestroy {
 
   currentSearch = '';
   currentSort = '';
+
+  // Delete confirmation dialog state
+  deleteConfirmDialogOpen = false;
+  broadcastToDelete: BroadcastData | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -157,11 +163,25 @@ export class ScheduleBroadcastComponent implements OnInit, OnDestroy {
   }
 
   onDeleteBroadcast(broadcastId: string, broadcastName?: string) {
-    const message = this.translationService.translate('broadcast.scheduled.messages.deleteConfirm', { name: broadcastName || 'this broadcast' });
-    if (!confirm(message)) {
-      return;
-    }
-    this.store.dispatch(ScheduledBroadcastActions.deleteBroadcast({ broadcast_id: broadcastId }));
+    this.broadcastToDelete = { id: broadcastId, name: broadcastName || '' } as BroadcastData;
+    this.deleteConfirmDialogOpen = true;
+  }
+
+  onConfirmDeleteBroadcast(): void {
+    if (!this.broadcastToDelete) return;
+    this.deleteConfirmDialogOpen = false;
+    this.store.dispatch(ScheduledBroadcastActions.deleteBroadcast({ broadcast_id: this.broadcastToDelete.id }));
+    this.broadcastToDelete = null;
+  }
+
+  onCancelDeleteBroadcast(): void {
+    this.deleteConfirmDialogOpen = false;
+    this.broadcastToDelete = null;
+  }
+
+  getDeleteConfirmMessage(): string {
+    if (!this.broadcastToDelete) return '';
+    return this.translationService.translate('broadcast.scheduled.messages.deleteConfirm', { name: this.broadcastToDelete.name || 'this broadcast' });
   }
 
   onEditBroadcast(broadcast: BroadcastData) {

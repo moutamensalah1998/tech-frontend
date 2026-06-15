@@ -22,6 +22,8 @@ import { TicketsTotalByStatusComponent } from './components/tickets-total-by-sta
 import { OperatorsPerformanceTableComponent } from './components/operators-performance-table/operators-performance-table.component';
 import { TagsAnalyticsComponent } from './components/tags-analytics/tags-analytics.component';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
+import { ReportsService } from '../../../../core/services/reports/reports.service';
+import { ToastService } from '../../../../core/services/toast-message.service';
 
 @Component({
   selector: 'app-reports',
@@ -46,7 +48,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
   currentPeriod$ = this.store.select(selectCurrentPeriod);
   currentPeriod: ReportPeriodParams = { period_type: 'last_7_days' };
 
-  constructor(private store: Store) {
+  isExporting = false;
+
+  constructor(
+    private store: Store,
+    private reportsService: ReportsService,
+    private toastService: ToastService,
+  ) {
     this.currentPeriod$.pipe(takeUntil(this.destroy$)).subscribe(period => {
       if (period) {
         this.currentPeriod = period;
@@ -77,6 +85,31 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.store.dispatch(loadTicketsTotalByStatus({ params: period }));
     this.store.dispatch(loadOperatorsPerformance({ params: period }));
     this.store.dispatch(loadTagsAnalytics({ params: period }));
+  }
+
+  onExportReport(): void {
+    if (this.isExporting) return;
+    this.isExporting = true;
+    this.toastService.showToast('Generating report export...', 'info');
+    this.reportsService.exportReport(this.currentPeriod).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        link.download = `Proggate_Report_${timestamp}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.isExporting = false;
+        this.toastService.showToast('Report exported successfully!', 'success');
+      },
+      error: (err) => {
+        console.error('Report export error:', err);
+        this.isExporting = false;
+        this.toastService.showToast('Failed to export report. Please try again.', 'error');
+      },
+    });
   }
 }
 

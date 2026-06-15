@@ -17,4 +17,16 @@
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" [limit]="limit"
       (pageChange)="onPageChange($event)" (limitChange)="onLimitChange($event)"></app-pagination>
   </div>
+
+  <!-- Delete Confirmation Dialog -->
+  <app-confirm-dialog
+    *ngIf="deleteConfirmDialogOpen"
+    header="Delete Broadcast"
+    [message]="getDeleteConfirmMessage()"
+    confirmText="Delete"
+    cancelText="Cancel"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteBroadcast()"
+    (cancelled)="onCancelDeleteBroadcast()">
+  </app-confirm-dialog>
 </div>

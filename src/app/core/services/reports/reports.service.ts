@@ -91,6 +91,20 @@ export class ReportsService {
     );
   }
 
+  exportReport(params: ReportPeriodParams): Observable<Blob> {
+    let httpParams = new HttpParams().set('period_type', params.period_type);
+
+    if (params.start_date) {
+      httpParams = httpParams.set('start_date', params.start_date);
+    }
+
+    if (params.end_date) {
+      httpParams = httpParams.set('end_date', params.end_date);
+    }
+
+    return this.apiService.getBlob('v1/reports/export', { params: httpParams });
+  }
+
   private buildHttpParams(params: ReportPeriodParams): HttpParams {
     let httpParams = new HttpParams().set('period_type', params.period_type);
     

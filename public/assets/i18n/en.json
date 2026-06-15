@@ -581,40 +581,181 @@
     "addEmoji": "Add Emoji"
   },
   "profile": {
-    "profileSettings": "Profile Settings",
-    "manageProfilePreferences": "Manage your profile and preferences",
-    "profilePicture": "Profile picture",
-    "briefDescription": "Brief description of what you do",
-    "businessDescription": "Tell us about your business, services, and what makes you unique. This will help customers understand what you offer and why they should choose you...",
-    "searchTags": "Search tags...",
-    "searchAttributes": "Search attributes...",
-    "tagName": "Tag Name",
-    "enterTagName": "Enter tag name",
-    "enterTagNamePlaceholder": "Enter tag name...",
-    "editTag": "Edit tag",
-    "deleteTag": "Delete tag",
-    "enterAttributeName": "Enter attribute name",
-    "enterAttributeNamePlaceholder": "Enter attribute name...",
-    "enterAttributeValue": "Enter attribute value",
-    "editAttribute": "Edit attribute",
-    "deleteAttribute": "Delete attribute",
-    "selectPage": "Select page",
-    "importExport": {
-      "fileSelectedSuccessfully": "File \"{{fileName}}\" selected successfully",
-      "pleaseSelectValidZip": "Please select a valid ZIP file for chat backup.",
-      "exportButtonClicked": "Export button clicked!",
-      "pleaseSelectFileToImport": "Please select a file to import first.",
-      "importProcessStarted": "Import process started for \"{{fileName}}\". This may take a few minutes.",
-      "downloadButtonClicked": "Download button clicked!"
-    },
     "settings": {
+      "title": "Profile Settings",
+      "subtitle": "Manage your profile and preferences",
+      "logout": "Logout",
+      "logoutFailed": "Logout failed, try again",
       "navigation": {
         "businessProfile": "Business Profile",
         "personalProfile": "Personal Profile",
         "userPreferences": "User Preferences",
         "tagsAttributes": "Tags & Attributes"
+      }
+    },
+    "personal": {
+      "title": "Personal Profile",
+      "subtitle": "Manage your personal and business information",
+      "basicInfo": "Basic Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "phone": "Phone",
+      "email": "Email",
+      "passwordSettings": "Password Settings",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "accountInfo": "Account Information",
+      "roles": "Roles",
+      "rolesHint": "Roles are managed by administrators",
+      "teams": "Teams",
+      "teamsHint": "Teams are managed by administrators",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "noUserIdAvailable": "No user ID available"
+    },
+    "business": {
+      "title": "Business Profile",
+      "subtitle": "Manage your business information and settings",
+      "loading": "Loading your profile...",
+      "loadingMessage": "Please wait while we fetch your information",
+      "profilePicture": "Profile Picture",
+      "uploadLogo": "Upload your business logo or profile picture",
+      "recommendedSize": "Recommended size: 400x400px, Max 2MB",
+      "clickToChange": "Click to change",
+      "fileSelected": "File selected",
+      "contactInfo": "Contact Information",
+      "phoneNumber": "Phone Number",
+      "phoneCannotChange": "This phone number cannot be changed",
+      "readOnly": "Read-only",
+      "contactEmail": "Contact Email",
+      "emailHelper": "Primary email for business communications",
+      "businessInfo": "Business Information",
+      "aboutBusiness": "About Your Business",
+      "aboutPlaceholder": "Enter your business name",
+      "businessAddress": "Business Address",
+      "addressPlaceholder": "Enter your complete business address",
+      "businessIndustry": "Business Industry",
+      "current": "Current:",
+      "notSpecified": "Not specified",
+      "selectIndustry": "Select your industry",
+      "emailPlaceholder": "contact@business.com",
+      "primaryWebsitePlaceholder": "https://www.yourbusiness.com",
+      "secondaryWebsitePlaceholder": "https://www.alternative-site.com",
+      "industries": {
+        "automotive": "Automotive",
+        "beautyWellness": "Beauty & Wellness",
+        "fashionApparel": "Fashion & Apparel",
+        "education": "Education",
+        "entertainment": "Entertainment",
+        "restaurantFood": "Restaurant & Food",
+        "eventPlanning": "Event Planning Service",
+        "financeBanking": "Finance & Banking",
+        "hotelLodging": "Hotel & Lodging",
+        "medicalHealth": "Medical & Health",
+        "nonProfit": "Non-Profit",
+        "professionalServices": "Professional Services",
+        "shoppingRetail": "Shopping & Retail",
+        "travelTransportation": "Travel & Transportation",
+        "otherIndustry": "Other Industry"
       },
-      "logoutFailed": "Logout failed. Please try again."
+      "businessDescription": "Business Description",
+      "descriptionPlaceholder": "Brief description of your business",
+      "onlinePresence": "Online Presence",
+      "primaryWebsite": "Primary Website",
+      "secondaryWebsite": "Secondary Website",
+      "optional": "(Optional)",
+      "savingChanges": "Saving...",
+      "saveProfile": "Save Profile",
+      "updateFailedTryAgain": "Update failed, try again"
+    },
+    "general": {
+      "title": "General Settings",
+      "subtitle": "General settings configuration will be implemented here."
+    },
+    "importExport": {
+      "title": "Chat Backup Manager",
+      "subtitle": "Securely backup and restore your chat history. Your data remains private and is never stored on our servers.",
+      "uploadBackup": "Upload Backup",
+      "uploadTitle": "Upload chat backup (.zip file)",
+      "uploadDescription": "Drag and drop your backup file here, or click the button below to select from your computer",
+      "selectFile": "Select File",
+      "exportChats": "Export Chats",
+      "exportDescription": "Create a backup of your current chat history",
+      "generateBackup": "Generate Backup",
+      "downloadBackup": "Download Backup",
+      "importChats": "Import Chats",
+      "importDescription": "Restore your chat history from a backup file",
+      "restoreBackup": "Restore Backup",
+      "uploadFirst": "You need to upload a backup file first"
+    },
+    "tagsAndAttributes": {
+      "title": "Tags and Attributes",
+      "subtitle": "Manage your tags and custom attributes"
+    },
+    "tags": {
+      "title": "Tags",
+      "searchPlaceholder": "Search tags...",
+      "addTag": "Add Tag",
+      "tagName": "Tag Name",
+      "actions": "Actions",
+      "noTagsFound": "No tags found",
+      "createFirstTag": "Create your first tag to get started",
+      "addNewTag": "Add New Tag",
+      "editTag": "Edit tag",
+      "deleteTag": "Delete tag",
+      "selectPage": "Select page",
+      "addTagDialog": {
+        "title": "Add Tag",
+        "tagNameLabel": "Tag Name",
+        "tagNamePlaceholder": "Enter tag name...",
+        "tagNameHint": "Choose a descriptive name for your tag",
+        "closeButton": "Close",
+        "addButton": "Add Tag",
+        "tagExists": "Tag already exists"
+      },
+      "editTagDialog": {
+        "title": "Edit Tag",
+        "newTagName": "New Tag Name",
+        "editButton": "Edit Tag"
+      },
+      "deleteTagDialog": {
+        "title": "Are you sure?",
+        "confirmMessage": "Are you sure you want to delete this tag?",
+        "deleteButton": "Delete Tag"
+      }
+    },
+    "attributes": {
+      "title": "Attributes",
+      "searchPlaceholder": "Search attributes...",
+      "addAttribute": "Add Attribute",
+      "attributeName": "Attribute Name",
+      "actions": "Actions",
+      "noAttributesFound": "No attributes found",
+      "createFirstAttribute": "Create your first attribute to get started",
+      "addNewAttribute": "Add New Attribute",
+      "editAttribute": "Edit attribute",
+      "deleteAttribute": "Delete attribute",
+      "selectPage": "Select page",
+      "addAttributeDialog": {
+        "title": "Add Attribute",
+        "attributeNameLabel": "Attribute Name",
+        "attributeNamePlaceholder": "Enter attribute name...",
+        "attributeNameHint": "Choose a descriptive name for your attribute",
+        "closeButton": "Close",
+        "addButton": "Add Attribute"
+      },
+      "editAttributeDialog": {
+        "title": "Edit Attribute",
+        "newAttributeName": "New Attribute Name",
+        "editButton": "Edit Attribute"
+      },
+      "deleteAttributeDialog": {
+        "title": "Are you sure?",
+        "confirmMessage": "Are you sure you want to delete this attribute?",
+        "deleteButton": "Delete Attribute"
+      }
     },
     "preferences": {
       "title": "User Preferences",
@@ -707,6 +848,40 @@
       "saving": "Saving...",
       "errorMessage": "An unexpected error occurred.",
       "contactName": "Contact Name"
+    },
+    "import": {
+      "title": "Import Contacts",
+      "short": "Import",
+      "subtitle": "Upload a file to bulk import contacts with tags and attributes",
+      "uploadArea": {
+        "title": "Select a file to upload",
+        "description": "Supported formats: .xlsx, .xls, .csv (Max 10MB)",
+        "browse": "Browse Files"
+      },
+      "formatInfo": {
+        "title": "File Format Requirements",
+        "required": "Required columns: name, country_code, phone_number",
+        "tagsHint": "Tags: comma-separated list (e.g. vip, customer)",
+        "attributesHint": "Attributes: semicolon-separated key:value pairs (e.g. city:NYC; role:Manager)"
+      },
+      "downloadSample": "Download Sample",
+      "cancel": "Cancel",
+      "importButton": "Import Contacts",
+      "importing": "Importing Contacts...",
+      "importingDesc": "Please wait while your contacts are being imported. This may take a moment.",
+      "invalidFile": "Invalid file format. Please upload .csv, .xlsx or .xls files.",
+      "fileTooLarge": "File is too large. Maximum file size is 10MB.",
+      "importFailed": "Import failed. Please check your file and try again.",
+      "results": {
+        "title": "Import Results",
+        "importMore": "Import More",
+        "total": "Total Processed",
+        "success": "Successful",
+        "existing": "Already Exists",
+        "failed": "Failed",
+        "errorsTitle": "Errors",
+        "done": "Done"
+      }
     }
   },
   "chatDetails": {
@@ -935,7 +1110,19 @@
         "sample": "Sample",
         "clearAll": "Clear All",
         "contactsSelected": "contacts selected",
-        "seeAll": "See all {{count}} contacts",
+        "seeAll": {
+          "title": "Selected Contacts",
+          "subtitle": "Reviewing {{count}} selected contacts",
+          "searchPlaceholder": "Search within selected contacts...",
+          "viewingSummary": "Viewing {{filtered}} of {{total}} contacts",
+          "filteredBy": "filtered by \"{{term}}\"",
+          "noTags": "No tags",
+          "removeAction": "Remove contact",
+          "removeConfirm": "Are you sure you want to remove \"{{name}}\" from the selected contacts?",
+          "noContactsSelected": "No contacts selected",
+          "goBackMessage": "Go back to select contacts for your broadcast",
+          "footerSummary": "contacts in total list"
+        },
         "showingContacts": "Showing {{count}} of {{total}} contacts. Click to see all",
         "showingSelected": "Showing {{count}} of {{total}} selected contacts. Click to view & manage all",
         "importingTitle": "Importing Contacts",
@@ -954,19 +1141,6 @@
           "gettingClose": "You're getting close to the limit.",
           "almostMax": "Almost at maximum capacity!",
           "maxReached": "Maximum capacity reached!"
-        },
-        "seeAll": {
-          "title": "Selected Contacts",
-          "subtitle": "Reviewing {{count}} selected contacts",
-          "searchPlaceholder": "Search within selected contacts...",
-          "viewingSummary": "Viewing {{filtered}} of {{total}} contacts",
-          "filteredBy": "filtered by \"{{term}}\"",
-          "noTags": "No tags",
-          "removeAction": "Remove contact",
-          "removeConfirm": "Are you sure you want to remove \"{{name}}\" from the selected contacts?",
-          "noContactsSelected": "No contacts selected",
-          "goBackMessage": "Go back to select contacts for your broadcast",
-          "footerSummary": "contacts in total list"
         },
         "progress": {
           "count": "{{current}} / {{max}} contacts",
@@ -1361,7 +1535,7 @@
       "actionButtons": {
         "callButton": "Call Button",
         "copyCodeButton": "Copy Code Button",
-        "callButtonDescription": "Call Button Description",
+        "callButtonDescription": "Enable call button to allow users to call a phone number",
         "copyCodeButtonDescription": "Copy Code Button Description",
         "callButtonDescriptionRequired": "Call Button Description Required",
         "copyCodeButtonDescriptionRequired": "Copy Code Button Description Required",
@@ -1418,15 +1592,13 @@
         "offerCode": "Offer Code",
         "offerCodeRequired": "*",
         "offerCodePlaceholder": "Enter offer code",
-        "offerCodeHint": "Offer code appears in the template",
+        "offerCodeHint": "Alphanumeric code only (max 15 characters)",
         "offerCodeRequiredError": "Offer code is required",
         "offerCodePlaceholderError": "Offer code placeholder is required",
         "offerCodeHintError": "Offer code hint is required",
-        "callButtonDescription": "Enable call button to allow users to call a phone number",
         "callButtonNotAllowed": "Call button is not allowed for",
         "callButtonTemplates": "templates",
         "callButtonRestricted": "Not available for this category",
-        "offerCodeHint": "Alphanumeric code only (max 15 characters)",
         "offerCodePatternError": "Offer code must contain only letters and numbers",
         "offerCodeMaxLengthError": "Offer code cannot exceed 15 characters",
         "phoneNumberError": "Please enter a valid phone number"
@@ -2094,208 +2266,18 @@
     },
     "chatWindowHeader": {
       "expired": "Expired",
-        "status": {
-          "open": "Open",
-          "solved": "Solved",
-          "pending": "Pending",
-          "APPROVED": "Approved",
-          "PENDING": "Pending",
-          "PENDING_DELETION": "Pending Deletion",
-          "REJECTED": "Rejected",
-          "DRAFT": "Draft",
-          "PAUSED": "Paused",
-          "DISABLED": "Disabled"
-        }
-    }
-  },
-  "profile": {
-    "settings": {
-      "title": "Profile Settings",
-      "subtitle": "Manage your profile and preferences",
-      "logout": "Logout",
-      "logoutFailed": "Logout failed, try again",
-      "navigation": {
-        "businessProfile": "Business Profile",
-        "personalProfile": "Personal Profile",
-        "userPreferences": "User Preferences",
-        "tagsAttributes": "Tags & Attributes"
+      "status": {
+        "open": "Open",
+        "solved": "Solved",
+        "pending": "Pending",
+        "APPROVED": "Approved",
+        "PENDING": "Pending",
+        "PENDING_DELETION": "Pending Deletion",
+        "REJECTED": "Rejected",
+        "DRAFT": "Draft",
+        "PAUSED": "Paused",
+        "DISABLED": "Disabled"
       }
-    },
-    "personal": {
-      "title": "Personal Profile",
-      "subtitle": "Manage your personal and business information",
-      "basicInfo": "Basic Information",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "phone": "Phone",
-      "email": "Email",
-      "passwordSettings": "Password Settings",
-      "currentPassword": "Current Password",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password",
-      "accountInfo": "Account Information",
-      "roles": "Roles",
-      "rolesHint": "Roles are managed by administrators",
-      "teams": "Teams",
-      "teamsHint": "Teams are managed by administrators",
-      "cancel": "Cancel",
-      "saveChanges": "Save Changes",
-      "saving": "Saving...",
-      "noUserIdAvailable": "No user ID available"
-    },
-    "business": {
-      "title": "Business Profile",
-      "subtitle": "Manage your business information and settings",
-      "loading": "Loading your profile...",
-      "loadingMessage": "Please wait while we fetch your information",
-      "profilePicture": "Profile Picture",
-      "uploadLogo": "Upload your business logo or profile picture",
-      "recommendedSize": "Recommended size: 400x400px, Max 2MB",
-      "clickToChange": "Click to change",
-      "fileSelected": "File selected",
-      "contactInfo": "Contact Information",
-      "phoneNumber": "Phone Number",
-      "phoneCannotChange": "This phone number cannot be changed",
-      "readOnly": "Read-only",
-      "contactEmail": "Contact Email",
-      "emailHelper": "Primary email for business communications",
-      "businessInfo": "Business Information",
-      "aboutBusiness": "About Your Business",
-      "aboutPlaceholder": "Enter your business name",
-      "businessAddress": "Business Address",
-      "addressPlaceholder": "Enter your complete business address",
-      "businessIndustry": "Business Industry",
-      "current": "Current:",
-      "notSpecified": "Not specified",
-      "selectIndustry": "Select your industry",
-      "emailPlaceholder": "contact@business.com",
-      "primaryWebsitePlaceholder": "https://www.yourbusiness.com",
-      "secondaryWebsitePlaceholder": "https://www.alternative-site.com",
-      "industries": {
-        "automotive": "Automotive",
-        "beautyWellness": "Beauty & Wellness",
-        "fashionApparel": "Fashion & Apparel",
-        "education": "Education",
-        "entertainment": "Entertainment",
-        "restaurantFood": "Restaurant & Food",
-        "eventPlanning": "Event Planning Service",
-        "financeBanking": "Finance & Banking",
-        "hotelLodging": "Hotel & Lodging",
-        "medicalHealth": "Medical & Health",
-        "nonProfit": "Non-Profit",
-        "professionalServices": "Professional Services",
-        "shoppingRetail": "Shopping & Retail",
-        "travelTransportation": "Travel & Transportation",
-        "otherIndustry": "Other Industry"
-      },
-      "businessDescription": "Business Description",
-      "descriptionPlaceholder": "Brief description of your business",
-      "onlinePresence": "Online Presence",
-      "primaryWebsite": "Primary Website",
-      "secondaryWebsite": "Secondary Website",
-      "optional": "(Optional)",
-      "savingChanges": "Saving...",
-      "saveProfile": "Save Profile",
-      "updateFailedTryAgain": "Update failed, try again"
-    },
-    "general": {
-      "title": "General Settings",
-      "subtitle": "General settings configuration will be implemented here."
-    },
-    "importExport": {
-      "title": "Chat Backup Manager",
-      "subtitle": "Securely backup and restore your chat history. Your data remains private and is never stored on our servers.",
-      "uploadBackup": "Upload Backup",
-      "uploadTitle": "Upload chat backup (.zip file)",
-      "uploadDescription": "Drag and drop your backup file here, or click the button below to select from your computer",
-      "selectFile": "Select File",
-      "exportChats": "Export Chats",
-      "exportDescription": "Create a backup of your current chat history",
-      "generateBackup": "Generate Backup",
-      "downloadBackup": "Download Backup",
-      "importChats": "Import Chats",
-      "importDescription": "Restore your chat history from a backup file",
-      "restoreBackup": "Restore Backup",
-      "uploadFirst": "You need to upload a backup file first"
-    },
-    "tagsAndAttributes": {
-      "title": "Tags and Attributes",
-      "subtitle": "Manage your tags and custom attributes"
-    },
-    "tags": {
-      "title": "Tags",
-      "searchPlaceholder": "Search tags...",
-      "addTag": "Add Tag",
-      "tagName": "Tag Name",
-      "actions": "Actions",
-      "noTagsFound": "No tags found",
-      "createFirstTag": "Create your first tag to get started",
-      "addNewTag": "Add New Tag",
-      "editTag": "Edit tag",
-      "deleteTag": "Delete tag",
-      "selectPage": "Select page",
-      "addTagDialog": {
-        "title": "Add Tag",
-        "tagNameLabel": "Tag Name",
-        "tagNamePlaceholder": "Enter tag name...",
-        "tagNameHint": "Choose a descriptive name for your tag",
-        "closeButton": "Close",
-        "addButton": "Add Tag",
-        "tagExists": "Tag already exists"
-      },
-      "editTagDialog": {
-        "title": "Edit Tag",
-        "newTagName": "New Tag Name",
-        "editButton": "Edit Tag"
-      },
-      "deleteTagDialog": {
-        "title": "Are you sure?",
-        "confirmMessage": "Are you sure you want to delete this tag?",
-        "deleteButton": "Delete Tag"
-      }
-    },
-    "attributes": {
-      "title": "Attributes",
-      "searchPlaceholder": "Search attributes...",
-      "addAttribute": "Add Attribute",
-      "attributeName": "Attribute Name",
-      "actions": "Actions",
-      "noAttributesFound": "No attributes found",
-      "createFirstAttribute": "Create your first attribute to get started",
-      "addNewAttribute": "Add New Attribute",
-      "editAttribute": "Edit attribute",
-      "deleteAttribute": "Delete attribute",
-      "selectPage": "Select page",
-      "addAttributeDialog": {
-        "title": "Add Attribute",
-        "attributeNameLabel": "Attribute Name",
-        "attributeNamePlaceholder": "Enter attribute name...",
-        "attributeNameHint": "Choose a descriptive name for your attribute",
-        "closeButton": "Close",
-        "addButton": "Add Attribute"
-      },
-      "editAttributeDialog": {
-        "title": "Edit Attribute",
-        "newAttributeName": "New Attribute Name",
-        "editButton": "Edit Attribute"
-      },
-      "deleteAttributeDialog": {
-        "title": "Are you sure?",
-        "confirmMessage": "Are you sure you want to delete this attribute?",
-        "deleteButton": "Delete Attribute"
-      }
-    },
-    "preferences": {
-      "title": "User Preferences",
-      "subtitle": "Customize your app experience",
-      "themeSettings": "Theme Settings",
-      "darkMode": "Dark Mode",
-      "darkModeEnabled": "Dark mode is enabled",
-      "lightModeEnabled": "Light mode is enabled",
-      "languageSettings": "Language Settings",
-      "englishDesc": "Use English language",
-      "arabicDesc": "Use Arabic language",
-      "preferencesNote": "Your preferences are saved automatically and will be applied across all your devices."
     }
   },
   "app": {
@@ -2387,7 +2369,8 @@
     "error": {
       "loadFailed": "Error loading data"
     },
-    "noData": "No data available"
+    "noData": "No data available",
+    "exportReport": "Export Report"
   },
   "deleteAccount": {
     "title": "Delete Account",

@@ -67,4 +67,13 @@ export class ApiService {
   delete<T>(endpoint: string, options?: RequestOptions): Observable<T> {
     return this.addRetryStrategy(this.http.delete<T>(`${this.baseUrl}/${endpoint}`, options));
   }
+
+  getBlob(endpoint: string, options?: RequestOptions): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+      ...(options || {}),
+      responseType: 'blob',
+    }).pipe(
+      catchError(err => this.handleError(err))
+    );
+  }
 }

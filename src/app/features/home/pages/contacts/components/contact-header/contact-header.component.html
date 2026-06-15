@@ -29,11 +29,23 @@
   </div>
 
   <!-- Action Buttons -->
-  <div class="flex flex-col sm:flex-row w-full">
+  <div class="flex flex-col sm:flex-row w-full gap-3 sm:gap-3">
     <button (click)="addContactDialogHandler()"
-      class="w-full text-white px-5 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 bg-indigo-300 dark:bg-indigo-600 border border-[#E6E8FF] dark:border-indigo-500 hover:bg-[#4A5BD1] dark:hover:bg-indigo-500 transition-colors duration-200 focus:outline-none">
+      class="flex-1 text-white px-5 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 bg-indigo-300 dark:bg-indigo-600 border border-[#E6E8FF] dark:border-indigo-500 hover:bg-[#4A5BD1] dark:hover:bg-indigo-500 transition-colors duration-200 focus:outline-none">
       <span class="text-xl font-bold">+</span>
       Add Contact
+    </button>
+    <button (click)="exportClicked.emit()"
+      class="flex-1 text-white px-5 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 bg-emerald-500 dark:bg-emerald-600 border border-emerald-400 dark:border-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 transition-colors duration-200 focus:outline-none">
+      <span class="text-lg">📊</span>
+      Export to Excel
+    </button>
+  </div>
+  <div class="flex w-full gap-3 mt-3">
+    <button (click)="importClicked.emit()"
+      class="flex-1 text-white px-5 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 bg-green-500 dark:bg-green-600 border border-green-400 dark:border-green-500 hover:bg-green-600 dark:hover:bg-green-500 transition-colors duration-200 focus:outline-none">
+      <span class="text-lg">📥</span>
+      Import Contacts
     </button>
   </div>
 </div>

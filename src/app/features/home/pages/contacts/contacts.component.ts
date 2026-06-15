@@ -8,7 +8,10 @@ import { ContactModel } from '../../../../core/models/contact.model';
 import { Store } from '@ngrx/store';
 import { getContacts } from '../../../../core/services/contact/ngrx/contact.actions';
 import { ContactHeaderAddContactDialogComponent } from "./components/contact-header/components/contact-header-add-contact-dialog/contact-header-add-contact-dialog.component";
+import { ImportContactsDialogComponent } from "./components/import-contacts-dialog/import-contacts-dialog.component";
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
+import { ContactService } from '../../../../core/services/contact/contact.service';
+import { ToastService } from '../../../../core/services/toast-message.service';
 
 @Component({
   selector: 'app-contacts',
@@ -20,6 +23,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     PaginationComponent,
     EditContactDialogComponent,
     ContactHeaderAddContactDialogComponent,
+    ImportContactsDialogComponent,
     TranslatePipe
   ],
   templateUrl: './contacts.component.html',
@@ -29,13 +33,19 @@ export class ContactsComponent implements OnInit {
   contact: ContactModel | null = null;
   editContactDialog = false;
   addContactDialog = false;
+  importContactsDialog = false;
   sortBy: string | null = "";
   searchTerm = '';
   currentPage = 1;
   limit = 5;
   paginationData?: { totalCount: number; totalPages: number; currentPage: number; limit: number; };
+  isExporting = false;
 
-  constructor(private store: Store<any>) {}
+  constructor(
+    private store: Store<any>,
+    private contactService: ContactService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.loadContacts();
@@ -99,12 +109,49 @@ export class ContactsComponent implements OnInit {
   }
 
   onContactUpdated(): void {
-  this.loadContacts();
-}
+    this.loadContacts();
+  }
 
   onSortChange(sortBy: string | null) {
     this.sortBy = sortBy;
     this.currentPage = 1;
+    this.loadContacts();
+  }
+
+  onExportContacts(): void {
+    if (this.isExporting) return;
+    this.isExporting = true;
+    this.toastService.showToast('Generating Excel export...', 'info');
+    this.contactService.exportContacts(this.searchTerm, this.sortBy).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        link.download = `Proggate_Contacts_Export_${timestamp}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.isExporting = false;
+        this.toastService.showToast('Contacts exported successfully!', 'success');
+      },
+      error: (err) => {
+        console.error('Export error:', err);
+        this.isExporting = false;
+        this.toastService.showToast('Failed to export contacts. Please try again.', 'error');
+      },
+    });
+  }
+
+  openImportContacts() {
+    this.importContactsDialog = true;
+  }
+
+  closeImportContacts() {
+    this.importContactsDialog = false;
+  }
+
+  onImportCompleted() {
     this.loadContacts();
   }
 }

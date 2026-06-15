@@ -18,6 +18,8 @@ export class ContactHeaderComponent implements OnInit, OnDestroy {
 
   @Output() searchChanged = new EventEmitter<string>();
   @Output() sortChanged = new EventEmitter<string | null>();
+  @Output() exportClicked = new EventEmitter<void>();
+  @Output() importClicked = new EventEmitter<void>();
 
   private searchSubject$ = new Subject<string>();
   private sortSubject$ = new Subject<string | null>();

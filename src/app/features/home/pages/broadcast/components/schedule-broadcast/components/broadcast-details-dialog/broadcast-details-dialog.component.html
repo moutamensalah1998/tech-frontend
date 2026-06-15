@@ -22,7 +22,6 @@
     <!-- Main Content -->
     <div class="max-h-[calc(95vh-120px)] overflow-y-auto p-6">
       <div class="max-w-4xl mx-auto">
-        <!-- Broadcast Information -->
         <div class="space-y-6">
           <!-- Broadcast Status & Stats -->
           <div
@@ -47,25 +46,140 @@
                 }}</span>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-primary dark:text-primary-dark">{{ data.broadcast.total_contacts }}
+            <!-- Loading state for stats -->
+            <div *ngIf="loadingStats" class="flex items-center justify-center py-8">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-primary-dark"></div>
+              <span class="ml-3 text-sm text-text-secondary dark:text-dark-text-secondary">Loading statistics...</span>
+            </div>
+
+            <!-- Error state -->
+            <div *ngIf="!loadingStats && statsError"
+              class="text-center py-6 text-amber-600 dark:text-amber-400">
+              <p class="text-sm">Could not load statistics. The broadcast may not have been sent yet.</p>
+            </div>
+
+            <!-- Real Statistics Grid -->
+            <div *ngIf="!loadingStats && !statsError">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Total Recipients -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center relative group cursor-pointer"
+                  (click)="stats?.successful_numbers?.length ? showSuccessfulNumbers = !showSuccessfulNumbers : null">
+                  <div class="text-2xl font-bold text-primary dark:text-primary-dark">
+                    {{ stats?.total_recipients || data.broadcast.total_contacts }}
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Total Recipients
+                  </div>
+                  <div *ngIf="stats?.successful_numbers?.length"
+                    class="text-xs text-green-600 dark:text-green-400 mt-1">
+                    Click to view list
+                  </div>
                 </div>
-                <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.totalRecipients' | translate }}</div>
+
+                <!-- Successfully Sent -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {{ stats?.successfully_sent || 0 }}
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Sent
+                  </div>
+                </div>
+
+                <!-- Delivered -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {{ getTotalDelivered() }}
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Delivered
+                  </div>
+                </div>
+
+                <!-- Read -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {{ stats?.read || 0 }}
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Read
+                  </div>
+                </div>
+
+                <!-- Failed Deliveries -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center relative group cursor-pointer"
+                  (click)="stats?.failed_numbers?.length ? showFailedNumbers = !showFailedNumbers : null">
+                  <div class="text-2xl font-bold text-red-600 dark:text-red-400">
+                    {{ stats?.failed_deliveries || 0 }}
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Failed
+                  </div>
+                  <div *ngIf="stats?.failed_numbers?.length"
+                    class="text-xs text-red-600 dark:text-red-400 mt-1">
+                    Click to view list
+                  </div>
+                </div>
+
+                <!-- Delivery Rate -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-primary dark:text-primary-dark">
+                    {{ getDeliveryRate() }}%
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Delivery Rate
+                  </div>
+                </div>
+
+                <!-- Read Rate -->
+                <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {{ getReadRate() }}%
+                  </div>
+                  <div class="text-sm text-text-secondary dark:text-dark-text-secondary">
+                    Read Rate
+                  </div>
+                </div>
               </div>
-              <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-primary dark:text-primary-dark">{{ getDeliveryRate() }}%</div>
-                <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.deliveryRate' | translate }}</div>
+
+              <!-- Successful Numbers List -->
+              <div *ngIf="showSuccessfulNumbers && stats?.successful_numbers?.length"
+                class="mt-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <h4 class="text-sm font-semibold text-green-800 dark:text-green-300">
+                    Successfully Received ({{ stats?.successful_numbers?.length }})
+                  </h4>
+                  <button (click)="showSuccessfulNumbers = false"
+                    class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200 text-sm">
+                    Hide
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-40 overflow-y-auto">
+                  <div *ngFor="let number of stats?.successful_numbers"
+                    class="text-xs text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-800/30 px-3 py-1 rounded-full text-center">
+                    {{ number }}
+                  </div>
+                </div>
               </div>
-              <div class="bg-surface dark:bg-dark-surface rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-text-secondary dark:text-dark-text-secondary">{{
-                  ('broadcast.scheduled.status.' + (data.broadcast.status
-                  | lowercase)) | translate }}</div>
-                <div class="text-sm text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.currentStatus' | translate }}</div>
+
+              <!-- Failed Numbers List -->
+              <div *ngIf="showFailedNumbers && stats?.failed_numbers?.length"
+                class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <h4 class="text-sm font-semibold text-red-800 dark:text-red-300">
+                    Failed Deliveries ({{ stats?.failed_numbers?.length }})
+                  </h4>
+                  <button (click)="showFailedNumbers = false"
+                    class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 text-sm">
+                    Hide
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-40 overflow-y-auto">
+                  <div *ngFor="let number of stats?.failed_numbers"
+                    class="text-xs text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-800/30 px-3 py-1 rounded-full text-center">
+                    {{ number }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -94,41 +208,6 @@
                   'broadcast.common.updated' | translate }}</span>
                 <span class="text-sm text-text-primary dark:text-dark-text-primary">{{ data.broadcast.updated_at |
                   date:'medium' }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Template Information -->
-          <div class="bg-surface dark:bg-dark-surface border border-border dark:border-dark-border rounded-lg p-6"
-            *ngIf="data.template">
-            <h3 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-4">{{
-              'broadcast.details.templateInfo' | translate }}</h3>
-
-            <div class="space-y-3">
-              <div class="flex justify-between items-center" *ngIf="data.template.name">
-                <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.templateName' | translate
-                  }}</span>
-                <span class="text-sm text-text-primary dark:text-dark-text-primary">{{ data.template.name }}</span>
-              </div>
-              <div class="flex justify-between items-center" *ngIf="data.template.category">
-                <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.category' | translate }}</span>
-                <span class="text-sm text-text-primary dark:text-dark-text-primary">{{ data.template.category }}</span>
-              </div>
-              <div class="flex justify-between items-center" *ngIf="data.template.language">
-                <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.language' | translate }}</span>
-                <span class="text-sm text-text-primary dark:text-dark-text-primary">{{ data.template.language }}</span>
-              </div>
-              <div class="flex justify-between items-center" *ngIf="data.template.status">
-                <span class="text-sm font-medium text-text-secondary dark:text-dark-text-secondary">{{
-                  'broadcast.details.templateStatus' | translate
-                  }}</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium"
-                  [ngClass]="getStatusColor(data.template.status)">
-                  {{ data.template.status }}
-                </span>
               </div>
             </div>
           </div>

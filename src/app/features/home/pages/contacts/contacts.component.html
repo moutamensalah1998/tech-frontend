@@ -35,6 +35,26 @@
               class="block w-full sm:w-64 lg:w-80 pl-10 pr-4 py-2 border-0 bg-surface-tertiary dark:bg-dark-surface-tertiary text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary rounded-xl focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:bg-surface dark:focus:bg-dark-surface transition-all duration-200 text-sm" />
           </div>
 
+          <!-- Export Button -->
+          <button (click)="onExportContacts()" [disabled]="isExporting"
+            class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 sm:px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/40 transition-all duration-200 flex items-center justify-center space-x-2 min-h-[44px] flex-shrink-0 disabled:opacity-60 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span class="hidden sm:inline">Export</span>
+            <span *ngIf="isExporting" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          </button>
+
+          <!-- Import Button -->
+          <button (click)="openImportContacts()"
+            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 sm:px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-green-500/40 transition-all duration-200 flex items-center justify-center space-x-2 min-h-[44px] flex-shrink-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+            </svg>
+            <span class="hidden sm:inline">{{ 'contacts.import.title' | translate }}</span>
+            <span class="sm:hidden">{{ 'contacts.import.short' | translate }}</span>
+          </button>
+
           <!-- Add Contact Button -->
           <button (click)="openAddContact()"
             class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 sm:px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200 flex items-center justify-center space-x-2 min-h-[44px] flex-shrink-0">
@@ -122,3 +142,7 @@
 <app-contact-header-add-contact-dialog *ngIf="addContactDialog" (closeDialog)="closeAddContact()"
   (contactCreated)="onContactUpdated()">
 </app-contact-header-add-contact-dialog>
+
+<app-import-contacts-dialog *ngIf="importContactsDialog" (closeDialog)="closeImportContacts()"
+  (importCompleted)="onImportCompleted()">
+</app-import-contacts-dialog>

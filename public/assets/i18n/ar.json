@@ -581,40 +581,181 @@
     "addEmoji": "إضافة رمز تعبيري"
   },
   "profile": {
-    "profileSettings": "إعدادات الملف الشخصي",
-    "manageProfilePreferences": "إدارة ملفك الشخصي وتفضيلاتك",
-    "profilePicture": "صورة الملف الشخصي",
-    "briefDescription": "وصف موجز لما تفعله",
-    "businessDescription": "أخبرنا عن عملك وخدماتك وما يميزك. سيساعد هذا العملاء على فهم ما تقدمه ولماذا يجب عليهم اختيارك...",
-    "searchTags": "بحث عن العلامات...",
-    "searchAttributes": "بحث عن السمات...",
-    "tagName": "اسم العلامة",
-    "enterTagName": "أدخل اسم العلامة",
-    "enterTagNamePlaceholder": "أدخل اسم العلامة...",
-    "editTag": "تعديل العلامة",
-    "deleteTag": "حذف العلامة",
-    "enterAttributeName": "أدخل اسم السمة",
-    "enterAttributeNamePlaceholder": "أدخل اسم السمة...",
-    "enterAttributeValue": "أدخل قيمة السمة",
-    "editAttribute": "تعديل السمة",
-    "deleteAttribute": "حذف السمة",
-    "selectPage": "اختر الصفحة",
-    "importExport": {
-      "fileSelectedSuccessfully": "تم اختيار الملف \"{{fileName}}\" بنجاح",
-      "pleaseSelectValidZip": "يرجى اختيار ملف ZIP صالح لنسخة احتياطية للمحادثات.",
-      "exportButtonClicked": "تم النقر على زر التصدير!",
-      "pleaseSelectFileToImport": "يرجى اختيار ملف للاستيراد أولاً.",
-      "importProcessStarted": "تم بدء عملية الاستيراد لـ \"{{fileName}}\". قد يستغرق هذا بضع دقائق.",
-      "downloadButtonClicked": "تم النقر على زر التنزيل!"
-    },
     "settings": {
+      "title": "إعدادات الملف الشخصي",
+      "subtitle": "إدارة ملفك الشخصي وتفضيلاتك",
+      "logout": "تسجيل الخروج",
+      "logoutFailed": "فشل تسجيل الخروج، يرجى المحاولة مرة أخرى",
       "navigation": {
         "businessProfile": "الملف التجاري",
         "personalProfile": "الملف الشخصي",
         "userPreferences": "تفضيلات المستخدم",
         "tagsAttributes": "العلامات والسمات"
+      }
+    },
+    "personal": {
+      "title": "الملف الشخصي",
+      "subtitle": "إدارة معلوماتك الشخصية والتجارية",
+      "basicInfo": "المعلومات الأساسية",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني",
+      "passwordSettings": "إعدادات كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "accountInfo": "معلومات الحساب",
+      "roles": "الأدوار",
+      "rolesHint": "تتم إدارة الأدوار بواسطة المسؤولين",
+      "teams": "الفرق",
+      "teamsHint": "تتم إدارة الفرق بواسطة المسؤولين",
+      "cancel": "إلغاء",
+      "saveChanges": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "noUserIdAvailable": "معرف المستخدم غير متاح"
+    },
+    "business": {
+      "title": "الملف التجاري",
+      "subtitle": "إدارة معلومات عملك وإعداداته",
+      "loading": "جاري تحميل ملفك الشخصي...",
+      "loadingMessage": "يرجى الانتظار بينما نجلب معلوماتك",
+      "profilePicture": "صورة الملف الشخصي",
+      "uploadLogo": "قم بتحميل شعار عملك أو صورة الملف الشخصي",
+      "recommendedSize": "الحجم الموصى به: 400×400 بكسل، الحد الأقصى 2 ميجابايت",
+      "clickToChange": "انقر للتغيير",
+      "fileSelected": "تم تحديد الملف",
+      "contactInfo": "معلومات الاتصال",
+      "phoneNumber": "رقم الهاتف",
+      "phoneCannotChange": "لا يمكن تغيير رقم الهاتف هذا",
+      "readOnly": "للقراءة فقط",
+      "contactEmail": "البريد الإلكتروني للاتصال",
+      "emailHelper": "البريد الإلكتروني الرئيسي للاتصالات التجارية",
+      "businessInfo": "معلومات العمل",
+      "aboutBusiness": "حول عملك",
+      "aboutPlaceholder": "أدخل اسم عملك",
+      "businessAddress": "عنوان العمل",
+      "addressPlaceholder": "أدخل عنوان عملك الكامل",
+      "businessIndustry": "مجال العمل",
+      "current": "الحالي:",
+      "notSpecified": "غير محدد",
+      "selectIndustry": "اختر مجال عملك",
+      "emailPlaceholder": "contact@business.com",
+      "primaryWebsitePlaceholder": "https://www.yourbusiness.com",
+      "secondaryWebsitePlaceholder": "https://www.alternative-site.com",
+      "industries": {
+        "automotive": "السيارات",
+        "beautyWellness": "الجمال والعافية",
+        "fashionApparel": "الأزياء والملابس",
+        "education": "التعليم",
+        "entertainment": "الترفيه",
+        "restaurantFood": "المطاعم والطعام",
+        "eventPlanning": "خدمات تخطيط الفعاليات",
+        "financeBanking": "المالية والمصرفية",
+        "hotelLodging": "الفنادق والإقامة",
+        "medicalHealth": "الطبية والصحية",
+        "nonProfit": "غير الربحية",
+        "professionalServices": "الخدمات المهنية",
+        "shoppingRetail": "التسوق والتجزئة",
+        "travelTransportation": "السفر والنقل",
+        "otherIndustry": "مجال آخر"
       },
-      "logoutFailed": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى."
+      "businessDescription": "وصف العمل",
+      "descriptionPlaceholder": "وصف موجز لعملك",
+      "onlinePresence": "الحضور عبر الإنترنت",
+      "primaryWebsite": "الموقع الأساسي",
+      "secondaryWebsite": "الموقع الثانوي",
+      "optional": "(اختياري)",
+      "savingChanges": "جاري الحفظ...",
+      "saveProfile": "حفظ الملف الشخصي",
+      "updateFailedTryAgain": "فشل التحديث، يرجى المحاولة مرة أخرى"
+    },
+    "general": {
+      "title": "الإعدادات العامة",
+      "subtitle": "سيتم تنفيذ تكوين الإعدادات العامة هنا."
+    },
+    "importExport": {
+      "title": "مدير نسخ احتياطي للمحادثات",
+      "subtitle": "قم بنسخ واستعادة سجل محادثاتك بأمان. تبقى بياناتك خاصة ولا يتم تخزينها على خوادمنا أبدًا.",
+      "uploadBackup": "رفع النسخة الاحتياطية",
+      "uploadTitle": "رفع نسخة احتياطية للمحادثات (ملف .zip)",
+      "uploadDescription": "اسحب وأفلت ملف النسخة الاحتياطية هنا، أو انقر على الزر أدناه للاختيار من جهاز الكمبيوتر الخاص بك",
+      "selectFile": "اختر ملف",
+      "exportChats": "تصدير المحادثات",
+      "exportDescription": "إنشاء نسخة احتياطية من سجل المحادثات الحالي",
+      "generateBackup": "إنشاء نسخة احتياطية",
+      "downloadBackup": "تنزيل النسخة الاحتياطية",
+      "importChats": "استيراد المحادثات",
+      "importDescription": "استعادة سجل المحادثات من ملف نسخة احتياطية",
+      "restoreBackup": "استعادة النسخة الاحتياطية",
+      "uploadFirst": "تحتاج إلى رفع ملف نسخة احتياطية أولاً"
+    },
+    "tagsAndAttributes": {
+      "title": "العلامات والسمات",
+      "subtitle": "إدارة العلامات والسمات المخصصة الخاصة بك"
+    },
+    "tags": {
+      "title": "العلامات",
+      "searchPlaceholder": "البحث في العلامات...",
+      "addTag": "إضافة علامة",
+      "tagName": "اسم العلامة",
+      "actions": "إجراءات",
+      "noTagsFound": "لم يتم العثور على علامات",
+      "createFirstTag": "أنشئ علامتك الأولى للبدء",
+      "addNewTag": "إضافة علامة جديدة",
+      "editTag": "تعديل العلامة",
+      "deleteTag": "حذف العلامة",
+      "selectPage": "اختر الصفحة",
+      "addTagDialog": {
+        "title": "إضافة علامة",
+        "tagNameLabel": "اسم العلامة",
+        "tagNamePlaceholder": "أدخل اسم العلامة...",
+        "tagNameHint": "اختر اسمًا وصفيًا لعلامتك",
+        "closeButton": "إغلاق",
+        "addButton": "إضافة علامة",
+        "tagExists": "العلامة موجودة بالفعل"
+      },
+      "editTagDialog": {
+        "title": "تعديل العلامة",
+        "newTagName": "اسم العلامة الجديد",
+        "editButton": "تعديل العلامة"
+      },
+      "deleteTagDialog": {
+        "title": "هل أنت متأكد؟",
+        "confirmMessage": "هل أنت متأكد من أنك تريد حذف هذه العلامة؟",
+        "deleteButton": "حذف العلامة"
+      }
+    },
+    "attributes": {
+      "title": "السمات",
+      "searchPlaceholder": "البحث في السمات...",
+      "addAttribute": "إضافة سمة",
+      "attributeName": "اسم السمة",
+      "actions": "إجراءات",
+      "noAttributesFound": "لم يتم العثور على سمات",
+      "createFirstAttribute": "أنشئ سمتك الأولى للبدء",
+      "addNewAttribute": "إضافة سمة جديدة",
+      "editAttribute": "تعديل السمة",
+      "deleteAttribute": "حذف السمة",
+      "selectPage": "اختر الصفحة",
+      "addAttributeDialog": {
+        "title": "إضافة سمة",
+        "attributeNameLabel": "اسم السمة",
+        "attributeNamePlaceholder": "أدخل اسم السمة...",
+        "attributeNameHint": "اختر اسمًا وصفيًا لسمتك",
+        "closeButton": "إغلاق",
+        "addButton": "إضافة سمة"
+      },
+      "editAttributeDialog": {
+        "title": "تعديل السمة",
+        "newAttributeName": "اسم السمة الجديد",
+        "editButton": "تعديل السمة"
+      },
+      "deleteAttributeDialog": {
+        "title": "هل أنت متأكد؟",
+        "confirmMessage": "هل أنت متأكد من أنك تريد حذف هذه السمة؟",
+        "deleteButton": "حذف السمة"
+      }
     },
     "preferences": {
       "title": "تفضيلات المستخدم",
@@ -707,6 +848,40 @@
       "saving": "جاري الحفظ...",
       "errorMessage": "حدث خطأ غير متوقع.",
       "contactName": "اسم جهة الاتصال"
+    },
+    "import": {
+      "title": "استيراد جهات الاتصال",
+      "short": "استيراد",
+      "subtitle": "تحميل ملف لاستيراد جهات الاتصال مع العلامات والسمات",
+      "uploadArea": {
+        "title": "اختر ملفاً للتحميل",
+        "description": "الصيغ المدعومة: .xlsx, .xls, .csv (الحد الأقصى 10 ميجابايت)",
+        "browse": "تصفح الملفات"
+      },
+      "formatInfo": {
+        "title": "متطلبات تنسيق الملف",
+        "required": "الأعمدة المطلوبة: name, country_code, phone_number",
+        "tagsHint": "العلامات: قائمة مفصولة بفواصل (مثال: vip, customer)",
+        "attributesHint": "السمات: أزواج مفتاح:قيمة مفصولة بفواصل منقوطة (مثال: city:NYC; role:Manager)"
+      },
+      "downloadSample": "تحميل نموذج",
+      "cancel": "إلغاء",
+      "importButton": "استيراد جهات الاتصال",
+      "importing": "جاري استيراد جهات الاتصال...",
+      "importingDesc": "يرجى الانتظار أثناء استيراد جهات الاتصال. قد يستغرق هذا بعض الوقت.",
+      "invalidFile": "تنسيق الملف غير صالح. يرجى تحميل ملفات .csv أو .xlsx أو .xls.",
+      "fileTooLarge": "الملف كبير جداً. الحد الأقصى لحجم الملف هو 10 ميجابايت.",
+      "importFailed": "فشل الاستيراد. يرجى التحقق من الملف والمحاولة مرة أخرى.",
+      "results": {
+        "title": "نتائج الاستيراد",
+        "importMore": "استيراد المزيد",
+        "total": "إجمالي المعالجة",
+        "success": "ناجح",
+        "existing": "موجود بالفعل",
+        "failed": "فشل",
+        "errorsTitle": "الأخطاء",
+        "done": "تم"
+      }
     }
   },
   "chatDetails": {
@@ -934,7 +1109,19 @@
         "sample": "نموذج",
         "clearAll": "مسح الكل",
         "contactsSelected": "جهات اتصال محددة",
-        "seeAll": "عرض جميع {{count}} جهات الاتصال",
+        "seeAll": {
+          "title": "جهات الاتصال المحددة",
+          "subtitle": "مراجعة {{count}} من جهات الاتصال المحددة",
+          "searchPlaceholder": "البحث في جهات الاتصال المحددة...",
+          "viewingSummary": "عرض {{filtered}} من {{total}} جهات اتصال",
+          "filteredBy": "تمت التصفية بـ \"{{term}}\"",
+          "noTags": "لا توجد علامات",
+          "removeAction": "إزالة جهة الاتصال",
+          "removeConfirm": "هل أنت متأكد من أنك تريد إزالة \"{{name}}\" من جهات الاتصال المحددة؟",
+          "noContactsSelected": "لم يتم تحديد جهات اتصال",
+          "goBackMessage": "عد لتحديد جهات اتصال لحملتك",
+          "footerSummary": "جهات اتصال في القائمة الإجمالية"
+        },
         "showingContacts": "عرض {{count}} من {{total}} جهات اتصال. انقر لرؤية الكل",
         "showingSelected": "عرض {{count}} من {{total}} جهات اتصال محددة. انقر لعرض وإدارة الكل",
         "importingTitle": "استيراد جهات الاتصال",
@@ -953,19 +1140,6 @@
           "gettingClose": "أنت تقترب من الحد.",
           "almostMax": "اقتراب من السعة القصوى!",
           "maxReached": "تم الوصول للسعة القصوى!"
-        },
-        "seeAll": {
-          "title": "جهات الاتصال المحددة",
-          "subtitle": "مراجعة {{count}} من جهات الاتصال المحددة",
-          "searchPlaceholder": "البحث في جهات الاتصال المحددة...",
-          "viewingSummary": "عرض {{filtered}} من {{total}} جهات اتصال",
-          "filteredBy": "تمت التصفية بـ \"{{term}}\"",
-          "noTags": "لا توجد علامات",
-          "removeAction": "إزالة جهة الاتصال",
-          "removeConfirm": "هل أنت متأكد من أنك تريد إزالة \"{{name}}\" من جهات الاتصال المحددة؟",
-          "noContactsSelected": "لم يتم تحديد جهات اتصال",
-          "goBackMessage": "عد لتحديد جهات اتصال لحملتك",
-          "footerSummary": "جهات اتصال في القائمة الإجمالية"
         },
         "progress": {
           "count": "{{current}} / {{max}} جهات اتصال",
@@ -1149,8 +1323,12 @@
       },
       "status": {
         "APPROVED": "موافق عليه",
+        "PENDING": "قيد المراجعة",
         "PENDING_DELETION": "في انتظار الحذف",
-        "REJECTED": "مرفوض"
+        "REJECTED": "مرفوض",
+        "DRAFT": "مسودة",
+        "PAUSED": "متوقف مؤقتاً",
+        "DISABLED": "معطل"
       },
       "actions": {
         "sendBroadcast": "إرسال بث",
@@ -1264,22 +1442,7 @@
           "title": "لم تتم إضافة أزرار موقع بعد",
           "message": "انقر على \"إضافة زر\" لإنشاء رابط موقعك الأول"
         }
-      },
-      "status": {
-        "APPROVED": "موافق عليه",
-        "PENDING": "قيد المراجعة",
-        "PENDING_DELETION": "في انتظار الحذف",
-        "REJECTED": "مرفوض",
-        "DRAFT": "مسودة",
-        "PAUSED": "متوقف مؤقتاً",
-        "DISABLED": "معطل"
-      },
-      "actions": {
-        "sendBroadcast": "إرسال بث",
-        "copy": "نسخ",
-        "delete": "حذف"
-      },
-      "showingTemplates": "عرض {{count}} قوالب"
+      }
     },
     "createTemplate": {
       "title": "إنشاء القالب",
@@ -1348,7 +1511,7 @@
       "actionButtons": {
         "callButton": "زر الاتصال",
         "copyCodeButton": "زر نسخ الرمز",
-        "callButtonDescription": "وصف زر الاتصال",
+        "callButtonDescription": "تفعيل زر الاتصال للسماح للمستخدمين بالاتصال برقم هاتف",
         "copyCodeButtonDescription": "وصف زر نسخ الرمز",
         "callButtonDescriptionRequired": "وصف زر الاتصال مطلوب",
         "copyCodeButtonDescriptionRequired": "وصف زر نسخ الرمز مطلوب",
@@ -1405,15 +1568,13 @@
         "offerCode": "رمز العرض",
         "offerCodeRequired": "*",
         "offerCodePlaceholder": "أدخل رمز العرض",
-        "offerCodeHint": "يظهر رمز العرض في القالب",
+        "offerCodeHint": "رمز أبجدي رقمي فقط (حد أقصى 15 حرفاً)",
         "offerCodeRequiredError": "رمز العرض مطلوب",
         "offerCodePlaceholderError": "عنصر نائب رمز العرض مطلوب",
         "offerCodeHintError": "تلميح رمز العرض مطلوب",
-        "callButtonDescription": "تفعيل زر الاتصال للسماح للمستخدمين بالاتصال برقم هاتف",
         "callButtonNotAllowed": "زر الاتصال غير مسموح لـ",
         "callButtonTemplates": "القوالب",
         "callButtonRestricted": "غير متاح لهذه الفئة",
-        "offerCodeHint": "رمز أبجدي رقمي فقط (حد أقصى 15 حرفاً)",
         "offerCodePatternError": "يجب أن يحتوي رمز العرض على أحرف وأرقام فقط",
         "offerCodeMaxLengthError": "لا يمكن أن يتجاوز رمز العرض 15 حرفاً",
         "phoneNumberError": "يرجى إدخال رقم هاتف صحيح"
@@ -1649,7 +1810,6 @@
       "marketingErrorMsg": "يجب أن تحتوي قوالب التسويق على زر واحد على الأقل مفعّل",
       "marketingWarning": "تحذير: تتطلب قوالب التسويق زراً واحداً على الأقل للحصول على الموافقة",
       "currentButtons": "الأزرار الحالية:",
-      "buttonsDisabled": "الأزرار معطلة",
       "enableToggle": "فعّل التبديل أعلاه لإضافة أزرار",
       "buttonsNotAllowed": "الأزرار غير مسموحة",
       "cannotInclude": "لا يمكن لقوالب الفئة تضمين أزرار تفاعلية",
@@ -2546,204 +2706,14 @@
     },
     "chatWindowHeader": {
       "expired": "منتهي الصلاحية",
-        "status": {
-          "APPROVED": "موافق عليه",
-          "PENDING_DELETION": "في انتظار الحذف",
-          "REJECTED": "مرفوض",
-          "DRAFT": "مسودة",
-          "PAUSED": "متوقف مؤقتاً",
-          "DISABLED": "معطل"
-        }
-    }
-  },
-  "profile": {
-    "settings": {
-      "title": "إعدادات الملف الشخصي",
-      "subtitle": "إدارة ملفك الشخصي وتفضيلاتك",
-      "logout": "تسجيل الخروج",
-      "logoutFailed": "فشل تسجيل الخروج، يرجى المحاولة مرة أخرى",
-      "navigation": {
-        "businessProfile": "الملف التجاري",
-        "personalProfile": "الملف الشخصي",
-        "userPreferences": "تفضيلات المستخدم",
-        "tagsAttributes": "العلامات والسمات"
+      "status": {
+        "APPROVED": "موافق عليه",
+        "PENDING_DELETION": "في انتظار الحذف",
+        "REJECTED": "مرفوض",
+        "DRAFT": "مسودة",
+        "PAUSED": "متوقف مؤقتاً",
+        "DISABLED": "معطل"
       }
-    },
-    "personal": {
-      "title": "الملف الشخصي",
-      "subtitle": "إدارة معلوماتك الشخصية والتجارية",
-      "basicInfo": "المعلومات الأساسية",
-      "firstName": "الاسم الأول",
-      "lastName": "اسم العائلة",
-      "phone": "الهاتف",
-      "email": "البريد الإلكتروني",
-      "passwordSettings": "إعدادات كلمة المرور",
-      "currentPassword": "كلمة المرور الحالية",
-      "newPassword": "كلمة المرور الجديدة",
-      "confirmPassword": "تأكيد كلمة المرور",
-      "accountInfo": "معلومات الحساب",
-      "roles": "الأدوار",
-      "rolesHint": "تتم إدارة الأدوار بواسطة المسؤولين",
-      "teams": "الفرق",
-      "teamsHint": "تتم إدارة الفرق بواسطة المسؤولين",
-      "cancel": "إلغاء",
-      "saveChanges": "حفظ التغييرات",
-      "saving": "جاري الحفظ...",
-      "noUserIdAvailable": "معرف المستخدم غير متاح"
-    },
-    "business": {
-      "title": "الملف التجاري",
-      "subtitle": "إدارة معلومات عملك وإعداداته",
-      "loading": "جاري تحميل ملفك الشخصي...",
-      "loadingMessage": "يرجى الانتظار بينما نجلب معلوماتك",
-      "profilePicture": "صورة الملف الشخصي",
-      "uploadLogo": "قم بتحميل شعار عملك أو صورة الملف الشخصي",
-      "recommendedSize": "الحجم الموصى به: 400×400 بكسل، الحد الأقصى 2 ميجابايت",
-      "clickToChange": "انقر للتغيير",
-      "fileSelected": "تم تحديد الملف",
-      "contactInfo": "معلومات الاتصال",
-      "phoneNumber": "رقم الهاتف",
-      "phoneCannotChange": "لا يمكن تغيير رقم الهاتف هذا",
-      "readOnly": "للقراءة فقط",
-      "contactEmail": "البريد الإلكتروني للاتصال",
-      "emailHelper": "البريد الإلكتروني الرئيسي للاتصالات التجارية",
-      "businessInfo": "معلومات العمل",
-      "aboutBusiness": "حول عملك",
-      "aboutPlaceholder": "أدخل اسم عملك",
-      "businessAddress": "عنوان العمل",
-      "addressPlaceholder": "أدخل عنوان عملك الكامل",
-      "businessIndustry": "مجال العمل",
-      "current": "الحالي:",
-      "notSpecified": "غير محدد",
-      "selectIndustry": "اختر مجال عملك",
-      "emailPlaceholder": "contact@business.com",
-      "primaryWebsitePlaceholder": "https://www.yourbusiness.com",
-      "secondaryWebsitePlaceholder": "https://www.alternative-site.com",
-      "industries": {
-        "automotive": "السيارات",
-        "beautyWellness": "الجمال والعافية",
-        "fashionApparel": "الأزياء والملابس",
-        "education": "التعليم",
-        "entertainment": "الترفيه",
-        "restaurantFood": "المطاعم والطعام",
-        "eventPlanning": "خدمات تخطيط الفعاليات",
-        "financeBanking": "المالية والمصرفية",
-        "hotelLodging": "الفنادق والإقامة",
-        "medicalHealth": "الطبية والصحية",
-        "nonProfit": "غير الربحية",
-        "professionalServices": "الخدمات المهنية",
-        "shoppingRetail": "التسوق والتجزئة",
-        "travelTransportation": "السفر والنقل",
-        "otherIndustry": "مجال آخر"
-      },
-      "businessDescription": "وصف العمل",
-      "descriptionPlaceholder": "وصف موجز لعملك",
-      "onlinePresence": "الحضور عبر الإنترنت",
-      "primaryWebsite": "الموقع الأساسي",
-      "secondaryWebsite": "الموقع الثانوي",
-      "optional": "(اختياري)",
-      "savingChanges": "جاري الحفظ...",
-      "saveProfile": "حفظ الملف الشخصي",
-      "updateFailedTryAgain": "فشل التحديث، يرجى المحاولة مرة أخرى"
-    },
-    "general": {
-      "title": "الإعدادات العامة",
-      "subtitle": "سيتم تنفيذ تكوين الإعدادات العامة هنا."
-    },
-    "importExport": {
-      "title": "مدير نسخ احتياطي للمحادثات",
-      "subtitle": "قم بنسخ واستعادة سجل محادثاتك بأمان. تبقى بياناتك خاصة ولا يتم تخزينها على خوادمنا أبدًا.",
-      "uploadBackup": "رفع النسخة الاحتياطية",
-      "uploadTitle": "رفع نسخة احتياطية للمحادثات (ملف .zip)",
-      "uploadDescription": "اسحب وأفلت ملف النسخة الاحتياطية هنا، أو انقر على الزر أدناه للاختيار من جهاز الكمبيوتر الخاص بك",
-      "selectFile": "اختر ملف",
-      "exportChats": "تصدير المحادثات",
-      "exportDescription": "إنشاء نسخة احتياطية من سجل المحادثات الحالي",
-      "generateBackup": "إنشاء نسخة احتياطية",
-      "downloadBackup": "تنزيل النسخة الاحتياطية",
-      "importChats": "استيراد المحادثات",
-      "importDescription": "استعادة سجل المحادثات من ملف نسخة احتياطية",
-      "restoreBackup": "استعادة النسخة الاحتياطية",
-      "uploadFirst": "تحتاج إلى رفع ملف نسخة احتياطية أولاً"
-    },
-    "tagsAndAttributes": {
-      "title": "العلامات والسمات",
-      "subtitle": "إدارة العلامات والسمات المخصصة الخاصة بك"
-    },
-    "tags": {
-      "title": "العلامات",
-      "searchPlaceholder": "البحث في العلامات...",
-      "addTag": "إضافة علامة",
-      "tagName": "اسم العلامة",
-      "actions": "إجراءات",
-      "noTagsFound": "لم يتم العثور على علامات",
-      "createFirstTag": "أنشئ علامتك الأولى للبدء",
-      "addNewTag": "إضافة علامة جديدة",
-      "editTag": "تعديل العلامة",
-      "deleteTag": "حذف العلامة",
-      "selectPage": "اختر الصفحة",
-      "addTagDialog": {
-        "title": "إضافة علامة",
-        "tagNameLabel": "اسم العلامة",
-        "tagNamePlaceholder": "أدخل اسم العلامة...",
-        "tagNameHint": "اختر اسمًا وصفيًا لعلامتك",
-        "closeButton": "إغلاق",
-        "addButton": "إضافة علامة",
-        "tagExists": "العلامة موجودة بالفعل"
-      },
-      "editTagDialog": {
-        "title": "تعديل العلامة",
-        "newTagName": "اسم العلامة الجديد",
-        "editButton": "تعديل العلامة"
-      },
-      "deleteTagDialog": {
-        "title": "هل أنت متأكد؟",
-        "confirmMessage": "هل أنت متأكد من أنك تريد حذف هذه العلامة؟",
-        "deleteButton": "حذف العلامة"
-      }
-    },
-    "attributes": {
-      "title": "السمات",
-      "searchPlaceholder": "البحث في السمات...",
-      "addAttribute": "إضافة سمة",
-      "attributeName": "اسم السمة",
-      "actions": "إجراءات",
-      "noAttributesFound": "لم يتم العثور على سمات",
-      "createFirstAttribute": "أنشئ سمتك الأولى للبدء",
-      "addNewAttribute": "إضافة سمة جديدة",
-      "editAttribute": "تعديل السمة",
-      "deleteAttribute": "حذف السمة",
-      "selectPage": "اختر الصفحة",
-      "addAttributeDialog": {
-        "title": "إضافة سمة",
-        "attributeNameLabel": "اسم السمة",
-        "attributeNamePlaceholder": "أدخل اسم السمة...",
-        "attributeNameHint": "اختر اسمًا وصفيًا لسمتك",
-        "closeButton": "إغلاق",
-        "addButton": "إضافة سمة"
-      },
-      "editAttributeDialog": {
-        "title": "تعديل السمة",
-        "newAttributeName": "اسم السمة الجديد",
-        "editButton": "تعديل السمة"
-      },
-      "deleteAttributeDialog": {
-        "title": "هل أنت متأكد؟",
-        "confirmMessage": "هل أنت متأكد من أنك تريد حذف هذه السمة؟",
-        "deleteButton": "حذف السمة"
-      }
-    },
-    "preferences": {
-      "title": "تفضيلات المستخدم",
-      "subtitle": "تخصيص تجربة التطبيق الخاصة بك",
-      "themeSettings": "إعدادات المظهر",
-      "darkMode": "الوضع الداكن",
-      "darkModeEnabled": "الوضع الداكن مفعّل",
-      "lightModeEnabled": "الوضع الفاتح مفعّل",
-      "languageSettings": "إعدادات اللغة",
-      "englishDesc": "استخدام اللغة الإنجليزية",
-      "arabicDesc": "استخدام اللغة العربية",
-      "preferencesNote": "يتم حفظ تفضيلاتك تلقائياً وسيتم تطبيقها على جميع أجهزتك."
     }
   },
   "app": {
@@ -2835,7 +2805,8 @@
     "error": {
       "loadFailed": "خطأ في تحميل البيانات"
     },
-    "noData": "لا توجد بيانات متاحة"
+    "noData": "لا توجد بيانات متاحة",
+    "exportReport": "تصدير التقرير"
   },
   "deleteAccount": {
     "title": "حذف الحساب",

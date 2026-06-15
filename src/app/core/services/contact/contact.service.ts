@@ -105,4 +105,15 @@ export class ContactService {
         formData.append('file', file);
         return this.apiService.post('v1/contact/bulk-upload', formData);
     }
+
+    exportContacts(searchTerm?: string | null, sort?: string | null): Observable<Blob> {
+        let params = new HttpParams();
+        if (searchTerm && searchTerm.toString().trim() !== '') {
+            params = params.set('search', searchTerm.toString().trim());
+        }
+        if (sort && sort.toString().trim() !== '') {
+            params = params.set('sort_by', sort.toString().trim());
+        }
+        return this.apiService.getBlob('v1/contact/export', { params });
+    }
 }
