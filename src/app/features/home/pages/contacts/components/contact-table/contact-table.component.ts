@@ -37,6 +37,8 @@ import { ContactHeaderAddContactDialogComponent } from "../contact-header/compon
 import { TranslatePipe } from '../../../../../../core/pipes/translate.pipe';
 import { ErrorTranslatorService } from '../../../../../../core/error/error-translator.service';
 import { TranslationService } from '../../../../../../core/services/translation/translation.service';
+import { AuthService } from '../../../../../../core/services/auth/auth.service';
+import { Role } from '../../../../../../core/models/auth.types';
 
 @Component({
   selector: 'app-contact-table',
@@ -70,13 +72,18 @@ export class ContactTableComponent implements OnInit, OnChanges, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private translationService = inject(TranslationService);
+  private currentUser: any = null;
 
   constructor(
     private store: Store,
     private actions$: Actions,
     private toastService: ToastService,
-    private errorTranslator: ErrorTranslatorService
+    private errorTranslator: ErrorTranslatorService,
+    private authService: AuthService
   ) {
+    this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe(user => {
+      this.currentUser = user;
+    });
     this.contacts$ = this.store.select(selectContacts);
     this.contactsPagination$ = this.store.select(selectPagination);
     this.loading$ = this.store.select(selectLoading);
@@ -159,7 +166,20 @@ export class ContactTableComponent implements OnInit, OnChanges, OnDestroy {
     this.expandedContactId = this.expandedContactId === contactId ? null : contactId;
   }
 
+  isCurrentUserAdmin(): boolean {
+    if (!this.currentUser?.data?.roles && !this.currentUser?.roles) return false;
+    const roles = this.currentUser?.data?.roles || this.currentUser?.roles || [];
+    return roles.some((role: any) => role.role_name === Role.ADMINISTRATOR);
+  }
+
   deleteOpenDialog(id: string) {
+    if (!this.isCurrentUserAdmin()) {
+      this.toastService.showToast(
+        this.translationService.translate('contacts.deleteDialog.notAllowed'),
+        'error'
+      );
+      return;
+    }
     this.contactIdSelected = id;
     this.deleteDialog = true;
   }

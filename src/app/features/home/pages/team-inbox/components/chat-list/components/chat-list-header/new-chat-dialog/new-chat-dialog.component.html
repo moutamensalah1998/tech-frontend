@@ -79,6 +79,14 @@
           </div>
         </div>
 
+        <!-- Customer Name Input (shown for manual phone entry) -->
+        <div *ngIf="inputMode === 'phone'" class="space-y-2">
+          <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">Customer name</label>
+          <input type="text" formControlName="customerName"
+            placeholder="Enter customer name (optional)"
+            class="w-full p-2.5 text-sm border border-border dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-primary dark:focus:border-primary-dark bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary placeholder-text-tertiary dark:placeholder-dark-text-tertiary" />
+        </div>
+
         <!-- Phone Number Input -->
         <div *ngIf="inputMode === 'phone'" class="space-y-2">
           <label class="block text-sm font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{

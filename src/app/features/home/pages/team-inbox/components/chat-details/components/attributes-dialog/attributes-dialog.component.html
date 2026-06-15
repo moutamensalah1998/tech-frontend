@@ -132,3 +132,15 @@
     </div>
   </div>
 </div>
+
+@if (deleteConfirmDialogOpen) {
+  <app-confirm-dialog
+    [title]="'chatDetails.attributesDialog.deleteAttribute' | translate"
+    [message]="getDeleteAttributeMessage()"
+    [confirmText]="'common.buttons.delete' | translate"
+    [cancelText]="'common.buttons.cancel' | translate"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteAttribute()"
+    (cancelled)="onCancelDeleteAttribute()">
+  </app-confirm-dialog>
+}

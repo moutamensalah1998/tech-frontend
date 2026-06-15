@@ -10,11 +10,12 @@ import { AttributesService } from '../../../../../../../../core/services/attribu
 import { getContactAttributes } from '../../../../../../../../core/services/contact/ngrx/contact.actions';
 import { TranslatePipe } from '../../../../../../../../core/pipes/translate.pipe';
 import { TranslationService } from '../../../../../../../../core/services/translation/translation.service';
+import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-attributes-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, TranslatePipe, ConfirmDialogComponent],
   templateUrl: './attributes-dialog.component.html',
   styleUrls: ['./attributes-dialog.component.css'],
 })
@@ -22,6 +23,8 @@ export class AttributesDialogComponent {
   editingAttributeId: string | null = null;
   editForm: FormGroup;
   loading = false;
+  deleteConfirmDialogOpen = false;
+  selectedAttributeForDeletion: ContactAttribute | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -102,28 +105,45 @@ export class AttributesDialogComponent {
   }
 
   deleteAttribute(attribute: ContactAttribute): void {
-    const message = this.translationService.translate('chatDetails.attributesDialog.deleteAttributeConfirm', { name: attribute.name });
-    if (confirm(message)) {
-      this.loading = true;
-      
-      this.attributesService.deleteContactAttribute(
-        this.data.contactId,
-        attribute.name
-      ).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: (response: any) => {
-          this.loading = false;
-          // Refresh the attributes list
-          this.store.dispatch(getContactAttributes({ contactId: this.data.contactId }));
-          this.dialogRef.close({ refresh: true, dataChanged: true });
-        },
-        error: (error: any) => {
-          this.loading = false;
-          console.error('Error deleting attribute:', error);
-        }
-      });
-    }
+    this.selectedAttributeForDeletion = attribute;
+    this.deleteConfirmDialogOpen = true;
+  }
+
+  onConfirmDeleteAttribute(): void {
+    if (!this.selectedAttributeForDeletion) return;
+    const attribute = this.selectedAttributeForDeletion;
+    this.deleteConfirmDialogOpen = false;
+    this.selectedAttributeForDeletion = null;
+
+    this.loading = true;
+    
+    this.attributesService.deleteContactAttribute(
+      this.data.contactId,
+      attribute.name
+    ).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        // Refresh the attributes list
+        this.store.dispatch(getContactAttributes({ contactId: this.data.contactId }));
+        this.dialogRef.close({ refresh: true, dataChanged: true });
+      },
+      error: (error: any) => {
+        this.loading = false;
+        console.error('Error deleting attribute:', error);
+      }
+    });
+  }
+
+  onCancelDeleteAttribute(): void {
+    this.deleteConfirmDialogOpen = false;
+    this.selectedAttributeForDeletion = null;
+  }
+
+  getDeleteAttributeMessage(): string {
+    if (!this.selectedAttributeForDeletion) return '';
+    return this.translationService.translate('chatDetails.attributesDialog.deleteAttributeConfirm', { name: this.selectedAttributeForDeletion.name });
   }
 
   ngOnDestroy(): void {

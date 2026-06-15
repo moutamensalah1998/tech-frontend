@@ -109,3 +109,15 @@
     </div>
   </div>
 </div>
+
+@if (deleteConfirmDialogOpen) {
+  <app-confirm-dialog
+    [title]="'chatDetails.tagsDialog.deleteTag' | translate"
+    [message]="getDeleteTagMessage()"
+    [confirmText]="'common.buttons.delete' | translate"
+    [cancelText]="'common.buttons.cancel' | translate"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteTag()"
+    (cancelled)="onCancelDeleteTag()">
+  </app-confirm-dialog>
+}

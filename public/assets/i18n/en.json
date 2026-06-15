@@ -659,9 +659,10 @@
     },
     "deleteDialog": {
       "header": "Delete Contact",
-      "message": "Are you sure you want to delete this contact? This action cannot be undone.",
+      "message": "Are you sure you want to delete this contact? All associated conversations will also be deleted. This action cannot be undone.",
       "confirm": "Delete",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "notAllowed": "You are not allowed to perform this action."
     },
     "editDialog": {
       "title": "Edit contact",
@@ -2074,6 +2075,8 @@
       "selectContact": "Select Contact",
       "selectContactPlaceholder": "Select contact",
       "noContactsFound": "No contacts found",
+      "customerName": "Customer Name",
+      "customerNamePlaceholder": "Enter customer name (optional)",
       "phoneNumber": "Phone Number",
       "phoneNumberPlaceholder": "Phone number",
       "country": "Country",

@@ -190,3 +190,15 @@
 
   </div>
 </div>
+
+@if (deleteConfirmDialogOpen) {
+  <app-confirm-dialog
+    [title]="'broadcast.templates.actions.delete' | translate"
+    [message]="getDeleteTemplateMessage()"
+    [confirmText]="'common.buttons.delete' | translate"
+    [cancelText]="'common.buttons.close' | translate"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteTemplate()"
+    (cancelled)="onCancelDeleteTemplate()">
+  </app-confirm-dialog>
+}

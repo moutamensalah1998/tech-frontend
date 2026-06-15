@@ -104,6 +104,7 @@ export class NewChatDialogComponent implements OnInit {
 
       countryCode: [''],
       phoneNumber: [''],
+      customerName: [''],
 
       templateId: [''],
       parameters: this.fb.array([])
@@ -266,20 +267,21 @@ export class NewChatDialogComponent implements OnInit {
     if (this.isFormValidWithVariables()) {
       const formValue = this.contactForm.value;
 
+      const customerName = formValue.customerName || formValue.selectedContactName || undefined;
+
       const payload: any = {
         contact_country_code: formValue.countryCode,
         template_id: formValue.templateId,
         parameters: this.selectedTemplateItem!.variables.map(
           variable => this.templateVariableValues[variable] || ''
-        )
+        ),
+        contact_name: customerName,
       };
 
       if (this.inputMode === 'contact') {
         payload.contact_phone_number = formValue.selectedContactPhone;
       } else {
-        const countryCode = formValue.countryCode;
-        const phoneNumber = formValue.phoneNumber.replace(/\D/g, '');
-        payload.contact_phone_number = `${countryCode}${phoneNumber}`;
+        payload.contact_phone_number = formValue.phoneNumber.replace(/\D/g, '');
       }
 
       this.conversationsService.createConversation(payload).subscribe({

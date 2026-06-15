@@ -10,11 +10,12 @@ import { TagsService } from '../../../../../../../../core/services/tags/tags.ser
 import { getContactTags } from '../../../../../../../../core/services/contact/ngrx/contact.actions';
 import { TranslatePipe } from '../../../../../../../../core/pipes/translate.pipe';
 import { TranslationService } from '../../../../../../../../core/services/translation/translation.service';
+import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-tags-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, TranslatePipe, ConfirmDialogComponent],
   templateUrl: './tags-dialog.component.html',
   styleUrls: ['./tags-dialog.component.css']
 })
@@ -22,6 +23,8 @@ export class TagsDialogComponent {
   editingTagId: string | null = null;
   editForm: FormGroup;
   loading = false;
+  deleteConfirmDialogOpen = false;
+  selectedTagForDeletion: ContactTag | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -95,25 +98,42 @@ export class TagsDialogComponent {
   }
 
   deleteTag(tag: ContactTag): void {
-    const message = this.translationService.translate('chatDetails.tagsDialog.deleteTagConfirm', { name: tag.name });
-    if (confirm(message)) {
-      this.loading = true;
-      
-      this.tagsService.deleteTag(tag.name).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: (response: any) => {
-          this.loading = false;
-          // Refresh the tags list
-          this.store.dispatch(getContactTags({ contact_id: this.data.contactId }));
-          this.dialogRef.close({ refresh: true, dataChanged: true });
-        },
-        error: (error: any) => {
-          this.loading = false;
-          console.error('Error deleting tag:', error);
-        }
-      });
-    }
+    this.selectedTagForDeletion = tag;
+    this.deleteConfirmDialogOpen = true;
+  }
+
+  onConfirmDeleteTag(): void {
+    if (!this.selectedTagForDeletion) return;
+    const tag = this.selectedTagForDeletion;
+    this.deleteConfirmDialogOpen = false;
+    this.selectedTagForDeletion = null;
+
+    this.loading = true;
+    
+    this.tagsService.deleteTag(tag.name).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        // Refresh the tags list
+        this.store.dispatch(getContactTags({ contact_id: this.data.contactId }));
+        this.dialogRef.close({ refresh: true, dataChanged: true });
+      },
+      error: (error: any) => {
+        this.loading = false;
+        console.error('Error deleting tag:', error);
+      }
+    });
+  }
+
+  onCancelDeleteTag(): void {
+    this.deleteConfirmDialogOpen = false;
+    this.selectedTagForDeletion = null;
+  }
+
+  getDeleteTagMessage(): string {
+    if (!this.selectedTagForDeletion) return '';
+    return this.translationService.translate('chatDetails.tagsDialog.deleteTagConfirm', { name: this.selectedTagForDeletion.name });
   }
 
   ngOnDestroy(): void {

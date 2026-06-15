@@ -23,10 +23,11 @@ import {
 import { TranslatePipe } from '../../../../../../core/pipes/translate.pipe';
 import { TranslationService } from '../../../../../../core/services/translation/translation.service';
 import { PaginationComponent } from '../../../../../../shared/components/pagination/pagination.component';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet, TranslatePipe, PaginationComponent],
+  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet, TranslatePipe, PaginationComponent, ConfirmDialogComponent],
   selector: 'app-your-templates',
   templateUrl: './your-templates.component.html',
 })
@@ -208,18 +209,38 @@ export class YourTemplatesComponent implements OnInit, OnDestroy {
     });
   }
 
+  deleteConfirmDialogOpen = false;
+  selectedTemplateForDeletion: WhatsAppTemplate | null = null;
+
   onDeleteTemplate(template: WhatsAppTemplate) {
-    const message = this.translationService.translate('broadcast.templates.messages.deleteConfirm', { name: template.name });
-    if (confirm(message)) {
-      this.store.dispatch(
-        TemplateActions.deleteTemplate({
-          name: template.name,
-          template_id: template.id,
-        })
-      );
-      this.page = 1;
-      this.dispatchLoadTemplates();
-    }
+    this.selectedTemplateForDeletion = template;
+    this.deleteConfirmDialogOpen = true;
+  }
+
+  onConfirmDeleteTemplate(): void {
+    if (!this.selectedTemplateForDeletion) return;
+    const template = this.selectedTemplateForDeletion;
+    this.deleteConfirmDialogOpen = false;
+    this.selectedTemplateForDeletion = null;
+
+    this.store.dispatch(
+      TemplateActions.deleteTemplate({
+        name: template.name,
+        template_id: template.id,
+      })
+    );
+    this.page = 1;
+    this.dispatchLoadTemplates();
+  }
+
+  onCancelDeleteTemplate(): void {
+    this.deleteConfirmDialogOpen = false;
+    this.selectedTemplateForDeletion = null;
+  }
+
+  getDeleteTemplateMessage(): string {
+    if (!this.selectedTemplateForDeletion) return '';
+    return this.translationService.translate('broadcast.templates.messages.deleteConfirm', { name: this.selectedTemplateForDeletion.name });
   }
 
   onCopyTemplate(template: WhatsAppTemplate) {

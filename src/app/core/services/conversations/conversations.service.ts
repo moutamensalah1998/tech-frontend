@@ -60,6 +60,7 @@ export class ConversationsService {
     contact_phone_number: string;
     template_id: string;
     parameters: string[];
+    contact_name?: string;
   }): Observable<any> {
     const url = `${this.teamBasePath}/create_conversation`;
     return this.apiService.post(url, payload);
