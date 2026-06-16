@@ -55,6 +55,8 @@ export class ChatListHeaderComponent implements OnInit, OnDestroy {
       'Open': 'open',
       'Solved': 'solved',
       'Pending': 'pending',
+      'Expired': 'expired',
+      'Assign to Me': 'assigned_to_me',
       'All': null
     };
 

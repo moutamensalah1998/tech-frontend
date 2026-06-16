@@ -540,6 +540,8 @@
     "open": "Open",
     "solved": "Solved",
     "pending": "Pending",
+    "expired": "Expired",
+    "assignToMe": "Assign To Me",
     "chats": "Chats",
     "selectContact": "Select contact",
     "noContactsFound": "No contacts found",

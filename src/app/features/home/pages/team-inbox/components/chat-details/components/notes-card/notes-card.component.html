@@ -89,7 +89,7 @@
                                112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
                   </button>
-                  <button (click)="deleteNote(note.id)"
+                  <button (click)="deleteNote(note)"
                     class="p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-full transition-colors"
                     [attr.title]="'chatDetails.notesCard.deleteNote' | translate">
                     <svg class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" stroke="currentColor"
@@ -118,3 +118,15 @@
     </div>
   </div>
 </div>
+
+@if (deleteConfirmDialogOpen) {
+  <app-confirm-dialog
+    [title]="'chatDetails.notesCard.deleteNote' | translate"
+    [message]="getDeleteNoteMessage()"
+    [confirmText]="'common.buttons.delete' | translate"
+    [cancelText]="'common.buttons.cancel' | translate"
+    dialogStyle="danger"
+    (confirmed)="onConfirmDeleteNote()"
+    (cancelled)="onCancelDeleteNote()">
+  </app-confirm-dialog>
+}

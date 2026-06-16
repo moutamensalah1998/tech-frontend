@@ -49,12 +49,10 @@ export class AttributesService {
 
     updateContactAttribute(contactId: string, attributeName: string, attributeValue: string): Observable<any> {
     const url = `v1/attributes/contact_id/${contactId}`;
-    const payload = {
-      attribute_name: attributeName,
-      // contact_id: contactId,
-      attribute_value: attributeValue
-    };
-    return this.apiService.put(url, payload);
+    const params = new HttpParams()
+      .set('attribute_name', attributeName)
+      .set('attribute_value', attributeValue);
+    return this.apiService.put(url, null, { params });
   }
 
   deleteContactAttribute(contactId: string, attributeName: string): Observable<any> {

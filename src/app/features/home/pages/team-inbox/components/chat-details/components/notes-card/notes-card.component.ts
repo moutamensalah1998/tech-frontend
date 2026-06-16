@@ -16,11 +16,12 @@ import { Conversation } from '../../../../../../../../core/models/conversation.m
 import { Actions } from '@ngrx/effects';
 import { TranslatePipe } from '../../../../../../../../core/pipes/translate.pipe';
 import { TranslationService } from '../../../../../../../../core/services/translation/translation.service';
+import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-notes-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, ConfirmDialogComponent],
   templateUrl: './notes-card.component.html',
 
 })
@@ -38,6 +39,9 @@ export class NotesCardComponent implements OnDestroy {
 
   currentPage = 1;
   pageSize = 10;
+
+  deleteConfirmDialogOpen = false;
+  selectedNoteForDeletion: Note | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -92,20 +96,25 @@ export class NotesCardComponent implements OnDestroy {
     this.editingContent = '';
   }
 
-  deleteNote(noteId: string) {
-    const message = this.translationService.translate('chatDetails.notesCard.deleteNoteConfirm');
-    if (confirm(message)) {
-      this.store.dispatch(deleteContactNote({ noteId }));
-    }
-    this.action$.pipe(takeUntil(this.destroy$)).subscribe(action => {
-      if (action.type === '[Contact] Delete Contact Note Success') {
-        this.store.dispatch(getContactNotes({
-          contactId: this.conversation.contact_id,
-          page: this.currentPage,
-          limit: this.pageSize
-        }));
-      }
-    })
+  deleteNote(note: Note) {
+    this.selectedNoteForDeletion = note;
+    this.deleteConfirmDialogOpen = true;
+  }
+
+  onConfirmDeleteNote(): void {
+    if (!this.selectedNoteForDeletion) return;
+    this.store.dispatch(deleteContactNote({ noteId: this.selectedNoteForDeletion.id }));
+    this.deleteConfirmDialogOpen = false;
+    this.selectedNoteForDeletion = null;
+  }
+
+  onCancelDeleteNote(): void {
+    this.deleteConfirmDialogOpen = false;
+    this.selectedNoteForDeletion = null;
+  }
+
+  getDeleteNoteMessage(): string {
+    return this.translationService.translate('chatDetails.notesCard.deleteNoteConfirm');
   }
 
   loadMoreNotes() {
