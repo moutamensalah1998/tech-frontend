@@ -1,0 +1,116 @@
+<div
+  class="node-card bg-white rounded-lg shadow-lg p-4 cursor-grab active:cursor-grabbing select-none relative will-change-transform transition-shadow duration-200 hover:shadow-xl"
+  [class.dragging]="isDragging"
+  [class.no-transition]="isDragging"
+  [class.ring-2]="isFirstNode"
+  [class.ring-purple-400]="isFirstNode"
+  [class.ring-offset-2]="isFirstNode"
+  [class.border-2]="true"
+  [class.border-red-500]="getValidationState() === 'error'"
+  [class.border-yellow-500]="getValidationState() === 'warning'"
+  [class.border-purple-500]="getValidationState() === 'valid'"
+  [class.border-gray-200]="getValidationState() === 'unknown'"
+  [title]="getValidationTooltip()"
+  (mousedown)="onMouseDown($event)"
+  (touchstart)="onTouchStart($event)"
+>
+  <app-connection-button (connectionStart)="onConnectionStart.emit($event)">
+  </app-connection-button>
+
+  <!-- Validation Badge -->
+  <div
+    *ngIf="getValidationState() !== 'unknown' && getValidationState() !== 'valid'"
+    class="absolute top-2 right-2 z-10"
+    [title]="getValidationTooltip()">
+    <span
+      *ngIf="getValidationState() === 'error'"
+      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-300">
+      <span class="material-icons text-xs mr-1">error</span>
+      {{ getValidationErrors().length }}
+    </span>
+    <span
+      *ngIf="getValidationState() === 'warning'"
+      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-300">
+      <span class="material-icons text-xs mr-1">warning</span>
+      {{ getValidationWarnings().length }}
+    </span>
+  </div>
+
+  <app-node-header
+    [title]="node.title || 'Assign Conversation'"
+    icon="settings"
+    color="purple"
+    [node]="node"
+    [isFirstNode]="isFirstNode"
+    (addNode)="onAddNode.emit()"
+    (delete)="onDelete.emit()"
+    (setAsFirst)="onSetAsFirst($event)">
+  </app-node-header>
+
+  <div class="content-section mt-3 space-y-3">
+    <!-- Type Selector -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Type
+      </label>
+      <select
+        [formControl]="operationForm.controls.operationType"
+        (change)="onOperationTypeChange()"
+        class="no-drag w-full px-3 py-2 rounded bg-white text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+        <option value="assign_user">Assign User</option>
+        <option value="assign_team">Assign Team</option>
+      </select>
+    </div>
+
+    <!-- Assign User Dropdown -->
+    <div *ngIf="operationForm.controls.operationType.value === 'assign_user'">
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        User
+      </label>
+      <select
+        [formControl]="operationForm.controls.userId"
+        (change)="onUserIdChange()"
+        class="no-drag w-full px-3 py-2 rounded bg-white text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+        <option value="" disabled>
+          {{ isLoadingUsers ? 'Loading users...' : (users.length === 0 ? 'No users available' : 'Select a user') }}
+        </option>
+        <option *ngFor="let user of users" [value]="user.id">
+          {{ user.first_name ? user.first_name + ' ' + (user.last_name || '') + ' (' + user.email + ')' : user.email }}
+        </option>
+      </select>
+      <div *ngIf="isLoadingUsers" class="text-xs text-gray-500 mt-1">Loading users...</div>
+      <div *ngIf="!isLoadingUsers && users.length === 0" class="text-xs text-yellow-600 mt-1">
+        No users found for this workspace.
+      </div>
+    </div>
+
+    <!-- Assign Team Dropdown -->
+    <div *ngIf="operationForm.controls.operationType.value === 'assign_team'">
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Team
+      </label>
+      <select
+        [formControl]="operationForm.controls.teamId"
+        (change)="onTeamIdChange()"
+        class="no-drag w-full px-3 py-2 rounded bg-white text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+        <option value="" disabled>
+          {{ isLoadingTeams ? 'Loading teams...' : (teams.length === 0 ? 'No teams available' : 'Select a team') }}
+        </option>
+        <option *ngFor="let team of teams" [value]="team.id">
+          {{ team.name }}
+        </option>
+      </select>
+      <div *ngIf="isLoadingTeams" class="text-xs text-gray-500 mt-1">Loading teams...</div>
+      <div *ngIf="!isLoadingTeams && teams.length === 0" class="text-xs text-yellow-600 mt-1">
+        No teams found for this workspace.
+      </div>
+    </div>
+
+    <!-- Help text: Use sidebar Save button to persist changes -->
+    <div class="pt-2 border-t border-gray-200">
+      <p class="text-xs text-gray-500 italic">
+        Changes are auto-saved. Use the sidebar <strong>Save</strong> to persist.
+      </p>
+    </div>
+  </div>
+</div>

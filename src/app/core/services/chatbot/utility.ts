@@ -13,6 +13,14 @@ export interface SerializedNode {
   is_first: boolean;
   is_final: boolean;
   next_nodes?: string | null;
+  service_hook?: {
+    service_type?: string;
+    service_action?: string;
+    user_id?: string;
+    team_id?: string;
+    on_success?: string;
+    on_failure?: string;
+  } | null;
 }
 
 /**
@@ -227,6 +235,11 @@ export class ChatbotSerializationService {
       return node.next_nodes || (node.children.length > 0 ? node.children[0].id : null);
     }
 
+    // For operation nodes, use the first child (single connection like message nodes)
+    if (node.type === 'operation') {
+      return node.children.length > 0 ? node.children[0].id : (node.next_nodes || null);
+    }
+
     return null;
   }
 
@@ -259,15 +272,25 @@ export class ChatbotSerializationService {
    * FIXED: Override serializeNode to pass node to cleanNodeBody
    */
   private static serializeNode(node: Node): SerializedNode {
+    // Extract service_hook from body and place it at the node level
+    // where the backend DynamicFlowNodeRequest expects it
+    const body = this.cleanNodeBody(node.body, node);
+    let serviceHook: any = null;
+    if ((body as any).service_hook) {
+      serviceHook = (body as any).service_hook;
+      delete (body as any).service_hook; // Remove from body
+    }
+
     return {
       id: node.id,
       type: node.type,
       title: node.title,
-      body: this.cleanNodeBody(node.body, node), // FIXED: Pass node reference
+      body,
       position: { ...node.position },
       is_first: node.is_first || false,
       is_final: this.isNodeFinal(node),
-      next_nodes: this.determineNextNodes(node)
+      next_nodes: this.determineNextNodes(node),
+      service_hook: serviceHook,
     };
   }
 

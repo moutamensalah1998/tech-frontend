@@ -55,6 +55,12 @@ export class ConversationsService {
     return this.apiService.post(url, body);
   }
 
+  assignTeamToConversation(conversation_id: string, team_id: string): Observable<any> {
+    const url = `${this.teamBasePath}/conversation_team_assign`;
+    const body = { conversation_id, team_id };
+    return this.apiService.post(url, body);
+  }
+
   createConversation(payload: {
     contact_country_code: string;
     contact_phone_number: string;

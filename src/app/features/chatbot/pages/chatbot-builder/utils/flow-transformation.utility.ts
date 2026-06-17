@@ -10,6 +10,14 @@ export interface ApiFlowNode {
   is_first: boolean;
   position: { x: number; y: number };
   next_nodes?: string | null;
+  service_hook?: {
+    service_type?: string;
+    service_action?: string;
+    user_id?: string;
+    team_id?: string;
+    on_success?: string;
+    on_failure?: string;
+  } | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,11 +47,26 @@ export class FlowTransformationUtility {
     apiNode: ApiFlowNode,
     mediaDownloadService?: MediaDownloadService
   ): Promise<Node> {
+    const body = await this.convertApiBodyToInternalBody(apiNode.body, apiNode.type, mediaDownloadService);
+
+    // Inject service_hook from the node-level into the body
+    // The backend stores service_hook at node level; the frontend expects it in node.body
+    if (apiNode.service_hook) {
+      (body as any).service_hook = {
+        service_type: apiNode.service_hook.service_type || '',
+        service_action: apiNode.service_hook.service_action || '',
+        user_id: apiNode.service_hook.user_id || '',
+        team_id: apiNode.service_hook.team_id || '',
+        on_success: apiNode.service_hook.on_success || '',
+        on_failure: apiNode.service_hook.on_failure || '',
+      };
+    }
+
     const node: Node = {
       id: apiNode.id,
       type: apiNode.type,
       title: this.getNodeTitle(apiNode.type),
-      body: await this.convertApiBodyToInternalBody(apiNode.body, apiNode.type, mediaDownloadService),
+      body,
       position: {
         x: apiNode.position.x,
         y: apiNode.position.y

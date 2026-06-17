@@ -13,6 +13,7 @@ import { Node } from '../../../../../../core/models/chatbot.model';
 import { MessageNodeComponent } from '../app-message-node/app-message-node.component';
 import { QuestionNodeComponent } from '../app-question-node/app-question-node.component';
 import { InteractiveButtonsNodeComponent } from '../app-interactive-buttons-node/app-interactive-buttons-node.component';
+import { OperationNodeComponent } from '../app-operation-node/app-operation-node.component';
 import { ConnectionLayerComponent } from '../connection-layer/connection-layer.component';
 import { Connection } from '../../services/connection.service';
 import { ConnectionPreviewLine, ConnectionDeleteButton } from '../../models/connection-preview.model';
@@ -32,6 +33,7 @@ export interface GridConfig {
     MessageNodeComponent,
     QuestionNodeComponent,
     InteractiveButtonsNodeComponent,
+    OperationNodeComponent,
     ConnectionLayerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

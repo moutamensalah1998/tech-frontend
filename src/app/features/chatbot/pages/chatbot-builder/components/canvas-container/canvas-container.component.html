@@ -71,6 +71,18 @@
           (onDelete)="onNodeDelete(node)"
           (onContentChange)="onNodeContentChange()">
         </app-interactive-buttons-node>
+
+        <!-- Operation Node -->
+        <app-operation-node
+          *ngIf="node.type === 'operation'"
+          [node]="node"
+          [isDragging]="isDragging && draggedNodeId === node.id"
+          [zoomLevel]="zoomConfig.level"
+          (onConnectionStart)="onNodeConnectionStart(node, $event)"
+          (onAddNode)="onNodeAdd(node)"
+          (onDelete)="onNodeDelete(node)"
+          (onContentChange)="onNodeContentChange()">
+        </app-operation-node>
       </div>
     </ng-container>
 

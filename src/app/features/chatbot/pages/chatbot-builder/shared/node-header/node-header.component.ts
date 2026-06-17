@@ -17,7 +17,7 @@ export class NodeHeaderComponent {
   
   @Input() title!: string;
   @Input() icon!: string;
-  @Input() color!: 'blue' | 'green' | 'yellow';
+  @Input() color!: 'blue' | 'green' | 'yellow' | 'purple';
   @Input() node!: Node;
   @Input() isFirstNode: boolean = false;
 
@@ -30,7 +30,8 @@ export class NodeHeaderComponent {
     const colorClasses = {
       blue: 'bg-blue-500',
       green: 'bg-green-500',
-      yellow: 'bg-yellow-500'
+      yellow: 'bg-yellow-500',
+      purple: 'bg-purple-500'
     };
     const firstNodeClass = this.isFirstNode ? 'ring-2 ring-green-300 ring-offset-1' : '';
 
@@ -59,7 +60,8 @@ export class NodeHeaderComponent {
     const typeNames = {
       'message': 'message',
       'question': 'question',
-      'interactive_buttons': 'interactive message'
+      'interactive_buttons': 'interactive message',
+      'operation': 'operation'
     };
     return typeNames[this.node.type as keyof typeof typeNames] || 'content';
   }
@@ -69,7 +71,7 @@ export class NodeHeaderComponent {
   }
 
   canBeFirstNode(): boolean {
-    return ['message', 'question', 'interactive_buttons'].includes(this.node.type);
+    return ['message', 'question', 'interactive_buttons', 'operation'].includes(this.node.type);
   }
 
   getFirstNodeHelpText(): string {

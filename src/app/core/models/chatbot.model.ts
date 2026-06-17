@@ -1,4 +1,4 @@
-export type FlowNodeType = "message" | "question" | "interactive_buttons";
+export type FlowNodeType = "message" | "question" | "interactive_buttons" | "operation";
 
 export interface Position {
   x: number;
@@ -48,6 +48,13 @@ export interface InteractiveAction {
   sections?: any[];
 }
 
+export interface ServiceHook {
+  service_type: string;
+  service_action: string;
+  user_id?: string;
+  team_id?: string;
+}
+
 export interface DynamicFlowNodeBody {
   body_message?: {
     content_items: ContentItem[];
@@ -68,6 +75,7 @@ export interface DynamicFlowNodeBody {
     footer?: InteractiveFooter;
     action: InteractiveAction;
   };
+  service_hook?: ServiceHook;
 }
 
 export interface Node {

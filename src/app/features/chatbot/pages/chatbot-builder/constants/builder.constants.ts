@@ -21,6 +21,13 @@ export const BUILDER_CONSTANTS = {
       bgColor: 'bg-yellow-500',
       iconBg: 'bg-yellow-700',
     },
+    {
+      title: 'Operation',
+      type: 'operation' as const,
+      icon: 'settings',
+      bgColor: 'bg-purple-500',
+      iconBg: 'bg-purple-700',
+    },
   ],
   DEFAULT_NODE_POSITION: { x: 200, y: 200 },
   NODE_SPACING: {

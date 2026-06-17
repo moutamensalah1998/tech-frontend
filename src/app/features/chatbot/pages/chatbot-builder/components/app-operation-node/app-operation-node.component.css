@@ -1,0 +1,137 @@
+/* Operation Node - Professional Styling */
+:host {
+  display: block;
+}
+
+.node-card {
+  width: 320px;
+  min-height: 120px;
+  background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+  border: 2px solid #e9d5ff;
+}
+
+.node-card:hover {
+  box-shadow: 0 10px 25px rgba(147, 51, 234, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-color: #d8b4fe;
+}
+
+.node-card.dragging {
+  box-shadow: 0 20px 40px rgba(147, 51, 234, 0.25), 0 0 0 4px rgba(147, 51, 234, 0.2);
+  transform: scale(1.02);
+  border-color: #a855f7;
+  opacity: 0.95;
+}
+
+.node-card.no-transition {
+  transition: none !important;
+}
+
+.node-card.ring-2 {
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.5), 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* Content Section */
+.content-section {
+  padding-top: 0.5rem;
+}
+
+/* Form Labels */
+label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+}
+
+/* Select Dropdowns */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239Ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+select:hover {
+  border-color: #a78bfa;
+}
+
+select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  outline: none;
+}
+
+select:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Save Button */
+button.bg-purple-500 {
+  background-color: #7c3aed;
+  border: none;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+button.bg-purple-500:hover {
+  background-color: #6d28d9;
+}
+
+button.bg-purple-500:active {
+  background-color: #5b21b6;
+  transform: scale(0.98);
+}
+
+/* Cancel Button */
+button.bg-gray-200 {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+button.bg-gray-200:hover {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+button.bg-gray-200:active {
+  background-color: #d1d5db;
+  transform: scale(0.98);
+}
+
+/* Status messages */
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-yellow-600 {
+  color: #d97706;
+}
+
+/* Connection Button Overlay - match purple theme */
+::ng-deep .connection-button {
+  background-color: #7c3aed !important;
+}
+
+::ng-deep .connection-button:hover {
+  background-color: #6d28d9 !important;
+}

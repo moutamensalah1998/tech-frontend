@@ -686,7 +686,8 @@ export class NodeManagementService {
     const nodesByType: Record<FlowNodeType, number> = {
       message: 0,
       question: 0,
-      interactive_buttons: 0
+      interactive_buttons: 0,
+      operation: 0
     };
 
     let totalConnections = 0;
@@ -755,10 +756,11 @@ export class NodeManagementService {
   }
 
   private getDefaultTitle(type: FlowNodeType): string {
-    const titles = {
+    const titles: Record<FlowNodeType, string> = {
       message: 'Send Message',
       question: 'Question',
       interactive_buttons: 'Interactive Buttons',
+      operation: 'Operation',
     };
     return titles[type];
   }
@@ -785,6 +787,12 @@ export class NodeManagementService {
           body: { text: templateData?.body_text || '' },
           action: { buttons: templateData?.buttons || [] },
         },
+      }),
+      operation: () => ({
+        service_hook: {
+          service_type: templateData?.service_type || 'assign_user',
+          service_action: templateData?.service_action || 'assign_user',
+        }
       }),
     };
 
