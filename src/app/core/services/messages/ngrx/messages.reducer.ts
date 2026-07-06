@@ -56,6 +56,18 @@ function mergeMessageWithServerResponse(localMessage: any, serverData: any) {
     conversationId: localMessage.conversationId,
   };
 }
+// Status priority: higher number = more advanced status
+const STATUS_PRIORITY: Record<string, number> = {
+  'loading': 0,
+  'sent': 1,
+  'delivered': 2,
+  'read': 3,
+};
+
+function getStatusPriority(status: string | undefined | null): number {
+  return STATUS_PRIORITY[status as string] ?? -1;
+}
+
 export const messageReducer = createReducer(
   messageInitialState,
   on(
@@ -134,9 +146,17 @@ export const messageReducer = createReducer(
   })),
   on(updateMessageStatus, (state, { message_id, status }) => ({
     ...state,
-    messages: state.messages.map(msg =>
-      msg._id === message_id ? { ...msg, message_status: status } : msg
-    ),
+    messages: state.messages.map(msg => {
+      if (msg._id !== message_id) return msg;
+      // Only update if new status has higher or equal priority
+      // Prevents downgrade from "read" to "delivered" due to out-of-order events
+      const currentPriority = getStatusPriority(msg.message_status);
+      const newPriority = getStatusPriority(status);
+      if (newPriority >= currentPriority) {
+        return { ...msg, message_status: status };
+      }
+      return msg;
+    }),
   })),
   on(loadMessagesByConversationSuccess, (state, { data, meta }) => ({
     ...state,

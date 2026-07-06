@@ -1,0 +1,164 @@
+<div class="training-panel">
+  <!-- Toast Notification -->
+  <div *ngIf="showToast" class="toast-notification" [ngClass]="toastType === 'success' ? 'toast-success' : 'toast-error'">
+    <span class="toast-icon">{{ toastType === 'success' ? '✅' : '❌' }}</span>
+    <span class="toast-message">{{ toastMessage }}</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-header">
+    <button class="tab-btn" [class.active]="activeTab === 'sources'" (click)="onTabChange('sources')">
+      📚 Knowledge Sources
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'logs'" (click)="onTabChange('logs')">
+      💬 Conversation Logs
+    </button>
+  </div>
+
+  <!-- Sources Tab -->
+  <div *ngIf="activeTab === 'sources'" class="tab-content">
+    <!-- Add Source Button -->
+    <div class="section-header">
+      <h3>Knowledge Sources</h3>
+      <button class="btn-primary" (click)="openAddSourceForm()" *ngIf="!showAddSourceForm">
+        + Add Source
+      </button>
+    </div>
+
+    <!-- Add Source Form -->
+    <div *ngIf="showAddSourceForm" class="add-source-form">
+      <h4>Add New Knowledge Source</h4>
+      
+      <!-- Name -->
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newSourceName" placeholder="Enter source name" class="form-input" />
+      </div>
+
+      <!-- Type Selector -->
+      <div class="form-group">
+        <label>Type</label>
+        <select [(ngModel)]="newSourceType" (ngModelChange)="onSourceTypeChange()" class="form-input">
+          <option *ngFor="let st of sourceTypes" [value]="st">
+            {{ sourceTypeLabels[st] }}
+          </option>
+        </select>
+      </div>
+
+      <!-- URL Input (for URL type) -->
+      <div *ngIf="newSourceType === 'url'" class="form-group">
+        <label>URL</label>
+        <input type="url" [(ngModel)]="newSourceUrl" placeholder="https://example.com/faq" class="form-input" />
+      </div>
+
+      <!-- Text Content (for Text type) -->
+      <div *ngIf="newSourceType === 'text'" class="form-group">
+        <label>Content</label>
+        <textarea [(ngModel)]="newSourceContent" placeholder="Paste your knowledge base content here..." 
+                  class="form-input" rows="6"></textarea>
+      </div>
+
+      <!-- File Upload (for PDF/Image/Excel/Word) -->
+      <div *ngIf="isFileSourceType()" class="form-group">
+        <label>Upload File ({{ sourceTypeLabels[newSourceType] }})</label>
+        <div class="file-upload-area">
+          <input type="file" [accept]="getAcceptFileTypes()" (change)="onFileSelected($event)" class="file-input" />
+          <div *ngIf="selectedFile" class="file-selected">
+            ✅ {{ selectedFile.name }} ({{ (selectedFile.size / 1024).toFixed(1) }} KB)
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button class="btn-secondary" (click)="cancelAddSource()">Cancel</button>
+        <button class="btn-primary" (click)="submitSource()" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Processing...' : 'Add Source' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Sources List -->
+    <div *ngIf="isLoading" class="loading">Loading sources...</div>
+    
+    <div *ngIf="!isLoading && sources.length === 0" class="empty-state">
+      <p>No knowledge sources yet. Add your first source to train the AI.</p>
+    </div>
+
+    <div *ngIf="!isLoading && sources.length > 0" class="sources-list">
+      <div *ngFor="let source of sources" class="source-card">
+        <div class="source-header">
+          <span class="source-icon">{{ getSourceTypeIcon(source.source_type) }}</span>
+          <div class="source-info">
+            <h4>{{ source.name }}</h4>
+            <span class="source-type-badge">{{ sourceTypeLabels[source.source_type as any] || source.source_type }}</span>
+            <span class="source-status" [ngClass]="getStatusClass(source.status)">
+              {{ source.status }}
+            </span>
+          </div>
+        </div>
+        <div class="source-meta">
+          <span *ngIf="source.url">🔗 {{ source.url }}</span>
+          <span *ngIf="source.filename">📎 {{ source.filename }}</span>
+          <span>📦 {{ source.chunk_count }} chunks</span>
+          <span *ngIf="source.last_scraped_at">🕐 {{ source.last_scraped_at | date:'short' }}</span>
+        </div>
+        <div *ngIf="source.error_message" class="source-error">
+          ⚠️ {{ source.error_message }}
+        </div>
+        <div class="source-actions">
+          <button class="btn-icon" (click)="rescrapeSource(source.id)" title="Re-process">
+            🔄
+          </button>
+          <button class="btn-icon btn-danger" (click)="deleteSource(source.id)" title="Delete">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logs Tab -->
+  <div *ngIf="activeTab === 'logs'" class="tab-content">
+    <div class="section-header">
+      <h3>AI Conversation Logs</h3>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">Loading logs...</div>
+
+    <div *ngIf="!isLoading && logs.length === 0" class="empty-state">
+      <p>No AI conversation logs yet. Logs will appear when the AI responds to customer messages.</p>
+    </div>
+
+    <div *ngIf="!isLoading && logs.length > 0" class="logs-list">
+      <div *ngFor="let log of logs" class="log-card">
+        <div class="log-header">
+          <span *ngIf="log.contact_phone" class="log-phone">📱 {{ log.contact_phone }}</span>
+          <span class="log-time">{{ log.created_at | date:'short' }}</span>
+          <span class="log-confidence" [ngClass]="log.confidence > 0.5 ? 'conf-high' : 'conf-low'">
+            {{ (log.confidence * 100).toFixed(0) }}% confidence
+          </span>
+        </div>
+        <div class="log-messages">
+          <div class="log-incoming">
+            <strong>Customer:</strong> {{ log.incoming_message }}
+          </div>
+          <div class="log-response">
+            <strong>AI:</strong> {{ log.ai_response }}
+          </div>
+        </div>
+        <div *ngIf="log.sources_used" class="log-sources">
+          📚 Sources: {{ log.sources_used }}
+        </div>
+        <div class="log-feedback">
+          <span>Was this helpful?</span>
+          <button class="btn-feedback" [class.active]="log.was_helpful === true" 
+                  (click)="updateLogFeedback(log.id, true)">👍</button>
+          <button class="btn-feedback" [class.active]="log.was_helpful === false"
+                  (click)="updateLogFeedback(log.id, false)">👎</button>
+          <span class="log-response-time">{{ log.response_time_ms }}ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

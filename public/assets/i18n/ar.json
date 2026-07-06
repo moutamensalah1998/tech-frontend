@@ -77,6 +77,8 @@
     "userManagement": "إدارة المستخدمين",
     "reports": "التقارير",
     "apiDoc": "وثائق API",
+    "aiControl": "التحكم بالذكاء الاصطناعي",
+    "aiSupport": "دعم الذكاء الاصطناعي",
     "connected": "متصل",
     "notConnected": "غير متصل"
   },

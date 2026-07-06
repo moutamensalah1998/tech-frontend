@@ -1,0 +1,513 @@
+<!-- AI Support Agent - Modern SaaS Dashboard -->
+<div class="ai-dashboard">
+  
+  <!-- Toast Notification -->
+  <div *ngIf="showToast" class="toast-notification" [ngClass]="toastType === 'success' ? 'toast-success' : 'toast-error'">
+    <span class="toast-icon">{{ toastType === 'success' ? '✅' : '❌' }}</span>
+    <span class="toast-message">{{ toastMessage }}</span>
+  </div>
+
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="header-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div>
+          <h1>AI Support Agent</h1>
+          <p class="header-subtitle">Knowledge-based WhatsApp customer support</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="ai-status-toggle" [class.active]="settings.enabled" (click)="toggleAI()">
+          <div class="status-dot"></div>
+          <span class="status-text">{{ settings.enabled ? 'AI Active' : 'AI Inactive' }}</span>
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon sources-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.total_sources }}</span>
+          <span class="stat-label">Sources</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon ready-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.ready_sources }}</span>
+          <span class="stat-label">Ready</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon chunks-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.total_chunks }}</span>
+          <span class="stat-label">Knowledge Chunks</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button *ngFor="let tab of tabs" 
+            class="tab-btn" 
+            [class.active]="activeTab === tab.id"
+            (click)="onTabChange(tab.id)">
+      <span class="tab-icon">{{ tab.icon }}</span>
+      <span class="tab-label">{{ tab.label }}</span>
+      <div class="tab-indicator" *ngIf="activeTab === tab.id"></div>
+    </button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content-wrapper">
+
+    <!-- ==================== KNOWLEDGE SOURCES TAB ==================== -->
+    <div *ngIf="activeTab === 'sources'" class="tab-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Knowledge Sources</h2>
+          <p class="panel-desc">Add documents, URLs, or text to build your AI knowledge base</p>
+        </div>
+        <button class="btn-primary" (click)="showAddSource = !showAddSource">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          {{ showAddSource ? 'Cancel' : 'Add Source' }}
+        </button>
+      </div>
+
+      <!-- Add Source Panel -->
+      <div *ngIf="showAddSource" class="add-source-panel">
+        <div class="source-type-selector">
+          <button class="type-btn" [class.active]="newSource.source_type === 'url'" (click)="newSource.source_type = 'url'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Website URL
+          </button>
+          <button class="type-btn" [class.active]="newSource.source_type === 'text'" (click)="newSource.source_type = 'text'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            Text Content
+          </button>
+          <button class="type-btn" [class.active]="isFileSourceType()" (click)="newSource.source_type = 'pdf'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <path d="M9 15h6"/><path d="M12 12v6"/>
+            </svg>
+            Upload File
+          </button>
+        </div>
+
+        <div class="source-form">
+          <div class="form-group">
+            <label>Source Name</label>
+            <input type="text" [(ngModel)]="newSource.name" placeholder="e.g., Product Catalog, FAQ, Store Policy" />
+          </div>
+
+          <!-- URL Input -->
+          <div *ngIf="newSource.source_type === 'url'" class="form-group">
+            <label>Website URL</label>
+            <input type="url" [(ngModel)]="newSource.url" placeholder="https://example.com/page" />
+            <span class="form-hint">The AI will crawl this URL and extract content automatically</span>
+          </div>
+
+          <!-- Text Input -->
+          <div *ngIf="newSource.source_type === 'text'" class="form-group">
+            <label>Content</label>
+            <textarea [(ngModel)]="newSource.content" rows="6" placeholder="Paste your knowledge content here..."></textarea>
+          </div>
+
+          <!-- File Upload -->
+          <div *ngIf="isFileSourceType()" class="upload-zone"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <div class="upload-content" *ngIf="!selectedFile">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <p class="upload-title">Drag & drop your file here</p>
+              <p class="upload-hint">or click to browse - PDF, DOC, DOCX, XLS, XLSX, TXT, CSV, PNG, JPG (max 20MB)</p>
+              <input type="file" [accept]="getAcceptFileTypes()" (change)="onFileSelected($event)" class="file-input-hidden" />
+              <button class="btn-secondary" (click)="browseFiles($event)">Browse Files</button>
+            </div>
+            <div class="upload-preview" *ngIf="selectedFile">
+              <div class="file-info">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <div>
+                  <p class="file-name">{{ selectedFile.name }}</p>
+                  <p class="file-size">{{ (selectedFile.size / 1024).toFixed(1) }} KB</p>
+                </div>
+                <button class="btn-icon" (click)="selectedFile = null; uploadError = ''">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="uploadError" class="upload-error">{{ uploadError }}</div>
+            <div *ngIf="isSubmitting && uploadProgress > 0" class="upload-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+              </div>
+              <span class="progress-text">{{ uploadProgress }}%</span>
+            </div>
+          </div>
+
+          <button class="btn-primary btn-submit" (click)="addSource()" [disabled]="!newSource.name || isSubmitting">
+            <svg *ngIf="isSubmitting" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+            {{ isSubmitting ? 'Processing...' : 'Add to Knowledge Base' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Sources List -->
+      <div class="sources-section">
+        <div class="sources-header">
+          <h3>All Sources ({{ sources.length }})</h3>
+        </div>
+
+        <div *ngIf="sources.length === 0 && !loading" class="empty-state">
+          <div class="empty-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <h3>No knowledge sources yet</h3>
+          <p>Add your first source to start building your AI knowledge base. The AI will use this information to answer customer questions.</p>
+          <button class="btn-primary" (click)="showAddSource = true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Your First Source
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading sources...</p>
+        </div>
+
+        <div *ngFor="let source of sources" class="source-card">
+          <div class="source-card-left">
+            <div class="source-type-icon" [ngClass]="'type-' + source.source_type">
+              <svg *ngIf="source.source_type === 'url'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              <svg *ngIf="source.source_type === 'text'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <svg *ngIf="source.source_type !== 'url' && source.source_type !== 'text'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="source-info">
+              <div class="source-name-row">
+                <span class="source-name">{{ source.name }}</span>
+                <span class="source-badge" [ngClass]="getStatusClass(source.status)">{{ source.status }}</span>
+              </div>
+              <div class="source-meta">
+                <span class="meta-type">{{ sourceTypeLabels[source.source_type] || source.source_type }}</span>
+                <span class="meta-sep">·</span>
+                <span class="meta-chunks">{{ source.chunk_count || 0 }} chunks</span>
+                <span *ngIf="source.url" class="meta-sep">·</span>
+                <span *ngIf="source.url" class="meta-url">{{ source.url | slice:0:50 }}{{ source.url.length > 50 ? '...' : '' }}</span>
+              </div>
+              <div *ngIf="source.error_message" class="source-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                {{ source.error_message }}
+              </div>
+            </div>
+          </div>
+          <div class="source-card-actions">
+            <button class="btn-icon" (click)="rescrapeSource(source.id)" title="Re-crawl">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+            </button>
+            <button class="btn-icon btn-icon-danger" (click)="deleteSource(source)" title="Delete">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TEST AI TAB ==================== -->
+    <div *ngIf="activeTab === 'test'" class="tab-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Test AI Response</h2>
+          <p class="panel-desc">Simulate a customer message to see how the AI responds</p>
+        </div>
+      </div>
+
+      <div class="test-layout">
+        <div class="test-input-card">
+          <label>Customer Message</label>
+          <textarea [(ngModel)]="testMessage" rows="4" placeholder="Type a customer message to test...&#10;Example: What are your store hours?" (keydown.enter)="onTestKeydown($event)"></textarea>
+          <div class="test-actions">
+            <span class="test-hint">Press Enter to send, Shift+Enter for new line</span>
+            <button class="btn-primary" (click)="runTest()" [disabled]="testLoading || !testMessage.trim()">
+              <svg *ngIf="testLoading" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+              </svg>
+              {{ testLoading ? 'Thinking...' : 'Send Test' }}
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="testResponse" class="test-result-card">
+          <div class="result-header">
+            <h3>AI Response</h3>
+            <div class="result-badges">
+              <span class="badge badge-lang">{{ testResponse.language === 'ar' ? '🇸🇦 Arabic' : '🇺🇸 English' }}</span>
+              <span class="badge badge-model">{{ testResponse.model_used }}</span>
+              <span class="badge badge-time">{{ testResponse.response_time_ms }}ms</span>
+            </div>
+          </div>
+          
+          <div class="result-response" [class.rtl]="testResponse.language === 'ar'">
+            {{ testResponse.response }}
+          </div>
+
+          <div class="result-details">
+            <div class="detail-row">
+              <span class="detail-label">Confidence</span>
+              <div class="confidence-bar">
+                <div class="confidence-fill" [style.width.%]="getConfidencePercent(testResponse.confidence)"
+                     [class.high]="testResponse.confidence > 0.7"
+                     [class.medium]="testResponse.confidence > 0.3 && testResponse.confidence <= 0.7"
+                     [class.low]="testResponse.confidence <= 0.3">
+                </div>
+                <span class="confidence-text">{{ getConfidencePercent(testResponse.confidence) }}%</span>
+              </div>
+            </div>
+            <div class="detail-row" *ngIf="testResponse.chunks_retrieved && testResponse.chunks_retrieved > 0">
+              <span class="detail-label">Chunks Retrieved</span>
+              <span class="detail-value">{{ testResponse.chunks_retrieved }}</span>
+            </div>
+            <div class="detail-row" *ngIf="testResponse.sources.length > 0">
+              <span class="detail-label">Sources Used</span>
+              <div class="source-tags">
+                <span *ngFor="let src of testResponse.sources" class="source-tag">{{ src }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="testResponse.prompt_sent" class="prompt-section">
+            <div class="prompt-header" (click)="showPrompt = !showPrompt">
+              <span>View Full Prompt</span>
+              <svg width="16" height="16" [class.rotated]="showPrompt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <pre *ngIf="showPrompt" class="prompt-content">{{ testResponse.prompt_sent }}</pre>
+          </div>
+
+          <div *ngIf="!testResponse.has_knowledge" class="no-knowledge-banner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            No matching knowledge found - fallback response used
+          </div>
+        </div>
+
+        <div *ngIf="!testResponse && !testLoading" class="test-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <p>Type a message above and click "Send Test" to see how the AI responds</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SETTINGS TAB ==================== -->
+    <div *ngIf="activeTab === 'settings'" class="tab-panel">
+      <div class="panel-header">
+        <div>
+          <h2>AI Settings</h2>
+          <p class="panel-desc">Configure how the AI behaves when responding to customers</p>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="setting-item">
+          <div class="setting-info">
+            <label>Auto-Reply</label>
+            <p class="setting-desc">Automatically reply to WhatsApp messages using AI</p>
+          </div>
+          <div class="toggle-switch" [class.active]="settings.auto_reply_enabled" (click)="settings.auto_reply_enabled = !settings.auto_reply_enabled">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <div class="setting-divider"></div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label>Confidence Threshold</label>
+            <p class="setting-desc">Minimum confidence level required for AI to respond</p>
+          </div>
+          <div class="range-control">
+            <input type="range" min="0" max="1" step="0.1" [(ngModel)]="settings.confidence_threshold" />
+            <span class="range-value">{{ (settings.confidence_threshold * 100).toFixed(0) }}%</span>
+          </div>
+        </div>
+
+        <div class="setting-divider"></div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label>Fallback Message</label>
+            <p class="setting-desc">Message sent when AI can't find a relevant answer</p>
+          </div>
+          <textarea [(ngModel)]="settings.fallback_message" rows="3" class="setting-textarea"></textarea>
+        </div>
+
+        <div class="setting-divider"></div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label>Fallback Assignment User</label>
+            <p class="setting-desc">Assign conversation to user when fallback message is triggered</p>
+          </div>
+          <div class="assignee-selector">
+            <div class="selector-trigger" [class.active]="showUserDropdown" (click)="loadAllUsers()">
+              <div *ngIf="selectedUserName" class="selected-user">
+                <div class="user-initials">{{ selectedUserName.charAt(0) }}{{ getSecondInitial(selectedUserName) }}</div>
+                <div class="user-label">
+                  <span class="label-name">{{ selectedUserName }}</span>
+                  <span class="label-role">Fallback assignee</span>
+                </div>
+                <button class="btn-clear" (click)="clearSelectedUser(); $event.stopPropagation()" title="Remove assignment">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+              <div *ngIf="!selectedUserName" class="placeholder-text">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+                </svg>
+                <span>Assign to team member</span>
+              </div>
+              <svg class="chevron-icon" [class.open]="showUserDropdown" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+
+            <div *ngIf="showUserDropdown" class="selector-dropdown">
+              <div class="dropdown-header">
+                <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search team members..."
+                  [(ngModel)]="userSearchQuery"
+                  (click)="$event.stopPropagation()"
+                />
+              </div>
+              <div class="dropdown-body">
+                <div *ngIf="isLoadingUsers" class="dropdown-loading">
+                  <div class="loading-spinner"></div>
+                  <span>Loading team members...</span>
+                </div>
+                <div *ngIf="!isLoadingUsers && getFilteredUsers().length > 0" class="dropdown-list">
+                  <div class="list-label">Team Members</div>
+                  <div
+                    *ngFor="let user of getFilteredUsers()"
+                    class="member-row"
+                    (click)="selectUser(user); $event.stopPropagation()"
+                    [class.is-selected]="selectedUserId === user.id"
+                  >
+                    <div class="member-avatar" [style.background]="'hsl(' + (user.id.charCodeAt(0) * 40 % 360) + ', 55%, 60%)'">
+                      {{ (user.first_name?.charAt(0) || '') + (user.last_name?.charAt(0) || '') }}
+                    </div>
+                    <div class="member-info">
+                      <span class="member-name">{{ user.first_name }} {{ user.last_name }}</span>
+                      <span class="member-email">{{ user.email }}</span>
+                    </div>
+                    <div class="member-check" *ngIf="selectedUserId === user.id">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!isLoadingUsers && getFilteredUsers().length === 0" class="dropdown-empty">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
+                  </svg>
+                  <span>No team members found</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-actions">
+          <button class="btn-primary" (click)="saveSettings()" [disabled]="saving">
+            <svg *ngIf="saving" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+            {{ saving ? 'Saving...' : 'Save Settings' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

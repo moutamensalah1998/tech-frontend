@@ -77,6 +77,8 @@
     "userManagement": "User Management",
     "reports": "Reports",
     "apiDoc": "API Doc",
+    "aiControl": "AI Control",
+    "aiSupport": "AI Support",
     "connected": "CONNECTED",
     "notConnected": "Not Connected"
   },

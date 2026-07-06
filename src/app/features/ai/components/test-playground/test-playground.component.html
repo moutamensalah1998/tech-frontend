@@ -1,0 +1,46 @@
+<div class="test-playground">
+  <h3>Test AI Decision</h3>
+
+  <div class="input-section">
+    <textarea 
+      [(ngModel)]="testMessage" 
+      placeholder="Enter a customer message to test..."
+      rows="3"
+    ></textarea>
+    <button class="run-btn" (click)="runTest()" [disabled]="isTesting || !testMessage.trim()">
+      {{ isTesting ? 'Processing...' : 'Run Test' }}
+    </button>
+  </div>
+
+  <div class="error" *ngIf="testError">{{ testError }}</div>
+
+  <div class="result-card" *ngIf="testResult">
+    <div class="action-badge" [class]="'action-' + testResult.action">
+      Action: {{ testResult.action.toUpperCase() }}
+    </div>
+    
+    <div class="confidence">Confidence: {{ (testResult.confidence * 100).toFixed(1) }}%</div>
+    
+    <div *ngIf="testResult.matched_rule">
+      <strong>Rule:</strong> {{ testResult.matched_rule.name }}
+    </div>
+    
+    <div *ngIf="testResult.matched_template">
+      <strong>Template:</strong> {{ testResult.matched_template.name }}
+    </div>
+    
+    <div *ngIf="testResult.payload?.['reply']">
+      <strong>Reply:</strong> {{ testResult.payload['reply'] }}
+    </div>
+    
+    <pre *ngIf="testResult.payload">{{ testResult.payload | json }}</pre>
+    
+    <div>
+      <strong>LLM Used:</strong> {{ testResult.llm_used ? 'Yes' : 'No' }}
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!testResult && !testError">
+    Enter a message to see how the AI responds
+  </div>
+</div>

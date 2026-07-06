@@ -66,6 +66,14 @@ export class HomeBaseNavComponent implements OnInit, OnDestroy {
       ]
     },
     {
+      label: 'navigation.aiSupport',
+      route: ['/dashboard', 'ai'],
+      requiredRoles: [
+        Role.ADMINISTRATOR,
+        Role.AUTOMATION_MANAGER
+      ]
+    },
+    {
       label: 'navigation.userManagement',
       route: ['/dashboard', 'user-dashboard-table'],
       requiredRoles: [Role.ADMINISTRATOR] // Only admins

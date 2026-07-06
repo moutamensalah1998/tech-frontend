@@ -9,6 +9,7 @@ import { teamInboxRoutes } from "./pages/team-inbox/team-inbox.routes";
 import { ChatbotRoutes } from "../chatbot/chatbot.routes";
 import { apiDocRoutes } from "./pages/api-doc/api-doc.routes";
 import { reportsRoutes } from "./pages/reports/reports.routes";
+import { aiRoutes } from '../ai/ai.routes';
 
 export const HomeBaseRoutes: Routes = [
   {
@@ -22,7 +23,8 @@ export const HomeBaseRoutes: Routes = [
       teamInboxRoutes,
       ...ChatbotRoutes,
       apiDocRoutes,
-      reportsRoutes
+      reportsRoutes,
+      ...aiRoutes
     ],
     canActivate: [AuthGuard],
     canMatch: [AuthGuard]

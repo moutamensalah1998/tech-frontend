@@ -1,0 +1,61 @@
+<div class="dashboard-panel">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-comment"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats?.total_replies || 0 }}</h3>
+        <p>Total Replies</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon assignment">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats?.total_assignments || 0 }}</h3>
+        <p>Assignments</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon escalation">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats?.total_escalations || 0 }}</h3>
+        <p>Escalations</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon llm">
+        <i class="fas fa-brain"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats?.llm_usage_rate || 0 }}%</h3>
+        <p>LLM Usage Rate</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-status-card">
+    <div class="status-header">
+      <h3>AI System Status</h3>
+      <input type="checkbox" [checked]="settings?.enabled" [disabled]="isLoading" (change)="onToggleAI($any($event.target).checked)" id="ai-toggle">
+    </div>
+    <div class="status-details">
+      <div class="status-item">
+        <span>Model:</span>
+        <strong>{{ settings?.model }}</strong>
+      </div>
+      <div class="status-item">
+        <span>Confidence Threshold:</span>
+        <strong>{{ settings?.confidence_threshold }}</strong>
+      </div>
+      <div class="status-item">
+        <span>Auto Actions:</span>
+        <strong>{{ settings?.auto_actions_enabled ? 'Enabled' : 'Disabled' }}</strong>
+      </div>
+    </div>
+  </div>
+</div>

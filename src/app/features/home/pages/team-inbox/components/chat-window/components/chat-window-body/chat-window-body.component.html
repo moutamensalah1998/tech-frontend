@@ -128,6 +128,10 @@
                 {{ msg.content?.emoji || '👍' }}
               </div>
 
+              <!-- AI Response Message -->
+              <app-text-message *ngSwitchCase="'ai_response'" [message]="msg" class="mx-2">
+              </app-text-message>
+
               <!-- Assign Message -->
               <app-assign-message *ngSwitchCase="'assign'" [message]="msg">
               </app-assign-message>
