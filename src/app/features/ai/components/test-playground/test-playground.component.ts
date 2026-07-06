@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AIConfigService } from '../../services/ai-config.service';
-import { AIDecisionResult } from '../../models/ai-config.model';
+import { AITestResponse } from '../../models/ai-config.model';
 
 @Component({
   selector: 'app-test-playground',
@@ -15,7 +15,7 @@ export class TestPlaygroundComponent {
   @Input() clientId: string = '';
   
   testMessage: string = '';
-  testResult: AIDecisionResult | null = null;
+  testResult: AITestResponse | null = null;
   isTesting = false;
   testError: string | null = null;
 
@@ -29,16 +29,24 @@ export class TestPlaygroundComponent {
     this.testResult = null;
 
     try {
-      const response = await this.aiService.testDecision(this.clientId, this.testMessage).toPromise();
-      if (response && response.success && response.data) {
-        this.testResult = response.data;
-      } else {
-        this.testError = 'Failed to get decision';
-      }
+      this.aiService.testAI(this.clientId, this.testMessage).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            this.testResult = response;
+          } else {
+            this.testError = 'Failed to get AI response';
+          }
+          this.isTesting = false;
+        },
+        error: (error) => {
+          console.error('Test failed:', error);
+          this.testError = error instanceof Error ? error.message : 'Unknown error occurred';
+          this.isTesting = false;
+        }
+      });
     } catch (error) {
       console.error('Test failed:', error);
       this.testError = error instanceof Error ? error.message : 'Unknown error occurred';
-    } finally {
       this.isTesting = false;
     }
   }
