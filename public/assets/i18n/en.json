@@ -594,7 +594,8 @@
         "businessProfile": "Business Profile",
         "personalProfile": "Personal Profile",
         "userPreferences": "User Preferences",
-        "tagsAttributes": "Tags & Attributes"
+        "tagsAttributes": "Tags & Attributes",
+        "timeAndArea": "Time and Area"
       }
     },
     "personal": {
@@ -772,6 +773,36 @@
       "englishDesc": "Use English language",
       "arabicDesc": "Use Arabic language",
       "preferencesNote": "Your preferences are saved automatically and will be applied across all your devices."
+    },
+    "timeArea": {
+      "title": "Time and Area Settings",
+      "subtitle": "Configure your time zone, region, and working hours",
+      "timeZoneSettings": "Time Zone & Region",
+      "timeZone": "Time Zone",
+      "timeZoneHelp": "Select your local time zone for accurate scheduling",
+      "region": "Region",
+      "regionHelp": "Select your business region for localized settings",
+      "dateTimeFormat": "Date, Time & Currency",
+      "currency": "Currency",
+      "dateFormat": "Date Format",
+      "timeFormat": "Time Format",
+      "firstDayOfWeek": "First Day of Week",
+      "workingHours": "Working Hours",
+      "closed": "Closed",
+      "workingHoursDisabled": "Working hours are disabled. Enable to set your business hours.",
+      "save": "Save Settings",
+      "saving": "Saving...",
+      "saveSuccess": "Time and area settings saved successfully",
+      "saveError": "Failed to save settings. Please try again.",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
     }
   },
   "contacts": {
@@ -2224,6 +2255,17 @@
         }
       }
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "clearAll": "Clear all",
+    "noNotifications": "No notifications yet",
+    "viewAll": "View all notifications",
+    "conversationAssigned": "Conversation Assigned",
+    "newMessage": "New Message",
+    "assignedToYou": "A conversation has been assigned to you",
+    "newMessageFrom": "New message from {{name}}"
   },
   "teamInbox": {
     "noConversationSelected": "No conversation selected",

@@ -1,0 +1,281 @@
+<div class="w-full min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-dark-surface dark:to-dark-surface-secondary">
+  <!-- Page Header -->
+  <div class="flex w-full bg-surface dark:bg-dark-surface-secondary shadow-md dark:shadow-dark-md backdrop-blur-sm px-4 sm:px-6 md:px-8 py-4 border-b border-border dark:border-dark-border">
+    <div class="flex items-center space-x-3 sm:space-x-4 rtl:space-x-reverse">
+      <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary dark:text-dark-text-primary tracking-tight">
+          {{ 'profile.timeArea.title' | translate }}
+        </h1>
+        <p class="text-text-secondary dark:text-dark-text-secondary mt-1 text-sm sm:text-base">
+          {{ 'profile.timeArea.subtitle' | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex items-center justify-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary-dark"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading" class="px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8 w-full max-w-full md:max-w-4xl mx-auto">
+    <form [formGroup]="timeAreaForm" (ngSubmit)="saveSettings()">
+      <div class="space-y-6">
+
+        <!-- Time Zone Settings Card -->
+        <div class="bg-surface/80 dark:bg-dark-surface-tertiary/80 backdrop-blur-sm rounded-2xl border border-border dark:border-dark-border shadow-lg dark:shadow-dark-lg p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-4 sm:mb-6 flex items-center">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 rtl:ml-2 rtl:mr-0 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ 'profile.timeArea.timeZoneSettings' | translate }}
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <!-- Time Zone Select -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                {{ 'profile.timeArea.timeZone' | translate }}
+              </label>
+              <div class="relative">
+                <select formControlName="timeZone"
+                  class="w-full px-4 py-3 bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all appearance-none cursor-pointer hover:border-text-tertiary dark:hover:border-dark-border-secondary">
+                  <option *ngFor="let tz of timeZones" [value]="tz.value">
+                    {{ tz.label }} ({{ tz.offset }})
+                  </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
+                {{ 'profile.timeArea.timeZoneHelp' | translate }}
+              </p>
+            </div>
+
+            <!-- Region Select -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                {{ 'profile.timeArea.region' | translate }}
+              </label>
+              <div class="relative">
+                <select formControlName="region"
+                  class="w-full px-4 py-3 bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all appearance-none cursor-pointer hover:border-text-tertiary dark:hover:border-dark-border-secondary">
+                  <option *ngFor="let region of regions" [value]="region.value">
+                    {{ region.flag }} {{ region.label }}
+                  </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
+                {{ 'profile.timeArea.regionHelp' | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date & Time Format Card -->
+        <div class="bg-surface/80 dark:bg-dark-surface-tertiary/80 backdrop-blur-sm rounded-2xl border border-border dark:border-dark-border shadow-lg dark:shadow-dark-lg p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-4 sm:mb-6 flex items-center">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 rtl:ml-2 rtl:mr-0 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {{ 'profile.timeArea.dateTimeFormat' | translate }}
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <!-- Currency -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                {{ 'profile.timeArea.currency' | translate }}
+              </label>
+              <div class="relative">
+                <select formControlName="currency"
+                  class="w-full px-4 py-3 bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all appearance-none cursor-pointer hover:border-text-tertiary dark:hover:border-dark-border-secondary">
+                  <option *ngFor="let curr of currencies" [value]="curr.value">
+                    {{ curr.symbol }} {{ curr.label }}
+                  </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Format -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                {{ 'profile.timeArea.dateFormat' | translate }}
+              </label>
+              <div class="relative">
+                <select formControlName="dateFormat"
+                  class="w-full px-4 py-3 bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all appearance-none cursor-pointer hover:border-text-tertiary dark:hover:border-dark-border-secondary">
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-text-tertiary dark:text-dark-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Time Format -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                {{ 'profile.timeArea.timeFormat' | translate }}
+              </label>
+              <div class="flex gap-2">
+                <button type="button" (click)="timeAreaForm.patchValue({timeFormat: '12h'})"
+                  class="flex-1 px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-medium"
+                  [ngClass]="timeAreaForm.get('timeFormat')?.value === '12h' 
+                    ? 'border-primary dark:border-primary-dark bg-primary-light dark:bg-primary-dark/10 text-primary dark:text-primary-dark' 
+                    : 'border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary hover:border-text-tertiary dark:hover:border-dark-border-secondary'">
+                  12h
+                </button>
+                <button type="button" (click)="timeAreaForm.patchValue({timeFormat: '24h'})"
+                  class="flex-1 px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-medium"
+                  [ngClass]="timeAreaForm.get('timeFormat')?.value === '24h' 
+                    ? 'border-primary dark:border-primary-dark bg-primary-light dark:bg-primary-dark/10 text-primary dark:text-primary-dark' 
+                    : 'border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary hover:border-text-tertiary dark:hover:border-dark-border-secondary'">
+                  24h
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- First Day of Week -->
+          <div class="mt-6 space-y-2">
+            <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary">
+              {{ 'profile.timeArea.firstDayOfWeek' | translate }}
+            </label>
+            <div class="flex gap-2 flex-wrap">
+              <button type="button" (click)="timeAreaForm.patchValue({firstDayOfWeek: 'sunday'})"
+                class="px-4 py-2.5 rounded-xl border-2 transition-all duration-200 text-sm font-medium"
+                [ngClass]="timeAreaForm.get('firstDayOfWeek')?.value === 'sunday' 
+                  ? 'border-primary dark:border-primary-dark bg-primary-light dark:bg-primary-dark/10 text-primary dark:text-primary-dark' 
+                  : 'border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary hover:border-text-tertiary dark:hover:border-dark-border-secondary'">
+                {{ 'profile.timeArea.days.sunday' | translate }}
+              </button>
+              <button type="button" (click)="timeAreaForm.patchValue({firstDayOfWeek: 'monday'})"
+                class="px-4 py-2.5 rounded-xl border-2 transition-all duration-200 text-sm font-medium"
+                [ngClass]="timeAreaForm.get('firstDayOfWeek')?.value === 'monday' 
+                  ? 'border-primary dark:border-primary-dark bg-primary-light dark:bg-primary-dark/10 text-primary dark:text-primary-dark' 
+                  : 'border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary hover:border-text-tertiary dark:hover:border-dark-border-secondary'">
+                {{ 'profile.timeArea.days.monday' | translate }}
+              </button>
+              <button type="button" (click)="timeAreaForm.patchValue({firstDayOfWeek: 'saturday'})"
+                class="px-4 py-2.5 rounded-xl border-2 transition-all duration-200 text-sm font-medium"
+                [ngClass]="timeAreaForm.get('firstDayOfWeek')?.value === 'saturday' 
+                  ? 'border-primary dark:border-primary-dark bg-primary-light dark:bg-primary-dark/10 text-primary dark:text-primary-dark' 
+                  : 'border-border dark:border-dark-border bg-surface-secondary dark:bg-dark-surface-secondary text-text-secondary dark:text-dark-text-secondary hover:border-text-tertiary dark:hover:border-dark-border-secondary'">
+                {{ 'profile.timeArea.days.saturday' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Working Hours Card -->
+        <div class="bg-surface/80 dark:bg-dark-surface-tertiary/80 backdrop-blur-sm rounded-2xl border border-border dark:border-dark-border shadow-lg dark:shadow-dark-lg p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="text-base sm:text-lg font-semibold text-text-primary dark:text-dark-text-primary flex items-center">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 rtl:ml-2 rtl:mr-0 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ 'profile.timeArea.workingHours' | translate }}
+            </h3>
+            
+            <!-- Toggle Working Hours -->
+            <button type="button" (click)="timeAreaForm.patchValue({enableWorkingHours: !timeAreaForm.get('enableWorkingHours')?.value})"
+              class="relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:ring-offset-2 dark:focus:ring-offset-dark-surface"
+              [ngClass]="timeAreaForm.get('enableWorkingHours')?.value ? 'bg-primary dark:bg-primary-dark' : 'bg-gray-200 dark:bg-dark-surface-tertiary'"
+              role="switch" [attr.aria-checked]="timeAreaForm.get('enableWorkingHours')?.value">
+              <span class="pointer-events-none relative inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-300 ease-in-out"
+                [ngClass]="timeAreaForm.get('enableWorkingHours')?.value ? 'translate-x-7 rtl:-translate-x-7' : 'translate-x-0'">
+              </span>
+            </button>
+          </div>
+
+          <div *ngIf="timeAreaForm.get('enableWorkingHours')?.value" formArrayName="workingDays" class="space-y-3">
+            <div *ngFor="let day of workingDaysArray.controls; let i = index" [formGroupName]="i"
+              class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:p-4 rounded-xl bg-surface-secondary dark:bg-dark-surface-secondary border border-border dark:border-dark-border transition-all hover:shadow-md dark:hover:shadow-dark-md">
+              
+              <!-- Day Toggle -->
+              <div class="flex items-center gap-3 sm:w-40">
+                <button type="button" (click)="toggleDay(i)"
+                  class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none"
+                  [ngClass]="day.get('enabled')?.value ? 'bg-success dark:bg-success-light' : 'bg-gray-200 dark:bg-dark-surface-tertiary'">
+                  <span class="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-300 ease-in-out"
+                    [ngClass]="day.get('enabled')?.value ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0'">
+                  </span>
+                </button>
+                <span class="font-medium text-sm text-text-primary dark:text-dark-text-primary capitalize">
+                  {{ getDayLabel(day.get('day')?.value) }}
+                </span>
+              </div>
+
+              <!-- Time Inputs -->
+              <div *ngIf="day.get('enabled')?.value" class="flex items-center gap-2 sm:gap-3 flex-1">
+                <div class="flex-1">
+                  <input type="time" formControlName="startTime"
+                    class="w-full px-3 py-2 bg-surface dark:bg-dark-surface-tertiary border border-border dark:border-dark-border rounded-lg text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all">
+                </div>
+                <span class="text-text-tertiary dark:text-dark-text-tertiary text-sm">—</span>
+                <div class="flex-1">
+                  <input type="time" formControlName="endTime"
+                    class="w-full px-3 py-2 bg-surface dark:bg-dark-surface-tertiary border border-border dark:border-dark-border rounded-lg text-text-primary dark:text-dark-text-primary text-sm focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent transition-all">
+                </div>
+              </div>
+              
+              <div *ngIf="!day.get('enabled')?.value" class="flex-1">
+                <span class="text-sm text-text-tertiary dark:text-dark-text-tertiary italic">
+                  {{ 'profile.timeArea.closed' | translate }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!timeAreaForm.get('enableWorkingHours')?.value"
+            class="text-center py-8 text-text-tertiary dark:text-dark-text-tertiary">
+            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm">{{ 'profile.timeArea.workingHoursDisabled' | translate }}</p>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="flex justify-end pt-2">
+          <button type="submit" [disabled]="isSaving"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 dark:from-primary-dark dark:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl dark:shadow-dark-lg dark:hover:shadow-dark-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]">
+            <svg *ngIf="isSaving" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <svg *ngIf="!isSaving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ (isSaving ? 'profile.timeArea.saving' : 'profile.timeArea.save') | translate }}
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

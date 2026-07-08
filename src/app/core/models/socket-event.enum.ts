@@ -38,6 +38,10 @@ export enum ServerToClientEventsEnum {
   ConversationMessageReceived = 'conversation_message_received',
   ConversationMessageStatus = 'whatsapp_message_status',
 
+  // Notification events
+  NewMessageNotification = 'new_message_notification',
+  ConversationAssignedNotification = 'conversation_assigned_notification',
+
   // Error events
   Error = 'error',
 }

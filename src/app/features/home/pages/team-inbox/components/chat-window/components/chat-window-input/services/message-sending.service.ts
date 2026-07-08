@@ -36,7 +36,7 @@ export class MessageSendingService {
   sendTextMessage(messageBody: string, context: MessageContext): void {
     const messageId = uuidv7();
     const messageContext = this.buildMessageContext(context);
-    const timestamp = Date.now();
+    const timestamp = new Date().getTime(); // UTC timestamp
     const newMsg = {
       conversationId: context.conversationId,
       client_message_id: messageId,
@@ -76,7 +76,7 @@ export class MessageSendingService {
   sendMediaFile(preview: FilePreview, context: MessageContext): void {
     const messageId = uuidv7();
     const messageContext = this.buildMessageContext(context);
-    const timestamp = Date.now();
+    const timestamp = new Date().getTime(); // UTC timestamp
     const newMsg = {
       conversationId: context.conversationId,
       client_message_id: messageId,
@@ -119,7 +119,7 @@ export class MessageSendingService {
   sendLocationMessage(locationData: LocationData, context: MessageContext): void {
     const messageId = uuidv7();
     const messageContext = this.buildMessageContext(context);
-    const timestamp = Date.now();
+    const timestamp = new Date().getTime(); // UTC timestamp
     const newLocationMessage = {
       conversationId: context.conversationId,
       client_message_id: messageId,
@@ -168,7 +168,7 @@ export class MessageSendingService {
   sendTemplateMessage(templateItem: TemplateItem, parameters: { [key: string]: string }, context: MessageContext, mediaUrl?: string): void {
     const messageId = uuidv7();
     const messageContext = this.buildMessageContext(context);
-    const timestamp = Date.now();
+    const timestamp = new Date().getTime(); // UTC timestamp
     const parametersArray = templateItem.variables.map((variable: string) => parameters[variable] || '');
 
     const newMsg = {

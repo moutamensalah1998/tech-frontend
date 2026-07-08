@@ -1,0 +1,99 @@
+/* Time and Area Component Styles */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Custom select arrow styling */
+select {
+  background-image: none;
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+select,
+input {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus visible styles for accessibility */
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Toggle switch animation */
+[role="switch"] span {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Working hours row hover effect */
+.form-array-row:hover {
+  transform: translateX(2px);
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Custom scrollbar for selects with many options */
+select::-webkit-scrollbar {
+  width: 8px;
+}
+
+select::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+select::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+/* Dark mode scrollbar */
+.dark select::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5);
+}
+
+/* Time input styling */
+input[type="time"] {
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .form-array-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Print styles */
+@media print {
+  button,
+  [role="switch"] {
+    display: none;
+  }
+}

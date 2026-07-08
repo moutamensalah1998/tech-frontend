@@ -143,19 +143,35 @@ export class DateUtils {
     const dateTime = this.toDate(date);
     if (!dateTime) return '';
 
+    // The date has already been converted to the target timezone by the pipe
+    // So we format it directly without additional timezone conversion
     const now = new Date();
     const diff = now.getTime() - dateTime.getTime();
     const oneDay = 24 * 60 * 60 * 1000;
 
-    if (diff < oneDay && dateTime.getDate() === now.getDate()) {
-      return `Today ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`;
-    } else if (diff < 2 * oneDay && dateTime.getDate() === now.getDate() - 1) {
-      return `Yesterday ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`;
+    // Use UTC methods since the date is already in the target timezone
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const isToday = dateTime.getUTCFullYear() === today.getUTCFullYear() &&
+                    dateTime.getUTCMonth() === today.getUTCMonth() &&
+                    dateTime.getUTCDate() === today.getUTCDate();
+
+    const isYesterday = dateTime.getUTCFullYear() === yesterday.getUTCFullYear() &&
+                        dateTime.getUTCMonth() === yesterday.getUTCMonth() &&
+                        dateTime.getUTCDate() === yesterday.getUTCDate();
+
+    if (isToday) {
+      return `Today ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}`;
+    } else if (isYesterday) {
+      return `Yesterday ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}`;
     } else {
       return dateTime.toLocaleDateString(locale, {
         weekday: 'short',
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'UTC'
       });
     }
   }

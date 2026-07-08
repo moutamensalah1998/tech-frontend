@@ -52,24 +52,30 @@ export class ApiService {
     );
   }
 
+  private buildUrl(endpoint: string): string {
+    const base = this.baseUrl.replace(/\/+$/, '');
+    const path = endpoint.replace(/^\/+/, '');
+    return `${base}/${path}`;
+  }
+
   get<T>(endpoint: string, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.get<T>(`${this.baseUrl}/${endpoint}`, options));
+    return this.addRetryStrategy(this.http.get<T>(this.buildUrl(endpoint), options));
   }
 
   post<T>(endpoint: string, body?: any, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, options));
+    return this.addRetryStrategy(this.http.post<T>(this.buildUrl(endpoint), body, options));
   }
 
   put<T>(endpoint: string, body: any, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, options));
+    return this.addRetryStrategy(this.http.put<T>(this.buildUrl(endpoint), body, options));
   }
 
   delete<T>(endpoint: string, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.delete<T>(`${this.baseUrl}/${endpoint}`, options));
+    return this.addRetryStrategy(this.http.delete<T>(this.buildUrl(endpoint), options));
   }
 
   getBlob(endpoint: string, options?: RequestOptions): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+    return this.http.get(this.buildUrl(endpoint), {
       ...(options || {}),
       responseType: 'blob',
     }).pipe(

@@ -6,6 +6,7 @@ import { ProfileSettingsComponent } from "./profile-settings.component";
 import { personalProfile } from "./components/personal-profile/personal-profile.routes";
 import { userPreferencesRoutes } from "./components/user-preferences/user-preferences.routes";
 import { connectWhatsappRoute } from "./components/connect-whatsapp/connect-whatsapp.routes";
+import { timeAndAreaRoutes } from "./components/time-and-area/time-and-area.routes";
 
 export const profileSettingsRoutes = {
   path: 'settings',
@@ -14,9 +15,10 @@ export const profileSettingsRoutes = {
     { path: '', redirectTo: 'business-profile', pathMatch: 'full' as const },
     businessProfile,
     personalProfile,
-    userPreferencesRoutes,
-    generalRoutes,
     tagsAndAttributesRoutes,
+    userPreferencesRoutes,
+    timeAndAreaRoutes,
+    generalRoutes,
     importExportChatsRoutes,
     connectWhatsappRoute
   ]

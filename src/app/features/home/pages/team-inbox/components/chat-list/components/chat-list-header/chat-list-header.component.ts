@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { NewChatDialogComponent } from './new-chat-dialog/new-chat-dialog.component';
+import { NotificationBellComponent } from '../../../notification-bell/notification-bell.component';
 import * as ConversationsActions from '../../../../../../../../core/services/conversations/ngrx/conversations.actions';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -11,7 +12,7 @@ import { TranslatePipe } from '../../../../../../../../core/pipes/translate.pipe
 
 @Component({
   selector: 'app-chat-list-header',
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, NotificationBellComponent],
   templateUrl: './chat-list-header.component.html',
   styleUrls: ['./chat-list-header.component.css']
 })
