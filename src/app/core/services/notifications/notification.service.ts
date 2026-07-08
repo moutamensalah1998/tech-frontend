@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, BehaviorSubject, Observable, interval } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 import { SocketService } from '../chat/socketio/socket.service';
 import { ServerToClientEventsEnum } from '../../models/socket-event.enum';
 import { ApiService } from '../../api/api.service';
@@ -24,10 +24,15 @@ export interface Notification {
   providedIn: 'root'
 })
 export class NotificationService implements OnDestroy {
+  // Backend is the single source of truth
   private notifications$ = new BehaviorSubject<Notification[]>([]);
   private unreadCount$ = new BehaviorSubject<number>(0);
   private destroy$ = new Subject<void>();
-  private readonly API_URL = '/notifications';
+  private readonly API_URL = '/v1/notifications';
+
+  // Debounce refresh to prevent multiple API calls from rapid socket events
+  private refreshPending = false;
+  private refreshTimer: any = null;
 
   constructor(
     private socketService: SocketService,
@@ -35,16 +40,19 @@ export class NotificationService implements OnDestroy {
   ) {
     this.initializeSocketListeners();
     this.loadNotificationsFromApi();
-    // Poll for new notifications every 30 seconds
     this.startPolling();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+    }
   }
 
   private startPolling(): void {
+    // Poll every 30 seconds to sync with backend
     interval(30000).pipe(
       takeUntil(this.destroy$)
     ).subscribe(() => {
@@ -52,11 +60,17 @@ export class NotificationService implements OnDestroy {
     });
   }
 
+  /**
+   * Load notifications from backend API.
+   * This is the single source of truth - backend database.
+   */
   private async loadNotificationsFromApi(): Promise<void> {
     try {
       const response: any = await this.apiService.get(this.API_URL).toPromise();
       if (response && response.data) {
-        const notifications = response.data.map((n: any) => this.mapApiNotification(n));
+        const notifications: Notification[] = response.data.map((n: any) => this.mapApiNotification(n));
+        // Sort by timestamp descending (newest first)
+        notifications.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         this.notifications$.next(notifications);
         this.updateUnreadCount();
       }
@@ -90,93 +104,33 @@ export class NotificationService implements OnDestroy {
   }
 
   private initializeSocketListeners(): void {
-    // Listen for new message notifications
+    // When backend sends notification events, refresh from API
+    // to get the canonical state (prevents duplicate IDs)
     this.socketService.on(ServerToClientEventsEnum.NewMessageNotification)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        this.handleNewMessage(data);
+      .subscribe(() => {
+        this.scheduleRefresh();
       });
 
-    // Listen for conversation assignment notifications
     this.socketService.on(ServerToClientEventsEnum.ConversationAssignedNotification)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        this.handleConversationAssignment(data);
-      });
-
-    // Also listen to business message received for new message notifications
-    this.socketService.on(ServerToClientEventsEnum.BusinessGroupMessageReceived)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        // Only create notification if message is from contact (not from business)
-        if (data.is_from_contact !== false) {
-          this.handleNewMessage({
-            conversation_id: data.conversation_id,
-            contact_name: data.contact_name,
-            contact_phone: data.contact_phone,
-            message: data.last_message_content,
-            timestamp: data.last_message_time
-          });
-        }
-      });
-
-    // Listen for conversation assignment events
-    this.socketService.on(ServerToClientEventsEnum.ConversationUserAssignment)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        this.handleConversationAssignment({
-          conversation_id: data.conversation_id,
-          assigned_to: data.assigned_to,
-          assigned_by_name: data.assigned_by_name,
-          contact_name: data.contact_name,
-          contact_phone: data.contact_phone,
-          message: data.message || `A conversation has been assigned to you`,
-          timestamp: data.timestamp || new Date().toISOString()
-        });
+      .subscribe(() => {
+        this.scheduleRefresh();
       });
   }
 
-  private async handleConversationAssignment(data: any): Promise<void> {
-    const notification: Notification = {
-      id: this.generateId(),
-      type: 'conversation_assignment',
-      title: 'Conversation Assigned',
-      message: data.message || `A conversation has been assigned to you`,
-      conversationId: data.conversation_id,
-      contactName: data.contact_name,
-      contactPhone: data.contact_phone,
-      assignedBy: data.assigned_by_name || data.assigned_by,
-      timestamp: new Date(data.timestamp || Date.now()),
-      read: false,
-      icon: 'assignment'
-    };
-    await this.addNotification(notification);
-  }
-
-  private async handleNewMessage(data: any): Promise<void> {
-    const notification: Notification = {
-      id: this.generateId(),
-      type: 'new_message',
-      title: 'New Message',
-      message: data.message || `New message from ${data.contact_name || 'a contact'}`,
-      conversationId: data.conversation_id,
-      contactName: data.contact_name,
-      contactPhone: data.contact_phone,
-      timestamp: new Date(data.timestamp || Date.now()),
-      read: false,
-      icon: 'message'
-    };
-    await this.addNotification(notification);
-  }
-
-  private async addNotification(notification: Notification): Promise<void> {
-    // Add to local state immediately for responsiveness
-    const current = this.notifications$.value;
-    this.notifications$.next([notification, ...current]);
-    this.updateUnreadCount();
-    
-    // Note: Backend should persist notifications when events are triggered
-    // This is a real-time notification, backend handles persistence
+  /**
+   * Schedule a debounced refresh from API.
+   * Prevents multiple API calls when multiple socket events fire rapidly.
+   */
+  private scheduleRefresh(): void {
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+    }
+    this.refreshTimer = setTimeout(() => {
+      this.loadNotificationsFromApi();
+      this.refreshTimer = null;
+    }, 500); // 500ms debounce
   }
 
   private updateUnreadCount(): void {
@@ -184,11 +138,8 @@ export class NotificationService implements OnDestroy {
     this.unreadCount$.next(unread);
   }
 
-  private generateId(): string {
-    return `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
+  // ─── Public API ──────────────────────────────────────────────
 
-  // Public API
   getNotifications(): Observable<Notification[]> {
     return this.notifications$.asObservable();
   }
@@ -197,63 +148,94 @@ export class NotificationService implements OnDestroy {
     return this.unreadCount$.asObservable();
   }
 
+  /**
+   * Mark a notification as read.
+   * Updates local state immediately, then persists to backend.
+   * On error, reverts local state.
+   */
   async markAsRead(notificationId: string): Promise<void> {
     const current = this.notifications$.value;
-    const updated = current.map(n => 
+    const previous = [...current];
+
+    // Optimistic update
+    const updated = current.map(n =>
       n.id === notificationId ? { ...n, read: true } : n
     );
     this.notifications$.next(updated);
     this.updateUnreadCount();
-    
+
     // Persist to backend
     try {
       await this.apiService.post(`${this.API_URL}/${notificationId}/read`, {}).toPromise();
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
+      // Revert on error
+      this.notifications$.next(previous);
+      this.updateUnreadCount();
     }
   }
 
   async markAllAsRead(): Promise<void> {
     const current = this.notifications$.value;
+    const previous = [...current];
+
+    // Optimistic update
     const updated = current.map(n => ({ ...n, read: true }));
     this.notifications$.next(updated);
     this.updateUnreadCount();
-    
+
     // Persist to backend
     try {
       await this.apiService.post(`${this.API_URL}/read-all`, {}).toPromise();
     } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
+      // Revert on error
+      this.notifications$.next(previous);
+      this.updateUnreadCount();
     }
   }
 
   async removeNotification(notificationId: string): Promise<void> {
     const current = this.notifications$.value;
+    const previous = [...current];
+
+    // Optimistic update
     const updated = current.filter(n => n.id !== notificationId);
     this.notifications$.next(updated);
     this.updateUnreadCount();
-    
+
     // Persist to backend
     try {
       await this.apiService.delete(`${this.API_URL}/${notificationId}`).toPromise();
     } catch (error) {
       console.error('Failed to delete notification:', error);
+      // Revert on error
+      this.notifications$.next(previous);
+      this.updateUnreadCount();
     }
   }
 
   async clearAll(): Promise<void> {
+    const previous = [...this.notifications$.value];
+
+    // Optimistic update
     this.notifications$.next([]);
     this.unreadCount$.next(0);
-    
+
     // Persist to backend
     try {
       await this.apiService.delete(this.API_URL).toPromise();
     } catch (error) {
       console.error('Failed to clear all notifications:', error);
+      // Revert on error
+      this.notifications$.next(previous);
+      this.updateUnreadCount();
     }
   }
 
-  // Refresh notifications from API
+  /**
+   * Force refresh from backend API.
+   */
   async refresh(): Promise<void> {
     await this.loadNotificationsFromApi();
   }

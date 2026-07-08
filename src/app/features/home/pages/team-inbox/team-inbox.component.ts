@@ -150,8 +150,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       .on(ServerToClientEventsEnum.ConversationMessageReceived)
       .pipe(takeUntil(this.destroy$))
       .subscribe((msg: any) => {
-         msg.message.created_at = this.parseTimestamp(msg.message.created_at);
+        // Ensure consistent timestamp format (milliseconds)
+        const timestamp = this.parseTimestamp(msg.message.created_at);
+        msg.message.created_at = timestamp;
+        
+        // Add message with deduplication check
         this.store.dispatch(addLocalMessage({ message: msg.message }));
+        
         this.store.dispatch(
           updateConversationExpiration({
             conversationId: msg.conversation_id,

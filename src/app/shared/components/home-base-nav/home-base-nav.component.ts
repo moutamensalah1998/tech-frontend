@@ -8,12 +8,13 @@ import { selectAuthUser } from '../../../core/services/auth/ngrx/auth.selector';
 import { Role } from '../../../core/models/auth.types';
 import { DashboardNavigationItem } from './navigation.model';
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
+import { NotificationBellComponent } from '../../../features/home/pages/team-inbox/components/notification-bell/notification-bell.component';
 
 
 @Component({
   selector: 'app-home-base-nav',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule, TranslatePipe],
+  imports: [RouterLink, RouterLinkActive, CommonModule, TranslatePipe, NotificationBellComponent],
   templateUrl: './home-base-nav.component.html',
   styleUrls: ['./home-base-nav.component.css']
 })

@@ -140,10 +140,23 @@ export const messageReducer = createReducer(
         : msg
     ),
   })),
-  on(addLocalMessage, (state, { message }) => ({
-    ...state,
-    messages: [message, ...state.messages],
-  })),
+  on(addLocalMessage, (state, { message }) => {
+    // DEDUPLICATION: Check if message already exists by wa_message_id or _id
+    const messageId = message.wa_message_id || message._id;
+    const isDuplicate = messageId && state.messages.some(
+      m => (m.wa_message_id || m._id) === messageId
+    );
+    
+    if (isDuplicate) {
+      // Skip duplicate - return state unchanged
+      return state;
+    }
+    
+    return {
+      ...state,
+      messages: [message, ...state.messages],
+    };
+  }),
   on(updateMessageStatus, (state, { message_id, status }) => ({
     ...state,
     messages: state.messages.map(msg => {

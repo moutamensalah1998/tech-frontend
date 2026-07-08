@@ -2,41 +2,84 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from '../../api/api.service';
 
+export interface TimeSettings {
+  timeZone: string;
+  timeFormat: '12h' | '24h';
+  dateFormat: string;
+  firstDayOfWeek: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class TimezoneService {
-  // Default timezone for new accounts
+  // Default settings for new accounts
   private static readonly DEFAULT_TIMEZONE = 'Asia/Riyadh';
+  private static readonly DEFAULT_TIME_FORMAT: '12h' | '24h' = '12h';
+  private static readonly DEFAULT_DATE_FORMAT = 'MM/DD/YYYY';
+  private static readonly DEFAULT_FIRST_DAY = 'sunday';
   
-  private timezoneSubject = new BehaviorSubject<string>(TimezoneService.DEFAULT_TIMEZONE);
-  public timezone$ = this.timezoneSubject.asObservable();
+  private settingsSubject = new BehaviorSubject<TimeSettings>({
+    timeZone: TimezoneService.DEFAULT_TIMEZONE,
+    timeFormat: TimezoneService.DEFAULT_TIME_FORMAT,
+    dateFormat: TimezoneService.DEFAULT_DATE_FORMAT,
+    firstDayOfWeek: TimezoneService.DEFAULT_FIRST_DAY
+  });
+  
+  public settings$ = this.settingsSubject.asObservable();
 
   constructor(private api: ApiService) {
-    this.loadTimezone();
+    this.loadSettings();
   }
 
-  private loadTimezone(): void {
+  private loadSettings(): void {
     this.api.get('/v1/business-profile/time-area-settings').subscribe({
       next: (response: any) => {
-        if (response?.data?.timeZone) {
-          this.timezoneSubject.next(response.data.timeZone);
+        if (response?.data) {
+          const data = response.data;
+          this.settingsSubject.next({
+            timeZone: data.timeZone || data.time_zone || TimezoneService.DEFAULT_TIMEZONE,
+            timeFormat: data.timeFormat || data.time_format || TimezoneService.DEFAULT_TIME_FORMAT,
+            dateFormat: data.dateFormat || data.date_format || TimezoneService.DEFAULT_DATE_FORMAT,
+            firstDayOfWeek: data.firstDayOfWeek || data.first_day_of_week || TimezoneService.DEFAULT_FIRST_DAY
+          });
         }
-        // If no timezone exists, keep the default (Asia/Riyadh)
       },
       error: () => {
-        // Keep default Asia/Riyadh if API fails
-        console.warn('Failed to load timezone settings, using Asia/Riyadh');
+        console.warn('Failed to load time settings, using defaults (Asia/Riyadh, 12h)');
       }
     });
   }
 
+  getSettings(): TimeSettings {
+    return this.settingsSubject.value;
+  }
+
   getTimezone(): string {
-    return this.timezoneSubject.value;
+    return this.settingsSubject.value.timeZone;
+  }
+
+  getTimeFormat(): '12h' | '24h' {
+    return this.settingsSubject.value.timeFormat;
+  }
+
+  is12HourFormat(): boolean {
+    return this.settingsSubject.value.timeFormat === '12h';
   }
 
   setTimezone(timezone: string): void {
-    this.timezoneSubject.next(timezone);
+    const current = this.settingsSubject.value;
+    this.settingsSubject.next({ ...current, timeZone: timezone });
+  }
+
+  setTimeFormat(format: '12h' | '24h'): void {
+    const current = this.settingsSubject.value;
+    this.settingsSubject.next({ ...current, timeFormat: format });
+  }
+
+  updateSettings(settings: Partial<TimeSettings>): void {
+    const current = this.settingsSubject.value;
+    this.settingsSubject.next({ ...current, ...settings });
   }
 
   /**
@@ -50,27 +93,21 @@ export class TimezoneService {
     if (!value) return new Date(0);
     if (value instanceof Date) return value;
     if (typeof value === 'number') {
-      // If timestamp is in seconds (< 10000000000), convert to milliseconds
       const ms = value < 10000000000 ? value * 1000 : value;
       return new Date(ms);
     }
     if (typeof value === 'string') {
-      // If it's a numeric string (timestamp)
       if (/^\d+$/.test(value)) {
         const ts = parseInt(value, 10);
         const ms = ts < 10000000000 ? ts * 1000 : ts;
         return new Date(ms);
       }
       
-      // For ISO date strings, we need to ensure they're treated as UTC
-      // Check if the string already has timezone info
       const hasTimezoneInfo = value.endsWith('Z') || 
                               value.match(/[+-]\d{2}:\d{2}$/) ||
                               value.match(/[+-]\d{4}$/);
       
       if (!hasTimezoneInfo) {
-        // No timezone info - assume UTC and add 'Z'
-        // This is critical: without 'Z', JavaScript treats the string as local time
         return new Date(value + 'Z');
       }
       
@@ -80,22 +117,38 @@ export class TimezoneService {
   }
 
   /**
-   * Format a UTC date using the selected timezone
-   * This is the single source of truth for all date formatting
+   * Format a UTC date using the selected timezone and time format
+   * This is the single source of truth for all date/time formatting
    */
   formatDate(utcDate: Date | string | number, options?: Intl.DateTimeFormatOptions): string {
     const date = this.toDate(utcDate);
-    const timezone = this.getTimezone();
+    const settings = this.settingsSubject.value;
     
     const defaultOptions: Intl.DateTimeFormatOptions = {
-      timeZone: timezone,
+      timeZone: settings.timeZone,
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: settings.timeFormat === '12h'
     };
     
-    const mergedOptions = { ...defaultOptions, ...options, timeZone: timezone };
+    const mergedOptions = { ...defaultOptions, ...options, timeZone: settings.timeZone };
+    
+    // Ensure hour12 is always set based on user preference
+    if (options?.hour !== undefined || options?.minute !== undefined) {
+      mergedOptions.hour12 = settings.timeFormat === '12h';
+    }
+    
     return new Intl.DateTimeFormat('en-US', mergedOptions).format(date);
+  }
+
+  /**
+   * Format time only (respects 12h/24h setting)
+   */
+  formatTime(utcDate: Date | string | number): string {
+    return this.formatDate(utcDate, {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   /**
@@ -103,43 +156,32 @@ export class TimezoneService {
    */
   formatChatDate(utcDate: Date | string | number): string {
     const date = this.toDate(utcDate);
-    const timezone = this.getTimezone();
+    const settings = this.settingsSubject.value;
     
-    // Get current date in the selected timezone
-    const nowInTz = new Date(this.formatDate(new Date(), { 
-      year: 'numeric', 
+    const nowInTz = new Intl.DateTimeFormat('en-US', {
+      timeZone: settings.timeZone,
+      year: 'numeric',
       month: '2-digit', 
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }));
+      day: '2-digit'
+    }).format(new Date());
     
-    // Get the date in the selected timezone
     const dateInTz = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
+      timeZone: settings.timeZone,
       year: 'numeric',
       month: '2-digit', 
       day: '2-digit'
     }).format(date);
     
-    const nowDateInTz = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).format(new Date());
+    const timeStr = this.formatTime(date);
     
-    const timeStr = this.formatDate(date, { hour: '2-digit', minute: '2-digit' });
-    
-    if (dateInTz === nowDateInTz) {
+    if (dateInTz === nowInTz) {
       return `Today ${timeStr}`;
     }
     
-    // Check if yesterday
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayInTz = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
+      timeZone: settings.timeZone,
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -149,7 +191,6 @@ export class TimezoneService {
       return `Yesterday ${timeStr}`;
     }
     
-    // Return full date
     return this.formatDate(date, {
       weekday: 'short',
       hour: '2-digit',
@@ -175,7 +216,34 @@ export class TimezoneService {
     if (hours < 24) return `${hours}h ago`;
     if (days < 7) return `${days}d ago`;
     
-    // For older dates, return formatted date
     return this.formatDate(date, { month: 'short', day: 'numeric' });
+  }
+
+  /**
+   * Format full date and time
+   */
+  formatDateTime(utcDate: Date | string | number): string {
+    return this.formatDate(utcDate, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  /**
+   * Format date only (no time)
+   */
+  formatDateOnly(utcDate: Date | string | number): string {
+    const settings = this.settingsSubject.value;
+    const date = this.toDate(utcDate);
+    
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: settings.timeZone,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
   }
 }
