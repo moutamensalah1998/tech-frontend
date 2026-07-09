@@ -1,4 +1,6 @@
 
+export type ConversationOwner = 'NONE' | 'AI' | 'CHATBOT' | 'HUMAN';
+
 export interface Conversation {
   id: string;
   contact_name: string;
@@ -16,6 +18,7 @@ export interface Conversation {
   conversation_is_expired: boolean;
   unread_count: number;
   chatbot_triggered: boolean;
+  owner: ConversationOwner;
 }
 
 export interface Meta {

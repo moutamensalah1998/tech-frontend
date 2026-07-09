@@ -117,6 +117,29 @@ export class TimezoneService {
   }
 
   /**
+   * Parse the dateFormat setting into Intl.DateTimeFormatOptions
+   * Supports: MM/DD/YYYY, DD/MM/YYYY, YYYY-MM-DD, MMM D, YYYY, etc.
+   */
+  private getDateOptionsFromFormat(): Intl.DateTimeFormatOptions {
+    const settings = this.settingsSubject.value;
+    const format = settings.dateFormat || 'MM/DD/YYYY';
+    
+    switch (format) {
+      case 'DD/MM/YYYY':
+        return { day: '2-digit', month: '2-digit', year: 'numeric' };
+      case 'YYYY-MM-DD':
+        return { year: 'numeric', month: '2-digit', day: '2-digit' };
+      case 'MMM D, YYYY':
+        return { month: 'short', day: 'numeric', year: 'numeric' };
+      case 'D MMM YYYY':
+        return { day: 'numeric', month: 'short', year: 'numeric' };
+      case 'MM/DD/YYYY':
+      default:
+        return { month: '2-digit', day: '2-digit', year: 'numeric' };
+    }
+  }
+
+  /**
    * Format a UTC date using the selected timezone and time format
    * This is the single source of truth for all date/time formatting
    */
@@ -233,17 +256,16 @@ export class TimezoneService {
   }
 
   /**
-   * Format date only (no time)
+   * Format date only (no time) - respects the user's dateFormat setting
    */
   formatDateOnly(utcDate: Date | string | number): string {
     const settings = this.settingsSubject.value;
     const date = this.toDate(utcDate);
+    const dateOptions = this.getDateOptionsFromFormat();
     
     return new Intl.DateTimeFormat('en-US', {
-      timeZone: settings.timeZone,
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+      ...dateOptions,
+      timeZone: settings.timeZone
     }).format(date);
   }
 }

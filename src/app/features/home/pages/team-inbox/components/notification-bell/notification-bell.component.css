@@ -10,14 +10,23 @@
 }
 
 .notification-dropdown {
-  position: fixed !important;
-  top: auto !important;
-  right: 1rem !important;
-  left: auto !important;
+  position: absolute;
+  top: 100%;
   margin-top: 0.5rem;
   z-index: 9999;
   max-width: calc(100vw - 2rem);
   width: 20rem;
+}
+
+/* RTL support - position on the left in RTL mode */
+:host-context([dir="rtl"]) .notification-dropdown {
+  right: 0;
+}
+
+/* LTR support - position on the right in LTR mode */
+:host-context([dir="ltr"]) .notification-dropdown,
+:host-context(:not([dir])) .notification-dropdown {
+  left: 0;
 }
 
 /* On larger screens, use wider dropdown */

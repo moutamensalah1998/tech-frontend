@@ -1,4 +1,5 @@
 import { formatDate } from '@angular/common';
+import { TimezoneService } from '../services/timezone/timezone.service';
 
 export enum DifferenceUnit {
   Seconds = 'seconds',
@@ -8,7 +9,25 @@ export enum DifferenceUnit {
 }
 
 export class DateUtils {
+  private static timezoneService: TimezoneService | null = null;
+  
   private constructor() { }
+  
+  /**
+   * Initialize DateUtils with the TimezoneService
+   * This should be called once during app initialization
+   */
+  static initialize(timezoneService: TimezoneService): void {
+    this.timezoneService = timezoneService;
+  }
+  
+  /**
+   * Get the user's timezone from the TimezoneService
+   * Falls back to 'Asia/Riyadh' if not initialized
+   */
+  private static getUserTimezone(): string {
+    return this.timezoneService?.getTimezone() || 'Asia/Riyadh';
+  }
 
   private static toDate(date: any): Date | null {
     if (!date) return null;
@@ -143,35 +162,51 @@ export class DateUtils {
     const dateTime = this.toDate(date);
     if (!dateTime) return '';
 
-    // The date has already been converted to the target timezone by the pipe
-    // So we format it directly without additional timezone conversion
+    const userTimezone = this.getUserTimezone();
     const now = new Date();
     const diff = now.getTime() - dateTime.getTime();
     const oneDay = 24 * 60 * 60 * 1000;
 
-    // Use UTC methods since the date is already in the target timezone
-    const today = new Date();
-    const yesterday = new Date(today);
+    // Compare dates in the user's timezone
+    const todayInTz = new Intl.DateTimeFormat('en-US', {
+      timeZone: userTimezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+
+    const dateInTz = new Intl.DateTimeFormat('en-US', {
+      timeZone: userTimezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(dateTime);
+
+    const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayInTz = new Intl.DateTimeFormat('en-US', {
+      timeZone: userTimezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(yesterday);
 
-    const isToday = dateTime.getUTCFullYear() === today.getUTCFullYear() &&
-                    dateTime.getUTCMonth() === today.getUTCMonth() &&
-                    dateTime.getUTCDate() === today.getUTCDate();
+    const timeStr = dateTime.toLocaleTimeString(locale, { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      timeZone: userTimezone 
+    });
 
-    const isYesterday = dateTime.getUTCFullYear() === yesterday.getUTCFullYear() &&
-                        dateTime.getUTCMonth() === yesterday.getUTCMonth() &&
-                        dateTime.getUTCDate() === yesterday.getUTCDate();
-
-    if (isToday) {
-      return `Today ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}`;
-    } else if (isYesterday) {
-      return `Yesterday ${dateTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}`;
+    if (dateInTz === todayInTz) {
+      return `Today ${timeStr}`;
+    } else if (dateInTz === yesterdayInTz) {
+      return `Yesterday ${timeStr}`;
     } else {
       return dateTime.toLocaleDateString(locale, {
         weekday: 'short',
         hour: '2-digit',
         minute: '2-digit',
-        timeZone: 'UTC'
+        timeZone: userTimezone
       });
     }
   }

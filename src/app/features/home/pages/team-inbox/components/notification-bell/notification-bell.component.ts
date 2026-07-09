@@ -84,27 +84,57 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     const dropdownWidth = 384; // max width of dropdown (24rem = 384px)
     const margin = 16; // 1rem margin from edge
     
-    // Calculate if dropdown would overflow on the right side
-    const wouldOverflowRight = bellRect.right + dropdownWidth > viewportWidth - margin;
+    // Get computed direction from the element itself - this is the most reliable way
+    // It will always reflect the current direction regardless of how it's set
+    const computedStyle = getComputedStyle(this.bellButton.nativeElement);
+    const isRTL = computedStyle.direction === 'rtl';
     
-    if (wouldOverflowRight) {
-      // Position from the right edge of viewport
-      this.dropdownStyle = {
-        'position': 'fixed',
-        'top': `${bellRect.bottom + 8}px`,
-        'right': `${margin}px`,
-        'left': 'auto',
-        'max-width': `calc(100vw - ${margin * 2}px)`
-      };
+    if (isRTL) {
+      // RTL mode: position from the right side
+      const wouldOverflowLeft = bellRect.left - dropdownWidth < margin;
+      
+      if (wouldOverflowLeft) {
+        // Position from the left edge of viewport
+        this.dropdownStyle = {
+          'position': 'fixed',
+          'top': `${bellRect.bottom + 8}px`,
+          'left': `${margin}px`,
+          'right': 'auto',
+          'max-width': `calc(100vw - ${margin * 2}px)`
+        };
+      } else {
+        // Position aligned with the bell button (right-aligned)
+        this.dropdownStyle = {
+          'position': 'fixed',
+          'top': `${bellRect.bottom + 8}px`,
+          'right': `${viewportWidth - bellRect.right}px`,
+          'left': 'auto',
+          'max-width': `calc(100vw - ${margin * 2}px)`
+        };
+      }
     } else {
-      // Position aligned with the bell button
-      this.dropdownStyle = {
-        'position': 'fixed',
-        'top': `${bellRect.bottom + 8}px`,
-        'right': `${viewportWidth - bellRect.right}px`,
-        'left': 'auto',
-        'max-width': `calc(100vw - ${margin * 2}px)`
-      };
+      // LTR mode: position from the left side
+      const wouldOverflowRight = bellRect.right + dropdownWidth > viewportWidth - margin;
+      
+      if (wouldOverflowRight) {
+        // Position from the right edge of viewport
+        this.dropdownStyle = {
+          'position': 'fixed',
+          'top': `${bellRect.bottom + 8}px`,
+          'right': `${margin}px`,
+          'left': 'auto',
+          'max-width': `calc(100vw - ${margin * 2}px)`
+        };
+      } else {
+        // Position aligned with the bell button (left-aligned)
+        this.dropdownStyle = {
+          'position': 'fixed',
+          'top': `${bellRect.bottom + 8}px`,
+          'left': `${bellRect.left}px`,
+          'right': 'auto',
+          'max-width': `calc(100vw - ${margin * 2}px)`
+        };
+      }
     }
   }
 

@@ -108,7 +108,7 @@ export class TimeAndAreaComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.timeAreaForm = this.fb.group({
-      timeZone: ['UTC', Validators.required],
+      timeZone: ['Asia/Riyadh', Validators.required],
       region: ['middle-east', Validators.required],
       currency: ['USD', Validators.required],
       dateFormat: ['MM/DD/YYYY', Validators.required],

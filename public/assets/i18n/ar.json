@@ -77,8 +77,6 @@
     "userManagement": "إدارة المستخدمين",
     "reports": "التقارير",
     "apiDoc": "وثائق API",
-    "aiControl": "التحكم بالذكاء الاصطناعي",
-    "aiSupport": "دعم الذكاء الاصطناعي",
     "connected": "متصل",
     "notConnected": "غير متصل"
   },
@@ -542,8 +540,6 @@
     "open": "مفتوح",
     "solved": "محلول",
     "pending": "قيد الانتظار",
-    "expired": "منتهية",
-    "assignToMe": "المعينة لي",
     "chats": "المحادثات",
     "selectContact": "اختر جهة اتصال",
     "noContactsFound": "لم يتم العثور على جهات اتصال",
@@ -804,10 +800,9 @@
     },
     "deleteDialog": {
       "header": "حذف جهة الاتصال",
-      "message": "هل أنت متأكد من أنك تريد حذف جهة الاتصال هذه؟ سيتم أيضاً حذف جميع المحادثات المرتبطة بها. لا يمكن التراجع عن هذا الإجراء.",
+      "message": "هل أنت متأكد من أنك تريد حذف جهة الاتصال هذه؟ لا يمكن التراجع عن هذا الإجراء.",
       "confirm": "حذف",
-      "cancel": "إلغاء",
-      "notAllowed": "غير مسموح لك بتنفيذ هذا الإجراء."
+      "cancel": "إلغاء"
     },
     "editDialog": {
       "title": "تعديل جهة الاتصال",
@@ -852,40 +847,6 @@
       "saving": "جاري الحفظ...",
       "errorMessage": "حدث خطأ غير متوقع.",
       "contactName": "اسم جهة الاتصال"
-    },
-    "import": {
-      "title": "استيراد جهات الاتصال",
-      "short": "استيراد",
-      "subtitle": "تحميل ملف لاستيراد جهات الاتصال مع العلامات والسمات",
-      "uploadArea": {
-        "title": "اختر ملفاً للتحميل",
-        "description": "الصيغ المدعومة: .xlsx, .xls, .csv (الحد الأقصى 10 ميجابايت)",
-        "browse": "تصفح الملفات"
-      },
-      "formatInfo": {
-        "title": "متطلبات تنسيق الملف",
-        "required": "الأعمدة المطلوبة: name, country_code, phone_number",
-        "tagsHint": "العلامات: قائمة مفصولة بفواصل (مثال: vip, customer)",
-        "attributesHint": "السمات: أزواج مفتاح:قيمة مفصولة بفواصل منقوطة (مثال: city:NYC; role:Manager)"
-      },
-      "downloadSample": "تحميل نموذج",
-      "cancel": "إلغاء",
-      "importButton": "استيراد جهات الاتصال",
-      "importing": "جاري استيراد جهات الاتصال...",
-      "importingDesc": "يرجى الانتظار أثناء استيراد جهات الاتصال. قد يستغرق هذا بعض الوقت.",
-      "invalidFile": "تنسيق الملف غير صالح. يرجى تحميل ملفات .csv أو .xlsx أو .xls.",
-      "fileTooLarge": "الملف كبير جداً. الحد الأقصى لحجم الملف هو 10 ميجابايت.",
-      "importFailed": "فشل الاستيراد. يرجى التحقق من الملف والمحاولة مرة أخرى.",
-      "results": {
-        "title": "نتائج الاستيراد",
-        "importMore": "استيراد المزيد",
-        "total": "إجمالي المعالجة",
-        "success": "ناجح",
-        "existing": "موجود بالفعل",
-        "failed": "فشل",
-        "errorsTitle": "الأخطاء",
-        "done": "تم"
-      }
     }
   },
   "chatDetails": {
@@ -2691,8 +2652,6 @@
       "selectContact": "اختر جهة اتصال",
       "selectContactPlaceholder": "اختر جهة اتصال",
       "noContactsFound": "لم يتم العثور على جهات اتصال",
-      "customerName": "اسم العميل",
-      "customerNamePlaceholder": "أدخل اسم العميل (اختياري)",
       "phoneNumber": "رقم الهاتف",
       "phoneNumberPlaceholder": "رقم الهاتف",
       "country": "الدولة",
@@ -2711,12 +2670,26 @@
     "chatWindowHeader": {
       "expired": "منتهي الصلاحية",
       "status": {
+        "open": "مفتوح",
+        "solved": "محلول",
+        "pending": "قيد الانتظار",
         "APPROVED": "موافق عليه",
         "PENDING_DELETION": "في انتظار الحذف",
-        "REJECTED": "مرفوض",
+        "REJECTED": "مرفض",
         "DRAFT": "مسودة",
         "PAUSED": "متوقف مؤقتاً",
         "DISABLED": "معطل"
+      },
+      "owners": {
+        "none": "بلا",
+        "ai": "ذكاء اصطناعي",
+        "chatbot": "روبوت محادثة",
+        "human": "إنسان"
+      },
+      "actions": {
+        "takeOver": "استيلاء على المحادثة",
+        "resumeAI": "استئناف الذكاء الاصطناعي",
+        "resumeChatbot": "استئناف روبوت المحادثة"
       }
     }
   },
@@ -2809,8 +2782,7 @@
     "error": {
       "loadFailed": "خطأ في تحميل البيانات"
     },
-    "noData": "لا توجد بيانات متاحة",
-    "exportReport": "تصدير التقرير"
+    "noData": "لا توجد بيانات متاحة"
   },
   "deleteAccount": {
     "title": "حذف الحساب",

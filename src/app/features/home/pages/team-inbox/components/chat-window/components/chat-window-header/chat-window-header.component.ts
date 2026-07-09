@@ -8,7 +8,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { interval, map, Observable, Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   assignConversation,
@@ -20,6 +20,7 @@ import { User } from '../../../../../../../../core/models/user-management.model'
 import { selectAllUsers } from '../../../../../../../../core/services/user-management/ngrx/user-management.selectors';
 import { TranslatePipe } from '../../../../../../../../core/pipes/translate.pipe';
 import { TranslationService } from '../../../../../../../../core/services/translation/translation.service';
+import { ConversationsService } from '../../../../../../../../core/services/conversations/conversations.service';
 
 @Component({
   selector: 'app-chat-window-header',
@@ -30,8 +31,18 @@ import { TranslationService } from '../../../../../../../../core/services/transl
 })
 export class ChatWindowHeaderComponent implements OnInit, OnDestroy, OnChanges {
   private translationService = inject(TranslationService);
+  private conversationsService = inject(ConversationsService);
   
   constructor(private store: Store) {}
+  
+  // Ownership
+  isHumanOwned = false;
+  isAiOwned = false;
+  isChatbotOwned = false;
+  isNoneOwned = true;
+  ownerLabel = '';
+  ownerBadgeClass = 'bg-gray-500';
+  updatingOwner = false;
 
   @Input() expiry_time: string | null = null;
   remainingTime: string | null = null;
@@ -82,6 +93,7 @@ export class ChatWindowHeaderComponent implements OnInit, OnDestroy, OnChanges {
       this.selectedUserId = this.conversation.user_assignments_id;
       this.isExpired = this.conversation.conversation_is_expired;
       this.expiry_time = this.conversation.conversation_expiration_time;
+      this.updateOwnershipState();
     }
 
     if (changes['expiry_time'] || changes['reset_counter']) {
@@ -132,5 +144,99 @@ export class ChatWindowHeaderComponent implements OnInit, OnDestroy, OnChanges {
       m.toString().padStart(2, '0'),
       s.toString().padStart(2, '0'),
     ].join(':');
+  }
+
+  // --- Ownership methods ---
+
+  private updateOwnershipState() {
+    const owner = this.conversation?.owner || 'NONE';
+    this.isHumanOwned = owner === 'HUMAN';
+    this.isAiOwned = owner === 'AI';
+    this.isChatbotOwned = owner === 'CHATBOT';
+    this.isNoneOwned = owner === 'NONE';
+
+    switch (owner) {
+      case 'AI':
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.ai');
+        this.ownerBadgeClass = 'bg-blue-500';
+        break;
+      case 'CHATBOT':
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.chatbot');
+        this.ownerBadgeClass = 'bg-purple-500';
+        break;
+      case 'HUMAN':
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.human');
+        this.ownerBadgeClass = 'bg-green-500';
+        break;
+      default:
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.none');
+        this.ownerBadgeClass = 'bg-gray-500';
+    }
+  }
+
+  takeOverConversation() {
+    if (!this.conversation?.id || this.updatingOwner) return;
+    this.updatingOwner = true;
+    this.conversationsService.takeOverConversation(this.conversation.id).subscribe({
+      next: () => {
+        this.isHumanOwned = true;
+        this.isAiOwned = false;
+        this.isChatbotOwned = false;
+        this.isNoneOwned = false;
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.human');
+        this.ownerBadgeClass = 'bg-green-500';
+        if (this.conversation) {
+          this.conversation.owner = 'HUMAN';
+        }
+        this.updatingOwner = false;
+      },
+      error: () => {
+        this.updatingOwner = false;
+      }
+    });
+  }
+
+  resumeAI() {
+    if (!this.conversation?.id || this.updatingOwner) return;
+    this.updatingOwner = true;
+    this.conversationsService.resumeAI(this.conversation.id).subscribe({
+      next: () => {
+        this.isHumanOwned = false;
+        this.isAiOwned = true;
+        this.isChatbotOwned = false;
+        this.isNoneOwned = false;
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.ai');
+        this.ownerBadgeClass = 'bg-blue-500';
+        if (this.conversation) {
+          this.conversation.owner = 'AI';
+        }
+        this.updatingOwner = false;
+      },
+      error: () => {
+        this.updatingOwner = false;
+      }
+    });
+  }
+
+  resumeChatbot() {
+    if (!this.conversation?.id || this.updatingOwner) return;
+    this.updatingOwner = true;
+    this.conversationsService.resumeChatbot(this.conversation.id).subscribe({
+      next: () => {
+        this.isHumanOwned = false;
+        this.isAiOwned = false;
+        this.isChatbotOwned = true;
+        this.isNoneOwned = false;
+        this.ownerLabel = this.translationService.translate('teamInbox.chatWindowHeader.owners.chatbot');
+        this.ownerBadgeClass = 'bg-purple-500';
+        if (this.conversation) {
+          this.conversation.owner = 'CHATBOT';
+        }
+        this.updatingOwner = false;
+      },
+      error: () => {
+        this.updatingOwner = false;
+      }
+    });
   }
 }

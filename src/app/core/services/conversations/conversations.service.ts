@@ -71,4 +71,22 @@ export class ConversationsService {
     const url = `${this.teamBasePath}/create_conversation`;
     return this.apiService.post(url, payload);
   }
+
+  updateConversationOwner(conversation_id: string, owner: string): Observable<any> {
+    const url = `${this.teamBasePath}/update_conversation_owner`;
+    const body = { conversation_id, owner };
+    return this.apiService.put(url, body);
+  }
+
+  resumeAI(conversation_id: string): Observable<any> {
+    return this.updateConversationOwner(conversation_id, 'AI');
+  }
+
+  resumeChatbot(conversation_id: string): Observable<any> {
+    return this.updateConversationOwner(conversation_id, 'CHATBOT');
+  }
+
+  takeOverConversation(conversation_id: string): Observable<any> {
+    return this.updateConversationOwner(conversation_id, 'HUMAN');
+  }
 }

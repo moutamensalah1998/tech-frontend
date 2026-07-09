@@ -2323,6 +2323,17 @@
         "DRAFT": "Draft",
         "PAUSED": "Paused",
         "DISABLED": "Disabled"
+      },
+      "owners": {
+        "none": "None",
+        "ai": "AI",
+        "chatbot": "Chatbot",
+        "human": "Human"
+      },
+      "actions": {
+        "takeOver": "Take Over",
+        "resumeAI": "Resume AI",
+        "resumeChatbot": "Resume Chatbot"
       }
     }
   },
@@ -2441,5 +2452,113 @@
     "failedToGetToken": "Failed to get token",
     "errorTitle": "Error Loading API Documentation",
     "errorMessage": "Failed to load the OpenAPI specification. Please try again later."
+  },
+  "ai": {
+    "title": "AI Support Agent",
+    "subtitle": "Knowledge-based WhatsApp customer support",
+    "aiActive": "AI Active",
+    "aiInactive": "AI Inactive",
+    "stats": {
+      "sources": "Sources",
+      "ready": "Ready",
+      "knowledgeChunks": "Knowledge Chunks"
+    },
+    "tabs": {
+      "sources": "Knowledge Sources",
+      "test": "Test AI",
+      "settings": "Settings"
+    },
+    "sources": {
+      "title": "Knowledge Sources",
+      "description": "Add documents, URLs, or text to build your AI knowledge base",
+      "addSource": "Add Source",
+      "cancel": "Cancel",
+      "sourceTypes": {
+        "url": "Website URL",
+        "text": "Text Content",
+        "file": "Upload File"
+      },
+      "form": {
+        "sourceName": "Source Name",
+        "sourceNamePlaceholder": "e.g., Product Catalog, FAQ, Store Policy",
+        "websiteUrl": "Website URL",
+        "urlPlaceholder": "https://example.com/page",
+        "urlHint": "The AI will crawl this URL and extract content automatically",
+        "content": "Content",
+        "contentPlaceholder": "Paste your knowledge content here..."
+      },
+      "upload": {
+        "title": "Drag & drop your file here",
+        "hint": "or click to browse - PDF, DOC, DOCX, XLS, XLSX, TXT, CSV, PNG, JPG (max 20MB)",
+        "browse": "Browse Files"
+      },
+      "submit": {
+        "processing": "Processing...",
+        "addToKnowledgeBase": "Add to Knowledge Base"
+      },
+      "list": {
+        "title": "All Sources",
+        "chunks": "chunks"
+      },
+      "empty": {
+        "title": "No knowledge sources yet",
+        "description": "Add your first source to start building your AI knowledge base. The AI will use this information to answer customer questions.",
+        "addFirst": "Add Your First Source"
+      },
+      "loading": "Loading sources...",
+      "actions": {
+        "recrawl": "Re-crawl",
+        "delete": "Delete"
+      }
+    },
+    "test": {
+      "title": "Test AI Response",
+      "description": "Simulate a customer message to see how the AI responds",
+      "customerMessage": "Customer Message",
+      "placeholder": "Type a customer message to test...\nExample: What are your store hours?",
+      "hint": "Press Enter to send, Shift+Enter for new line",
+      "thinking": "Thinking...",
+      "sendTest": "Send Test",
+      "response": {
+        "title": "AI Response",
+        "confidence": "Confidence",
+        "chunksRetrieved": "Chunks Retrieved",
+        "sourcesUsed": "Sources Used",
+        "viewPrompt": "View Full Prompt",
+        "noKnowledge": "No matching knowledge found - fallback response used"
+      },
+      "placeholderText": "Type a message above and click \"Send Test\" to see how the AI responds"
+    },
+    "settings": {
+      "title": "AI Settings",
+      "description": "Configure how the AI behaves when responding to customers",
+      "autoReply": {
+        "label": "Auto-Reply",
+        "description": "Automatically reply to WhatsApp messages using AI"
+      },
+      "confidenceThreshold": {
+        "label": "Confidence Threshold",
+        "description": "Minimum confidence level required for AI to respond"
+      },
+      "fallbackMessage": {
+        "label": "Fallback Message",
+        "description": "Message sent when AI can't find a relevant answer"
+      },
+      "fallbackAssignment": {
+        "label": "Fallback Assignment User",
+        "description": "Assign conversation to user when fallback message is triggered",
+        "assignToTeamMember": "Assign to team member",
+        "fallbackAssignee": "Fallback assignee",
+        "removeAssignment": "Remove assignment",
+        "searchMembers": "Search team members...",
+        "teamMembers": "Team Members",
+        "loadingMembers": "Loading team members...",
+        "noMembersFound": "No team members found"
+      },
+      "save": {
+        "saving": "Saving...",
+        "saveSettings": "Save Settings"
+      }
+    }
   }
 }

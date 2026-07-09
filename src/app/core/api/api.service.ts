@@ -24,6 +24,13 @@ export class ApiService {
     backoff: 1000    
   };
 
+  // Cache-busting headers to prevent service worker from serving stale API responses
+  private readonly noCacheHeaders = new HttpHeaders({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
   constructor(private http: HttpClient) {}
 
   private handleError(error: HttpErrorResponse) {
@@ -37,7 +44,6 @@ export class ApiService {
     return observable.pipe(
       retry({
         count: this.retryStrategy.maxRetries,
-        // delay: (error, retryAttempt) => ObservableInput
         delay: (error: any, retryAttempt: number) => {
           const status = error?.status;
           if (typeof status === 'number' && status >= 400 && status < 500 && status !== 401) {
@@ -58,27 +64,40 @@ export class ApiService {
     return `${base}/${path}`;
   }
 
+  /**
+   * Get no-cache headers to bypass service worker cache for API requests.
+   */
+  private getNoCacheHeaders(existingHeaders?: HttpHeaders): HttpHeaders {
+    let headers = existingHeaders || new HttpHeaders();
+    headers = headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    headers = headers.set('Pragma', 'no-cache');
+    headers = headers.set('Expires', '0');
+    return headers;
+  }
+
   get<T>(endpoint: string, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.get<T>(this.buildUrl(endpoint), options));
+    const opts = { ...(options || {}), headers: this.getNoCacheHeaders(options?.headers) };
+    return this.addRetryStrategy(this.http.get<T>(this.buildUrl(endpoint), opts));
   }
 
   post<T>(endpoint: string, body?: any, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.post<T>(this.buildUrl(endpoint), body, options));
+    const opts = { ...(options || {}), headers: this.getNoCacheHeaders(options?.headers) };
+    return this.addRetryStrategy(this.http.post<T>(this.buildUrl(endpoint), body, opts));
   }
 
   put<T>(endpoint: string, body: any, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.put<T>(this.buildUrl(endpoint), body, options));
+    const opts = { ...(options || {}), headers: this.getNoCacheHeaders(options?.headers) };
+    return this.addRetryStrategy(this.http.put<T>(this.buildUrl(endpoint), body, opts));
   }
 
   delete<T>(endpoint: string, options?: RequestOptions): Observable<T> {
-    return this.addRetryStrategy(this.http.delete<T>(this.buildUrl(endpoint), options));
+    const opts = { ...(options || {}), headers: this.getNoCacheHeaders(options?.headers) };
+    return this.addRetryStrategy(this.http.delete<T>(this.buildUrl(endpoint), opts));
   }
 
   getBlob(endpoint: string, options?: RequestOptions): Observable<Blob> {
-    return this.http.get(this.buildUrl(endpoint), {
-      ...(options || {}),
-      responseType: 'blob',
-    }).pipe(
+    const opts = { ...(options || {}), headers: this.getNoCacheHeaders(options?.headers), responseType: 'blob' as const };
+    return this.http.get(this.buildUrl(endpoint), opts).pipe(
       catchError(err => this.handleError(err))
     );
   }

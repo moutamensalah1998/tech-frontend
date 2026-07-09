@@ -6,11 +6,12 @@ import { ApiService } from '../../../../core/api/api.service';
 import { AISettings, KnowledgeSource, KnowledgeSourceCreate, AITestResponse } from '../../models/ai-config.model';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-ai-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './ai-page.component.html',
   styleUrls: ['./ai-page.component.css']
 })

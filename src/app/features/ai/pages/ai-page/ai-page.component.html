@@ -18,14 +18,14 @@
           </svg>
         </div>
         <div>
-          <h1>AI Support Agent</h1>
-          <p class="header-subtitle">Knowledge-based WhatsApp customer support</p>
+          <h1>{{ 'ai.title' | translate }}</h1>
+          <p class="header-subtitle">{{ 'ai.subtitle' | translate }}</p>
         </div>
       </div>
       <div class="header-right">
         <div class="ai-status-toggle" [class.active]="settings.enabled" (click)="toggleAI()">
           <div class="status-dot"></div>
-          <span class="status-text">{{ settings.enabled ? 'AI Active' : 'AI Inactive' }}</span>
+          <span class="status-text">{{ (settings.enabled ? 'ai.aiActive' : 'ai.aiInactive') | translate }}</span>
           <div class="toggle-track">
             <div class="toggle-thumb"></div>
           </div>
@@ -44,7 +44,7 @@
         </div>
         <div class="stat-info">
           <span class="stat-value">{{ stats.total_sources }}</span>
-          <span class="stat-label">Sources</span>
+          <span class="stat-label">{{ 'ai.stats.sources' | translate }}</span>
         </div>
       </div>
       <div class="stat-card">
@@ -55,7 +55,7 @@
         </div>
         <div class="stat-info">
           <span class="stat-value">{{ stats.ready_sources }}</span>
-          <span class="stat-label">Ready</span>
+          <span class="stat-label">{{ 'ai.stats.ready' | translate }}</span>
         </div>
       </div>
       <div class="stat-card">
@@ -69,7 +69,7 @@
         </div>
         <div class="stat-info">
           <span class="stat-value">{{ stats.total_chunks }}</span>
-          <span class="stat-label">Knowledge Chunks</span>
+          <span class="stat-label">{{ 'ai.stats.knowledgeChunks' | translate }}</span>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@
             [class.active]="activeTab === tab.id"
             (click)="onTabChange(tab.id)">
       <span class="tab-icon">{{ tab.icon }}</span>
-      <span class="tab-label">{{ tab.label }}</span>
+      <span class="tab-label">{{ 'ai.tabs.' + tab.id | translate }}</span>
       <div class="tab-indicator" *ngIf="activeTab === tab.id"></div>
     </button>
   </div>
@@ -94,14 +94,14 @@
     <div *ngIf="activeTab === 'sources'" class="tab-panel">
       <div class="panel-header">
         <div>
-          <h2>Knowledge Sources</h2>
-          <p class="panel-desc">Add documents, URLs, or text to build your AI knowledge base</p>
+          <h2>{{ 'ai.sources.title' | translate }}</h2>
+          <p class="panel-desc">{{ 'ai.sources.description' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="showAddSource = !showAddSource">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          {{ showAddSource ? 'Cancel' : 'Add Source' }}
+          {{ showAddSource ? ('ai.sources.cancel' | translate) : ('ai.sources.addSource' | translate) }}
         </button>
       </div>
 
@@ -113,7 +113,7 @@
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
             </svg>
-            Website URL
+            {{ 'ai.sources.sourceTypes.url' | translate }}
           </button>
           <button class="type-btn" [class.active]="newSource.source_type === 'text'" (click)="newSource.source_type = 'text'">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -121,7 +121,7 @@
               <polyline points="14 2 14 8 20 8"/>
               <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
-            Text Content
+            {{ 'ai.sources.sourceTypes.text' | translate }}
           </button>
           <button class="type-btn" [class.active]="isFileSourceType()" (click)="newSource.source_type = 'pdf'">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,27 +129,27 @@
               <polyline points="14 2 14 8 20 8"/>
               <path d="M9 15h6"/><path d="M12 12v6"/>
             </svg>
-            Upload File
+            {{ 'ai.sources.sourceTypes.file' | translate }}
           </button>
         </div>
 
         <div class="source-form">
           <div class="form-group">
-            <label>Source Name</label>
-            <input type="text" [(ngModel)]="newSource.name" placeholder="e.g., Product Catalog, FAQ, Store Policy" />
+            <label>{{ 'ai.sources.form.sourceName' | translate }}</label>
+            <input type="text" [(ngModel)]="newSource.name" [placeholder]="'ai.sources.form.sourceNamePlaceholder' | translate" />
           </div>
 
           <!-- URL Input -->
           <div *ngIf="newSource.source_type === 'url'" class="form-group">
-            <label>Website URL</label>
-            <input type="url" [(ngModel)]="newSource.url" placeholder="https://example.com/page" />
-            <span class="form-hint">The AI will crawl this URL and extract content automatically</span>
+            <label>{{ 'ai.sources.form.websiteUrl' | translate }}</label>
+            <input type="url" [(ngModel)]="newSource.url" [placeholder]="'ai.sources.form.urlPlaceholder' | translate" />
+            <span class="form-hint">{{ 'ai.sources.form.urlHint' | translate }}</span>
           </div>
 
           <!-- Text Input -->
           <div *ngIf="newSource.source_type === 'text'" class="form-group">
-            <label>Content</label>
-            <textarea [(ngModel)]="newSource.content" rows="6" placeholder="Paste your knowledge content here..."></textarea>
+            <label>{{ 'ai.sources.form.content' | translate }}</label>
+            <textarea [(ngModel)]="newSource.content" rows="6" [placeholder]="'ai.sources.form.contentPlaceholder' | translate"></textarea>
           </div>
 
           <!-- File Upload -->
@@ -163,10 +163,10 @@
                 <polyline points="17 8 12 3 7 8"/>
                 <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
-              <p class="upload-title">Drag & drop your file here</p>
-              <p class="upload-hint">or click to browse - PDF, DOC, DOCX, XLS, XLSX, TXT, CSV, PNG, JPG (max 20MB)</p>
+              <p class="upload-title">{{ 'ai.sources.upload.title' | translate }}</p>
+              <p class="upload-hint">{{ 'ai.sources.upload.hint' | translate }}</p>
               <input type="file" [accept]="getAcceptFileTypes()" (change)="onFileSelected($event)" class="file-input-hidden" />
-              <button class="btn-secondary" (click)="browseFiles($event)">Browse Files</button>
+              <button class="btn-secondary" (click)="browseFiles($event)">{{ 'ai.sources.upload.browse' | translate }}</button>
             </div>
             <div class="upload-preview" *ngIf="selectedFile">
               <div class="file-info">
@@ -198,7 +198,7 @@
             <svg *ngIf="isSubmitting" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
             </svg>
-            {{ isSubmitting ? 'Processing...' : 'Add to Knowledge Base' }}
+            {{ isSubmitting ? ('ai.sources.submit.processing' | translate) : ('ai.sources.submit.addToKnowledgeBase' | translate) }}
           </button>
         </div>
       </div>
@@ -206,7 +206,7 @@
       <!-- Sources List -->
       <div class="sources-section">
         <div class="sources-header">
-          <h3>All Sources ({{ sources.length }})</h3>
+          <h3>{{ 'ai.sources.list.title' | translate }} ({{ sources.length }})</h3>
         </div>
 
         <div *ngIf="sources.length === 0 && !loading" class="empty-state">
@@ -216,19 +216,19 @@
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
             </svg>
           </div>
-          <h3>No knowledge sources yet</h3>
-          <p>Add your first source to start building your AI knowledge base. The AI will use this information to answer customer questions.</p>
+          <h3>{{ 'ai.sources.empty.title' | translate }}</h3>
+          <p>{{ 'ai.sources.empty.description' | translate }}</p>
           <button class="btn-primary" (click)="showAddSource = true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-            Add Your First Source
+            {{ 'ai.sources.empty.addFirst' | translate }}
           </button>
         </div>
 
         <div *ngIf="loading" class="loading-state">
           <div class="spinner"></div>
-          <p>Loading sources...</p>
+          <p>{{ 'ai.sources.loading' | translate }}</p>
         </div>
 
         <div *ngFor="let source of sources" class="source-card">
@@ -256,7 +256,7 @@
               <div class="source-meta">
                 <span class="meta-type">{{ sourceTypeLabels[source.source_type] || source.source_type }}</span>
                 <span class="meta-sep">·</span>
-                <span class="meta-chunks">{{ source.chunk_count || 0 }} chunks</span>
+                <span class="meta-chunks">{{ source.chunk_count || 0 }} {{ 'ai.sources.list.chunks' | translate }}</span>
                 <span *ngIf="source.url" class="meta-sep">·</span>
                 <span *ngIf="source.url" class="meta-url">{{ source.url | slice:0:50 }}{{ source.url.length > 50 ? '...' : '' }}</span>
               </div>
@@ -269,12 +269,12 @@
             </div>
           </div>
           <div class="source-card-actions">
-            <button class="btn-icon" (click)="rescrapeSource(source.id)" title="Re-crawl">
+            <button class="btn-icon" (click)="rescrapeSource(source.id)" [title]="'ai.sources.actions.recrawl' | translate">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
               </svg>
             </button>
-            <button class="btn-icon btn-icon-danger" (click)="deleteSource(source)" title="Delete">
+            <button class="btn-icon btn-icon-danger" (click)="deleteSource(source)" [title]="'ai.sources.actions.delete' | translate">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
               </svg>
@@ -288,29 +288,29 @@
     <div *ngIf="activeTab === 'test'" class="tab-panel">
       <div class="panel-header">
         <div>
-          <h2>Test AI Response</h2>
-          <p class="panel-desc">Simulate a customer message to see how the AI responds</p>
+          <h2>{{ 'ai.test.title' | translate }}</h2>
+          <p class="panel-desc">{{ 'ai.test.description' | translate }}</p>
         </div>
       </div>
 
       <div class="test-layout">
         <div class="test-input-card">
-          <label>Customer Message</label>
-          <textarea [(ngModel)]="testMessage" rows="4" placeholder="Type a customer message to test...&#10;Example: What are your store hours?" (keydown.enter)="onTestKeydown($event)"></textarea>
+          <label>{{ 'ai.test.customerMessage' | translate }}</label>
+          <textarea [(ngModel)]="testMessage" rows="4" [placeholder]="'ai.test.placeholder' | translate" (keydown.enter)="onTestKeydown($event)"></textarea>
           <div class="test-actions">
-            <span class="test-hint">Press Enter to send, Shift+Enter for new line</span>
+            <span class="test-hint">{{ 'ai.test.hint' | translate }}</span>
             <button class="btn-primary" (click)="runTest()" [disabled]="testLoading || !testMessage.trim()">
               <svg *ngIf="testLoading" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
               </svg>
-              {{ testLoading ? 'Thinking...' : 'Send Test' }}
+              {{ testLoading ? ('ai.test.thinking' | translate) : ('ai.test.sendTest' | translate) }}
             </button>
           </div>
         </div>
 
         <div *ngIf="testResponse" class="test-result-card">
           <div class="result-header">
-            <h3>AI Response</h3>
+            <h3>{{ 'ai.test.response.title' | translate }}</h3>
             <div class="result-badges">
               <span class="badge badge-lang">{{ testResponse.language === 'ar' ? '🇸🇦 Arabic' : '🇺🇸 English' }}</span>
               <span class="badge badge-model">{{ testResponse.model_used }}</span>
@@ -324,7 +324,7 @@
 
           <div class="result-details">
             <div class="detail-row">
-              <span class="detail-label">Confidence</span>
+              <span class="detail-label">{{ 'ai.test.response.confidence' | translate }}</span>
               <div class="confidence-bar">
                 <div class="confidence-fill" [style.width.%]="getConfidencePercent(testResponse.confidence)"
                      [class.high]="testResponse.confidence > 0.7"
@@ -335,11 +335,11 @@
               </div>
             </div>
             <div class="detail-row" *ngIf="testResponse.chunks_retrieved && testResponse.chunks_retrieved > 0">
-              <span class="detail-label">Chunks Retrieved</span>
+              <span class="detail-label">{{ 'ai.test.response.chunksRetrieved' | translate }}</span>
               <span class="detail-value">{{ testResponse.chunks_retrieved }}</span>
             </div>
             <div class="detail-row" *ngIf="testResponse.sources.length > 0">
-              <span class="detail-label">Sources Used</span>
+              <span class="detail-label">{{ 'ai.test.response.sourcesUsed' | translate }}</span>
               <div class="source-tags">
                 <span *ngFor="let src of testResponse.sources" class="source-tag">{{ src }}</span>
               </div>
@@ -348,7 +348,7 @@
 
           <div *ngIf="testResponse.prompt_sent" class="prompt-section">
             <div class="prompt-header" (click)="showPrompt = !showPrompt">
-              <span>View Full Prompt</span>
+              <span>{{ 'ai.test.response.viewPrompt' | translate }}</span>
               <svg width="16" height="16" [class.rotated]="showPrompt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
@@ -360,7 +360,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            No matching knowledge found - fallback response used
+            {{ 'ai.test.response.noKnowledge' | translate }}
           </div>
         </div>
 
@@ -368,7 +368,7 @@
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <p>Type a message above and click "Send Test" to see how the AI responds</p>
+          <p>{{ 'ai.test.placeholderText' | translate }}</p>
         </div>
       </div>
     </div>
@@ -377,16 +377,16 @@
     <div *ngIf="activeTab === 'settings'" class="tab-panel">
       <div class="panel-header">
         <div>
-          <h2>AI Settings</h2>
-          <p class="panel-desc">Configure how the AI behaves when responding to customers</p>
+          <h2>{{ 'ai.settings.title' | translate }}</h2>
+          <p class="panel-desc">{{ 'ai.settings.description' | translate }}</p>
         </div>
       </div>
 
       <div class="settings-card">
         <div class="setting-item">
           <div class="setting-info">
-            <label>Auto-Reply</label>
-            <p class="setting-desc">Automatically reply to WhatsApp messages using AI</p>
+            <label>{{ 'ai.settings.autoReply.label' | translate }}</label>
+            <p class="setting-desc">{{ 'ai.settings.autoReply.description' | translate }}</p>
           </div>
           <div class="toggle-switch" [class.active]="settings.auto_reply_enabled" (click)="settings.auto_reply_enabled = !settings.auto_reply_enabled">
             <div class="toggle-knob"></div>
@@ -397,8 +397,8 @@
 
         <div class="setting-item">
           <div class="setting-info">
-            <label>Confidence Threshold</label>
-            <p class="setting-desc">Minimum confidence level required for AI to respond</p>
+            <label>{{ 'ai.settings.confidenceThreshold.label' | translate }}</label>
+            <p class="setting-desc">{{ 'ai.settings.confidenceThreshold.description' | translate }}</p>
           </div>
           <div class="range-control">
             <input type="range" min="0" max="1" step="0.1" [(ngModel)]="settings.confidence_threshold" />
@@ -410,8 +410,8 @@
 
         <div class="setting-item">
           <div class="setting-info">
-            <label>Fallback Message</label>
-            <p class="setting-desc">Message sent when AI can't find a relevant answer</p>
+            <label>{{ 'ai.settings.fallbackMessage.label' | translate }}</label>
+            <p class="setting-desc">{{ 'ai.settings.fallbackMessage.description' | translate }}</p>
           </div>
           <textarea [(ngModel)]="settings.fallback_message" rows="3" class="setting-textarea"></textarea>
         </div>
@@ -420,8 +420,8 @@
 
         <div class="setting-item">
           <div class="setting-info">
-            <label>Fallback Assignment User</label>
-            <p class="setting-desc">Assign conversation to user when fallback message is triggered</p>
+            <label>{{ 'ai.settings.fallbackAssignment.label' | translate }}</label>
+            <p class="setting-desc">{{ 'ai.settings.fallbackAssignment.description' | translate }}</p>
           </div>
           <div class="assignee-selector">
             <div class="selector-trigger" [class.active]="showUserDropdown" (click)="loadAllUsers()">
@@ -429,9 +429,9 @@
                 <div class="user-initials">{{ selectedUserName.charAt(0) }}{{ getSecondInitial(selectedUserName) }}</div>
                 <div class="user-label">
                   <span class="label-name">{{ selectedUserName }}</span>
-                  <span class="label-role">Fallback assignee</span>
+                  <span class="label-role">{{ 'ai.settings.fallbackAssignment.fallbackAssignee' | translate }}</span>
                 </div>
-                <button class="btn-clear" (click)="clearSelectedUser(); $event.stopPropagation()" title="Remove assignment">
+                <button class="btn-clear" (click)="clearSelectedUser(); $event.stopPropagation()" [title]="'ai.settings.fallbackAssignment.removeAssignment' | translate">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
@@ -441,7 +441,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
                 </svg>
-                <span>Assign to team member</span>
+                <span>{{ 'ai.settings.fallbackAssignment.assignToTeamMember' | translate }}</span>
               </div>
               <svg class="chevron-icon" [class.open]="showUserDropdown" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"/>
@@ -455,7 +455,7 @@
                 </svg>
                 <input
                   type="text"
-                  placeholder="Search team members..."
+                  [placeholder]="'ai.settings.fallbackAssignment.searchMembers' | translate"
                   [(ngModel)]="userSearchQuery"
                   (click)="$event.stopPropagation()"
                 />
@@ -463,10 +463,10 @@
               <div class="dropdown-body">
                 <div *ngIf="isLoadingUsers" class="dropdown-loading">
                   <div class="loading-spinner"></div>
-                  <span>Loading team members...</span>
+                  <span>{{ 'ai.settings.fallbackAssignment.loadingMembers' | translate }}</span>
                 </div>
                 <div *ngIf="!isLoadingUsers && getFilteredUsers().length > 0" class="dropdown-list">
-                  <div class="list-label">Team Members</div>
+                  <div class="list-label">{{ 'ai.settings.fallbackAssignment.teamMembers' | translate }}</div>
                   <div
                     *ngFor="let user of getFilteredUsers()"
                     class="member-row"
@@ -491,7 +491,7 @@
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
                   </svg>
-                  <span>No team members found</span>
+                  <span>{{ 'ai.settings.fallbackAssignment.noMembersFound' | translate }}</span>
                 </div>
               </div>
             </div>
@@ -503,7 +503,7 @@
             <svg *ngIf="saving" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
             </svg>
-            {{ saving ? 'Saving...' : 'Save Settings' }}
+            {{ saving ? ('ai.settings.save.saving' | translate) : ('ai.settings.save.saveSettings' | translate) }}
           </button>
         </div>
       </div>

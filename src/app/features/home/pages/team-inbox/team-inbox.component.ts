@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChatListComponent } from './components/chat-list/chat-list.component';
 import { ChatDetailsComponent } from './components/chat-details/chat-details.component';
 import { ChatWindowComponent } from './components/chat-window/chat-window.component';
@@ -9,7 +10,7 @@ import {
   ClientToServerEventsEnum,
   ServerToClientEventsEnum,
 } from '../../../../core/models/socket-event.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, filter, distinctUntilChanged, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   addLocalMessage,
@@ -51,11 +52,40 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   private notificationSound = new Audio('/assets/tech-gate-noti.mp3');
   @Output() conversationSelected = new Subject<Conversation>();
   i: number = 0;
-  constructor(private socketService: SocketService, private store: Store, private conversationState: ConversationStateService
+  constructor(
+    private socketService: SocketService,
+    private store: Store,
+    private conversationState: ConversationStateService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
   private parseTimestamp(timestamp: any): number {
-    const ts = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
-    return ts < 10000000000 ? ts * 1000 : ts;
+    if (!timestamp) return Date.now();
+    
+    // Handle numeric timestamps (seconds or milliseconds)
+    if (typeof timestamp === 'number') {
+      return timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+    }
+    
+    // Handle string timestamps
+    if (typeof timestamp === 'string') {
+      // Check if it's a pure numeric string
+      if (/^\d+$/.test(timestamp)) {
+        const ts = parseInt(timestamp, 10);
+        return ts < 10000000000 ? ts * 1000 : ts;
+      }
+      
+      // Handle ISO 8601 strings (e.g., "2026-07-08T15:30:00+00:00" or "2026-07-08T15:30:00Z")
+      // Parse as UTC and return milliseconds timestamp
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        return date.getTime();
+      }
+    }
+    
+    // Fallback: try to parse as Date
+    const date = new Date(timestamp);
+    return isNaN(date.getTime()) ? Date.now() : date.getTime();
   }
   ngOnInit() {
     this.listenForEvents();
@@ -65,6 +95,26 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       limit: 1000,
       search: ''
     }));
+
+    // Handle deep-link navigation from notifications
+    // Use take(1) to ensure this only fires once per conversationId
+    this.route.queryParams
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(params => !!params['conversationId']),
+        take(1)
+      )
+      .subscribe(params => {
+        const conversationId = params['conversationId'];
+        // Clear the query param immediately to prevent re-triggering
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          replaceUrl: true
+        });
+        // Set pending conversation for chat-list to pick up
+        this.conversationState.setPendingConversationId(conversationId);
+      });
   }
 
   onSelectConversation(conversation: Conversation) {

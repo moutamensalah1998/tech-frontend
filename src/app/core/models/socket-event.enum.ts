@@ -32,6 +32,7 @@ export enum ServerToClientEventsEnum {
   ConversationLeft = 'conversation_left',
   ConversationStatus = 'conversation_status_business_group',
   ConversationUserAssignment = 'conversation_assignment_chat',
+  ConversationOwnerChanged = 'conversation_owner_changed',
 
   // Message events
   BusinessGroupMessageReceived = 'business_message_received',

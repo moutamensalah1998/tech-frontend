@@ -104,8 +104,19 @@
               </svg>
             </button>
           </div>
-          <p class="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5 line-clamp-2">
-            {{ notification.message }}
+          <!-- Contact Info: Name and Phone -->
+          <div *ngIf="notification.contactName || notification.contactPhone" class="flex items-center gap-2 mt-0.5">
+            <span *ngIf="notification.contactName" class="text-xs font-medium text-primary dark:text-primary-dark">
+              {{ notification.contactName }}
+            </span>
+            <span *ngIf="notification.contactName && notification.contactPhone" class="text-xs text-text-tertiary dark:text-dark-text-tertiary">·</span>
+            <span *ngIf="notification.contactPhone" class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
+              {{ notification.contactPhone }}
+            </span>
+          </div>
+          <!-- Message Preview -->
+          <p *ngIf="notification.message" class="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5 line-clamp-2 italic">
+            "{{ notification.message }}"
           </p>
           <div class="flex items-center gap-2 mt-1">
             <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
