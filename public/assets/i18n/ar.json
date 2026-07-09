@@ -77,6 +77,7 @@
     "userManagement": "إدارة المستخدمين",
     "reports": "التقارير",
     "apiDoc": "وثائق API",
+    "aiSupport": "الدعم الذكي",
     "connected": "متصل",
     "notConnected": "غير متصل"
   },
@@ -590,7 +591,8 @@
         "businessProfile": "الملف التجاري",
         "personalProfile": "الملف الشخصي",
         "userPreferences": "تفضيلات المستخدم",
-        "tagsAttributes": "العلامات والسمات"
+        "tagsAttributes": "العلامات والسمات",
+        "timeAndArea": "الوقت والمنطقة"
       }
     },
     "personal": {
@@ -2940,10 +2942,21 @@
         "loadingMembers": "جاري تحميل أعضاء الفريق...",
         "noMembersFound": "لم يتم العثور على أعضاء فريق"
       },
-      "save": {
-        "saving": "جاري الحفظ...",
-        "saveSettings": "حفظ الإعدادات"
-      }
-    }
-  }
-}
+       "save": {
+         "saving": "جاري الحفظ...",
+         "saveSettings": "حفظ الإعدادات"
+       }
+     }
+   },
+   "notifications": {
+     "title": "الإشعارات",
+     "markAllRead": "تعيين الكل كمقروء",
+     "clearAll": "مسح الكل",
+     "noNotifications": "لا توجد إشعارات بعد",
+     "viewAll": "عرض جميع الإشعارات",
+     "conversationAssigned": "تم تعيين المحادثة",
+     "newMessage": "رسالة جديدة",
+     "assignedToYou": "تم تعيين محادثة إليك",
+     "newMessageFrom": "رسالة جديدة من {{name}}"
+   }
+ }
