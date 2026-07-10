@@ -2540,10 +2540,11 @@
         "label": "Confidence Threshold",
         "description": "Minimum confidence level required for AI to respond"
       },
-      "fallbackMessage": {
-        "label": "Fallback Message",
-        "description": "Message sent when AI can't find a relevant answer"
-      },
+       "fallbackMessage": {
+         "label": "Fallback Message",
+         "description": "Message sent when AI can't find a relevant answer",
+         "placeholder": "Enter the fallback message that will be sent when AI cannot answer from knowledge base..."
+       },
       "fallbackAssignment": {
         "label": "Fallback Assignment User",
         "description": "Assign conversation to user when fallback message is triggered",

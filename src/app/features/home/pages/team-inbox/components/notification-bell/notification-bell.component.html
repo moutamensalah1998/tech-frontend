@@ -17,8 +17,8 @@
     
     <!-- Unread Badge -->
     <span *ngIf="unreadCount > 0" 
-          class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 dark:bg-red-600 rounded-full animate-pulse">
-      {{ unreadCount > 9 ? '9+' : unreadCount }}
+          class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 dark:bg-red-600 rounded-full animate-pulse">
+      {{ unreadCount }}
     </span>
   </button>
 

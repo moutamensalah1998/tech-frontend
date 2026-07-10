@@ -408,13 +408,14 @@
 
         <div class="setting-divider"></div>
 
-        <div class="setting-item">
-          <div class="setting-info">
-            <label>{{ 'ai.settings.fallbackMessage.label' | translate }}</label>
-            <p class="setting-desc">{{ 'ai.settings.fallbackMessage.description' | translate }}</p>
-          </div>
-          <textarea [(ngModel)]="settings.fallback_message" rows="3" class="setting-textarea"></textarea>
-        </div>
+         <div class="setting-item">
+           <div class="setting-info">
+             <label>{{ 'ai.settings.fallbackMessage.label' | translate }}</label>
+             <p class="setting-desc">{{ 'ai.settings.fallbackMessage.description' | translate }}</p>
+           </div>
+           <textarea [(ngModel)]="settings.fallback_message" rows="3" class="setting-textarea" 
+                     [placeholder]="'ai.settings.fallbackMessage.placeholder' | translate"></textarea>
+         </div>
 
         <div class="setting-divider"></div>
 

@@ -28,8 +28,9 @@
   <div class="flex flex-col sm:flex-row sm:items-center gap-3">
     <div class="relative">
       <button (click)="toggleDropdown()"
-        class="flex items-center gap-1.5 px-3 py-1.5 text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary rounded-md transition-colors font-medium">
-        <span class="text-sm">{{ 'chat.all' | translate }}</span>
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors font-medium"
+        [ngClass]="selectedFilter ? 'bg-primary/10 dark:bg-primary-dark/10 text-primary dark:text-primary-dark' : 'text-text-primary dark:text-dark-text-primary hover:bg-surface-tertiary dark:hover:bg-dark-surface-tertiary'">
+        <span class="text-sm">{{ getFilterLabel() }}</span>
         <svg [ngClass]="{'rotate-180': isDropdownOpen}"
           class="w-4 h-4 text-primary dark:text-primary-dark transition-transform" viewBox="0 0 12 7"
           fill="currentColor">

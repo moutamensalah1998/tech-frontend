@@ -43,12 +43,12 @@
   <ng-container *ngIf="messages$ | async as messages; else noMessages">
     <ng-container *ngIf="messages.length; else noMessages">
       <div *ngFor="let msg of messages.slice().reverse()" class="flex flex-col items-start" [ngClass]="{
-              'items-end': !msg.is_from_contact,
+              'items-end': !msg.is_from_contact && msg.message_type !== 'assign' && msg.message_type !== 'flow_completion',
               'items-center': msg.message_type === 'assign' || msg.message_type === 'flow_completion',
-              'my-2': msg.message_type === 'assign' || msg.message_type === 'flow_completion',
+              'my-3': msg.message_type === 'assign' || msg.message_type === 'flow_completion',
             }">
         <!-- Timestamp + Sender -->
-        <div *ngIf="msg.message_type !== 'flow_completion'" class="flex items-center space-x-2 mb-1">
+        <div *ngIf="msg.message_type !== 'assign' && msg.message_type !== 'flow_completion'" class="flex items-center space-x-2 mb-1">
           <span class="text-xs text-text-tertiary dark:text-dark-text-tertiary">
             {{ msg.created_at | dateUtils:'chat' }}
           </span>

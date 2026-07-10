@@ -51,6 +51,22 @@ export class ChatListHeaderComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  getFilterLabel(): string {
+    if (!this.selectedFilter) {
+      return 'All';
+    }
+    
+    const labelMap: Record<string, string> = {
+      'assigned_to_me': 'Assign to Me',
+      'open': 'Open',
+      'solved': 'Solved',
+      'pending': 'Pending',
+      'expired': 'Expired'
+    };
+    
+    return labelMap[this.selectedFilter] || 'All';
+  }
+
   selectFilter(option: string) {
     const map: Record<string, string | null> = {
       'Open': 'open',

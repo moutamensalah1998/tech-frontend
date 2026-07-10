@@ -1,6 +1,6 @@
-<div class="w-full min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-dark-surface dark:to-dark-surface-secondary">
+<div class="w-full h-full min-h-0 bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-dark-surface dark:to-dark-surface-secondary flex flex-col overflow-hidden">
   <!-- Page Header -->
-  <div class="flex w-full bg-surface dark:bg-dark-surface-secondary shadow-md dark:shadow-dark-md backdrop-blur-sm px-4 sm:px-6 md:px-8 py-4 border-b border-border dark:border-dark-border">
+  <div class="flex-shrink-0 bg-surface dark:bg-dark-surface-secondary shadow-md dark:shadow-dark-md backdrop-blur-sm px-4 sm:px-6 md:px-8 py-4 border-b border-border dark:border-dark-border">
     <div class="flex items-center space-x-3 sm:space-x-4 rtl:space-x-reverse">
       <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -19,14 +19,14 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="flex items-center justify-center py-20">
+  <div *ngIf="isLoading" class="flex-1 flex items-center justify-center py-20">
     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary-dark"></div>
   </div>
 
   <!-- Main Content -->
-  <div *ngIf="!isLoading" class="px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8 w-full max-w-full md:max-w-4xl mx-auto">
-    <form [formGroup]="timeAreaForm" (ngSubmit)="saveSettings()">
-      <div class="space-y-6">
+  <div *ngIf="!isLoading" class="flex-1 min-h-0 flex flex-col px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8 w-full max-w-full md:max-w-4xl mx-auto overflow-hidden">
+    <form [formGroup]="timeAreaForm" (ngSubmit)="saveSettings()" class="flex-1 min-h-0 flex flex-col">
+      <div class="flex-1 min-h-0 overflow-y-auto space-y-6 pr-1 custom-scrollbar pb-4">
 
         <!-- Time Zone Settings Card -->
         <div class="bg-surface/80 dark:bg-dark-surface-tertiary/80 backdrop-blur-sm rounded-2xl border border-border dark:border-dark-border shadow-lg dark:shadow-dark-lg p-4 sm:p-6">
@@ -259,22 +259,21 @@
             <p class="text-sm">{{ 'profile.timeArea.workingHoursDisabled' | translate }}</p>
           </div>
         </div>
+      </div>
 
-        <!-- Save Button -->
-        <div class="flex justify-end pt-2">
-          <button type="submit" [disabled]="isSaving"
-            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 dark:from-primary-dark dark:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl dark:shadow-dark-lg dark:hover:shadow-dark-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]">
-            <svg *ngIf="isSaving" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <svg *ngIf="!isSaving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            {{ (isSaving ? 'profile.timeArea.saving' : 'profile.timeArea.save') | translate }}
-          </button>
-        </div>
-
+      <!-- Save Button - Fixed at bottom, outside scrollable area -->
+      <div class="flex justify-end pt-4 pb-2 mt-4 border-t border-border dark:border-dark-border flex-shrink-0">
+        <button type="submit" [disabled]="isSaving"
+          class="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-primary to-indigo-600 dark:from-primary-dark dark:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl dark:shadow-dark-lg dark:hover:shadow-dark-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]">
+          <svg *ngIf="isSaving" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <svg *ngIf="!isSaving" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          {{ (isSaving ? 'profile.timeArea.saving' : 'profile.timeArea.save') | translate }}
+        </button>
       </div>
     </form>
   </div>
