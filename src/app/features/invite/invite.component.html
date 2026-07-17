@@ -1,0 +1,132 @@
+<div class="min-h-screen flex items-center justify-center bg-surface-secondary dark:bg-dark-surface-secondary px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Logo/Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-text-primary dark:text-dark-text-primary mb-2">Prog Gate</h1>
+      <p class="text-text-secondary dark:text-dark-text-secondary text-sm">Invitation Registration</p>
+    </div>
+
+    <div class="bg-surface dark:bg-dark-surface rounded-xl border border-border dark:border-dark-border p-6 sm:p-8 shadow-sm">
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="flex items-center justify-center py-12">
+        <div class="text-center">
+          <div class="relative w-10 h-10 mb-4 mx-auto">
+            <div class="absolute inset-0 rounded-full border-4 border-border dark:border-dark-border"></div>
+            <div class="absolute inset-0 rounded-full border-t-4 border-primary animate-spin"></div>
+          </div>
+          <p class="text-sm text-text-secondary dark:text-dark-text-secondary">Validating invitation...</p>
+        </div>
+      </div>
+
+      <!-- Error (invalid/expired invitation) -->
+      <div *ngIf="!loading && error && !showMetaButton && !showRegisterForm">
+        <div class="text-center py-8">
+          <svg class="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <h2 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-2">Invalid Invitation</h2>
+          <p class="text-sm text-text-secondary dark:text-dark-text-secondary mb-4">{{ error }}</p>
+          <p class="text-xs text-text-secondary dark:text-dark-text-secondary">If you believe this is an error, please contact the platform administrator for a new invitation link.</p>
+        </div>
+      </div>
+
+      <!-- Step 1: Connect WhatsApp Button -->
+      <div *ngIf="showMetaButton">
+        <div class="text-center py-6">
+          <h2 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-2">
+            {{ invitation?.company_name ? 'You\'re invited to join ' + invitation!.company_name : 'You\'re Invited!' }}
+          </h2>
+          <p class="text-sm text-text-secondary dark:text-dark-text-secondary mb-6">
+            Connect your WhatsApp Business account to get started.
+          </p>
+
+          <button (click)="connectWithWhatsApp()" [disabled]="metaConnecting"
+            class="inline-flex items-center gap-3 px-6 py-3 bg-[#25D366] text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-[#1fa952] disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-md hover:shadow-lg">
+            <span *ngIf="!metaConnecting">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+            </span>
+            <span *ngIf="metaConnecting" class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            {{ metaConnecting ? 'Opening WhatsApp Setup...' : 'Connect WhatsApp Business' }}
+          </button>
+
+          <p *ngIf="error" class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
+            {{ error }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2: Complete Registration Form (after Meta auth) -->
+      <form *ngIf="showRegisterForm && !success" (ngSubmit)="completeRegistration()" [formGroup]="registerForm">
+        <h2 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-1">Create Your Account</h2>
+        <p class="text-xs text-primary mb-4 flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          WhatsApp Business connected successfully
+        </p>
+
+        <!-- Error -->
+        <div *ngIf="error" class="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
+          {{ error }}
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">First Name *</label>
+            <input type="text" formControlName="first_name"
+              class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+              [class.border-red-500]="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">Last Name *</label>
+            <input type="text" formControlName="last_name"
+              class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+              [class.border-red-500]="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">Email *</label>
+          <input type="email" formControlName="email"
+            class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+            [class.border-red-500]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">Company Name *</label>
+          <input type="text" formControlName="company_name"
+            class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+            [class.border-red-500]="registerForm.get('company_name')?.invalid && registerForm.get('company_name')?.touched">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">Password *</label>
+          <input type="password" formControlName="password"
+            class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+            [class.border-red-500]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            placeholder="Minimum 8 characters">
+        </div>
+
+        <button type="submit" [disabled]="registering"
+          class="w-full py-3 px-4 bg-primary text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]">
+          <span *ngIf="registering" class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          {{ registering ? 'Creating Account...' : 'Create Account' }}
+        </button>
+      </form>
+
+      <!-- Success -->
+      <div *ngIf="success" class="text-center py-8">
+        <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h2 class="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-2">Setup Complete!</h2>
+        <p class="text-sm text-text-secondary dark:text-dark-text-secondary">{{ success }}</p>
+        <div class="mt-4 relative w-8 h-8 mx-auto">
+          <div class="absolute inset-0 rounded-full border-4 border-border dark:border-dark-border"></div>
+          <div class="absolute inset-0 rounded-full border-t-4 border-primary animate-spin"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

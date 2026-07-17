@@ -60,7 +60,7 @@ export class AuthInterceptor implements HttpInterceptor {
           const clonedRequest = token ? this.addToken(request, token) : request;
           return next.handle(clonedRequest).pipe(
             catchError((error: HttpErrorResponse) => {
-              if (error.status === 401 || error.status === 403) {
+              if (error.status === 401) {
                 return this.handleAdmin401Error(request, next, error);
               }
               return throwError(() => error);
@@ -75,7 +75,7 @@ export class AuthInterceptor implements HttpInterceptor {
           const clonedRequest = token ? this.addToken(request, token) : request;
           return next.handle(clonedRequest).pipe(
             catchError((error: HttpErrorResponse) => {
-              if (error.status === 401 || error.status === 403) {
+              if (error.status === 401) {
                 return this.handle401Error(request, next, error);
               }
               return throwError(() => error);
@@ -94,6 +94,9 @@ export class AuthInterceptor implements HttpInterceptor {
       '/v1/auth/register',
       '/v1/auth/admin/login',
       '/v1/auth/admin/refresh',
+      '/v1/invite/validate/',
+      '/v1/invite/register',
+      '/v1/invite/register-embedded',
       'tech-gate-s3.s3.eu-north-1.amazonaws.com'
     ];
     return publicUrls.some((url) => request.url.includes(url));

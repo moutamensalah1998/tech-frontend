@@ -2,8 +2,8 @@ export const environment = {
   apiUrl: 'https://prog-gate.cloud/backend/api',
   production: false,
   meta: {
-    appId: '136178525724752',
-    configId: '2109899429754495',
+    appId: '1506133857645770',
+    configId: '4278075445669207',
     redirectUri: 'https://prog-gate.cloud/meta/callback',
     apiVersion: 'v21.0',
   },

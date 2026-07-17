@@ -15,13 +15,19 @@ import {
 } from 'rxjs/operators';
 
 import { UserService } from '../services/auth/user.service';
+import { AuthService } from '../services/auth/auth.service';
 import { selectAuthUser, selectAuthResponse } from '../services/auth/ngrx/auth.selector';
-import { setAuthUser } from '../services/auth/ngrx/auth.action';
+import { setAuthUser, refreshTokenSuccess } from '../services/auth/ngrx/auth.action';
 import * as SocketActions from '../services/chat/ngrx/socket.actions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanMatch {
-  constructor(private store: Store, private userService: UserService, private router: Router) {}
+  constructor(
+    private store: Store,
+    private userService: UserService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   canActivate(): Observable<boolean> {
     return this.checkAuth();
@@ -43,13 +49,25 @@ export class AuthGuard implements CanActivate, CanMatch {
           return of(true);
         }
 
-        return this.userService.fetchUserFromAPI().pipe(
-          map(response => response.data),
-          tap(user => {
-            this.store.dispatch(setAuthUser({ user }));
-            this.handleSocketConnection(user);
+        // Refresh the token first using the session cookie,
+        // then fetch the user with the new token in the store.
+        return this.authService.refreshToken().pipe(
+          switchMap((response: any) => {
+            const newToken = response?.data?.access_token;
+            if (newToken) {
+              this.store.dispatch(refreshTokenSuccess({ token: newToken }));
+            }
+            return this.userService.fetchUserFromAPI().pipe(
+              map(res => res?.data),
+              tap(user => {
+                if (user) {
+                  this.store.dispatch(setAuthUser({ user }));
+                  this.handleSocketConnection(user);
+                }
+              }),
+              map(user => !!user),
+            );
           }),
-          map(user => !!user),
           catchError(() => {
             this.router.navigate(['auth/sign-in'], { replaceUrl: true });
             return of(false);

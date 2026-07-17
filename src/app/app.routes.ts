@@ -36,5 +36,10 @@ export const routes: Routes = [
 
   { path: 'meta/callback', component: MetaCallbackComponent },
 
+  {
+    path: 'invite/:token',
+    loadComponent: () => import('./features/invite/invite.component').then(m => m.InviteComponent)
+  },
+
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

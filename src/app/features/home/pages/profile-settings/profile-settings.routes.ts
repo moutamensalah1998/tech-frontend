@@ -7,6 +7,7 @@ import { personalProfile } from "./components/personal-profile/personal-profile.
 import { userPreferencesRoutes } from "./components/user-preferences/user-preferences.routes";
 import { connectWhatsappRoute } from "./components/connect-whatsapp/connect-whatsapp.routes";
 import { timeAndAreaRoutes } from "./components/time-and-area/time-and-area.routes";
+import { inviteManagementRoutes } from "./components/invite-management/invite-management.routes";
 
 export const profileSettingsRoutes = {
   path: 'settings',
@@ -18,6 +19,7 @@ export const profileSettingsRoutes = {
     tagsAndAttributesRoutes,
     userPreferencesRoutes,
     timeAndAreaRoutes,
+    inviteManagementRoutes,
     generalRoutes,
     importExportChatsRoutes,
     connectWhatsappRoute
