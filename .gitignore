@@ -40,3 +40,18 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment / secrets - never commit real credentials
+.env
+.env.*
+!.env.example
+*.env
+*.secret
+*.secrets
+*credentials*
+
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.p8

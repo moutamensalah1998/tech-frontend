@@ -97,7 +97,7 @@ export class AuthInterceptor implements HttpInterceptor {
       '/v1/invite/validate/',
       '/v1/invite/register',
       '/v1/invite/register-embedded',
-      'tech-gate-s3.s3.eu-north-1.amazonaws.com'
+      'tech-gate-prod-storage-2026-485964362051-eu-north-1-an.s3.eu-north-1.amazonaws.com'
     ];
     return publicUrls.some((url) => request.url.includes(url));
   }
