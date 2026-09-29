@@ -94,23 +94,29 @@ export class InvitationService {
   registerWithEmbeddedSignup(params: {
     token: string;
     meta_code: string;
+    waba_id?: string | null;
+    phone_number_id?: string | null;
     first_name: string;
     last_name: string;
     email: string;
     password: string;
     company_name: string;
+    pin: string;
   }): Observable<RegisterEmbeddedSignupResponse> {
     const queryParams = new URLSearchParams();
     queryParams.set('token', params.token);
     queryParams.set('meta_code', params.meta_code);
+    if (params.waba_id) queryParams.set('waba_id', params.waba_id);
+    if (params.phone_number_id) queryParams.set('phone_number_id', params.phone_number_id);
     queryParams.set('first_name', params.first_name);
     queryParams.set('last_name', params.last_name);
     queryParams.set('email', params.email);
     queryParams.set('password', params.password);
     queryParams.set('company_name', params.company_name);
+    // The PIN is sent in the request body (JSON), never in the URL/query string.
     return this.apiService.post<RegisterEmbeddedSignupResponse>(
       `/v1/invite/register-embedded?${queryParams.toString()}`,
-      {},
+      { pin: params.pin },
       { isJson: true }
     );
   }

@@ -29,6 +29,8 @@ export class InviteComponent implements OnInit, OnDestroy {
   showMetaButton = false;
   showRegisterForm = false;
   metaCode: string | null = null;
+  metaWabaId: string | null = null;
+  metaPhoneNumberId: string | null = null;
 
   private readonly metaConfigId = environment.meta.configId;
   private destroy$ = new Subject<void>();
@@ -39,6 +41,7 @@ export class InviteComponent implements OnInit, OnDestroy {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     company_name: new FormControl('', [Validators.required]),
+    pin: new FormControl('', [Validators.required, Validators.pattern(/^\d{6}$/)]),
   });
 
   constructor(
@@ -99,6 +102,8 @@ export class InviteComponent implements OnInit, OnDestroy {
       .then((result) => {
         this.metaConnecting = false;
         this.metaCode = result.code;
+        this.metaWabaId = result.waba_id;
+        this.metaPhoneNumberId = result.phone_number_id;
         this.showMetaButton = false;
         this.showRegisterForm = true;
       })
@@ -135,11 +140,14 @@ export class InviteComponent implements OnInit, OnDestroy {
     this.invitationService.registerWithEmbeddedSignup({
       token: this.token,
       meta_code: this.metaCode,
+      waba_id: this.metaWabaId,
+      phone_number_id: this.metaPhoneNumberId,
       first_name: form.first_name!,
       last_name: form.last_name!,
       email: form.email!,
       password: form.password!,
       company_name: form.company_name!,
+      pin: form.pin!,
     }).subscribe({
       next: (res) => {
         this.registering = false;

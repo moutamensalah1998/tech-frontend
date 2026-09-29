@@ -108,6 +108,14 @@
             placeholder="Minimum 8 characters">
         </div>
 
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">WhatsApp Verification PIN (6 digits) *</label>
+          <input type="text" inputmode="numeric" maxlength="6" formControlName="pin"
+            class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"
+            [class.border-red-500]="registerForm.get('pin')?.invalid && registerForm.get('pin')?.touched"
+            placeholder="6-digit verification PIN">
+        </div>
+
         <button type="submit" [disabled]="registering"
           class="w-full py-3 px-4 bg-primary text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]">
           <span *ngIf="registering" class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

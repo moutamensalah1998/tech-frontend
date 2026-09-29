@@ -12,6 +12,19 @@ export interface FBAuthResponse {
   };
 }
 
+export interface MetaSessionInfo {
+  waba_id: string | null;
+  phone_number_id: string | null;
+  business_id: string | null;
+}
+
+export interface EmbeddedSignupResult {
+  code: string;
+  waba_id: string | null;
+  phone_number_id: string | null;
+  business_id: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +33,8 @@ export class FacebookSDKService {
   private readonly apiVersion = environment.meta.apiVersion;
   private initialized$ = new BehaviorSubject<boolean>(false);
   private initPromise: Promise<void> | null = null;
+  private capturedSessionInfo: MetaSessionInfo | null = null;
+  private sessionInfoListener: ((event: MessageEvent) => void) | null = null;
 
   constructor() {
     this.init();
@@ -80,23 +95,35 @@ export class FacebookSDKService {
   }
 
   /**
-   * Launch the Meta Embedded Signup flow.
-   * Uses the configuration ID for the embedded signup experience.
+   * Launch the Meta Embedded Signup flow and capture the WABA / phone
+   * number IDs that Meta reports through the ``WA_EMBEDDED_SIGNUP``
+   * postMessage event, in addition to the exchangeable authorization code.
    */
-  launchEmbeddedSignup(configId: string): Promise<{ code: string }> {
+  launchEmbeddedSignup(configId: string): Promise<EmbeddedSignupResult> {
     return this.waitForInit().then(() => {
-      return new Promise<{ code: string }>((resolve, reject) => {
+      return new Promise<EmbeddedSignupResult>((resolve, reject) => {
+        // Reset any session info captured by a previous attempt.
+        this.capturedSessionInfo = null;
+        this.attachSessionInfoListener();
+
         FB.login(
           (response: FBAuthResponse) => {
-            if (response.status === 'connected' && response.authResponse) {
-              // For Embedded Signup, the authResponse contains an authorization code
+            if (response.status === 'connected' && response.authResponse?.code) {
+              // For Embedded Signup, the authResponse contains an authorization code.
               const code = response.authResponse.code;
-              if (code) {
-                resolve({ code });
-              } else {
-                reject(new Error('No authorization code received from Meta'));
-              }
+              // Meta delivers the WABA / phone number IDs via postMessage; it
+              // can arrive just after the login callback, so wait briefly.
+              this.waitForSessionInfo(3000).then((info) => {
+                this.detachSessionInfoListener();
+                resolve({
+                  code,
+                  waba_id: info?.waba_id ?? null,
+                  phone_number_id: info?.phone_number_id ?? null,
+                  business_id: info?.business_id ?? null
+                });
+              });
             } else {
+              this.detachSessionInfoListener();
               reject(new Error('User cancelled or authentication failed'));
             }
           },
@@ -107,11 +134,102 @@ export class FacebookSDKService {
             extras: {
               setup: {},
               featureType: '',
-              sessionInfoVersion: '2'
+              sessionInfoVersion: '3'
             }
           }
         );
       });
+    });
+  }
+
+  /**
+   * Listen for the ``WA_EMBEDDED_SIGNUP`` postMessage that Meta sends from
+   * the Embedded Signup dialog. It carries the session info (``waba_id``,
+   * ``phone_number_id``, ``business_id``) of the business that just
+   * completed signup.
+   */
+  private attachSessionInfoListener(): void {
+    if (this.sessionInfoListener) {
+      return;
+    }
+
+    this.sessionInfoListener = (event: MessageEvent) => {
+      if (!event.origin || !event.origin.endsWith('facebook.com')) {
+        return;
+      }
+
+      let data: any;
+      try {
+        data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      } catch {
+        return;
+      }
+
+      if (!data || data.type !== 'WA_EMBEDDED_SIGNUP') {
+        return;
+      }
+
+      const eventName = data.event;
+      const payload = data.data ?? {};
+
+      if (eventName === 'ERROR') {
+        // ``error_message`` is a user-facing string and never contains
+        // tokens or secrets, so it is safe to surface for debugging.
+        console.warn('[EmbeddedSignup] Meta reported an error:', payload.error_message ?? eventName);
+        return;
+      }
+
+      // Capture the session info on any completion event. Fields are absent
+      // on cancel/intermediate steps, in which case we keep waiting.
+      const completionEvents = [
+        'FINISH',
+        'FINISH_ONLY_WABA',
+        'FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING',
+        'LOGIN_SUCCESS',
+        'SESSION_LOGGING'
+      ];
+      if (!completionEvents.includes(eventName)) {
+        return;
+      }
+
+      const wabaId = payload.waba_id ?? null;
+      const phoneNumberId = payload.phone_number_id ?? null;
+      const businessId = payload.business_id ?? null;
+
+      if (wabaId || phoneNumberId || businessId) {
+        this.capturedSessionInfo = {
+          waba_id: wabaId,
+          phone_number_id: phoneNumberId,
+          business_id: businessId
+        };
+      }
+    };
+
+    window.addEventListener('message', this.sessionInfoListener);
+  }
+
+  private detachSessionInfoListener(): void {
+    if (this.sessionInfoListener) {
+      window.removeEventListener('message', this.sessionInfoListener);
+      this.sessionInfoListener = null;
+    }
+  }
+
+  private waitForSessionInfo(timeoutMs: number): Promise<MetaSessionInfo | null> {
+    return new Promise((resolve) => {
+      const startedAt = Date.now();
+      const check = () => {
+        if (this.capturedSessionInfo) {
+          resolve(this.capturedSessionInfo);
+          return;
+        }
+        if (Date.now() - startedAt >= timeoutMs) {
+          resolve(null);
+          return;
+        }
+        setTimeout(check, 100);
+      };
+      check();
     });
   }
 }

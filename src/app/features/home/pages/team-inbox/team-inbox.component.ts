@@ -29,6 +29,7 @@ import {
 import { loadUsers } from '../../../../core/services/user-management/ngrx/user-management.actions';
 import { ConversationStateService } from './components/conversation.state.service';
 import { getChatbotsMetaData } from '../../../../core/services/chatbot/ngrx/chatbot.actions';
+import * as SocketActions from '../../../../core/services/chat/ngrx/socket.actions';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
 @Component({
@@ -88,6 +89,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     return isNaN(date.getTime()) ? Date.now() : date.getTime();
   }
   ngOnInit() {
+    // Establish the realtime socket connection as soon as the Team Inbox
+    // loads (not only via the auth guard, which may have run before the
+    // user's ADMINISTRATOR role was available). Idempotent if already connected.
+    this.store.dispatch(SocketActions.connectSocket());
     this.listenForEvents();
     this.store.dispatch(loadUsers({ query: '', page: 1, limit: 100 }));
     this.store.dispatch(getChatbotsMetaData({
