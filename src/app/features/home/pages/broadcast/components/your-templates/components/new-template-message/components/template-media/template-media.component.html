@@ -119,6 +119,14 @@
         <p>- {{ 'broadcast.createTemplate.media.fileRequirements' | translate }}</p>
         <p>- {{ 'broadcast.createTemplate.media.supportedFormats' | translate }} {{ getSupportedFormats() }}</p>
       </div>
+
+      <div *ngIf="selectedMediaType === 'Document'"
+        class="mt-2 p-3 bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/40 rounded-lg">
+        <p class="text-xs text-blue-800 dark:text-blue-300 font-semibold">📄 {{
+          'broadcast.createTemplate.media.documentHeaderTitle' | translate }}</p>
+        <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">{{
+          'broadcast.createTemplate.media.documentHeaderHint' | translate }}</p>
+      </div>
     </div>
   </div>
 </div>

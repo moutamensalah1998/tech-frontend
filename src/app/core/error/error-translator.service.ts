@@ -39,12 +39,17 @@ export class ErrorTranslatorService {
   /**
    * Translates error from HTTP error response
    * Priority: validation_error_code > error_code > message
-   * Follows the exact same translation pattern as the rest of the app
+   * Follows the exact same translation pattern as the rest of the app.
+   * Supports both the backend envelope `{ status, error: { ... } }` and flat shapes.
    */
   translateHttpError(error: any): string {
+    // Backend envelope is: { status, error: { status_code, error_code, message, details, ... } }
+    const body = error?.error;
+    const inner = body?.error ?? body;
+
     // Priority 1: Use validation_error_code if present
-    if (error?.error?.validation_error_code) {
-      const validationKey = `errors.${error.error.validation_error_code}`;
+    if (inner?.validation_error_code) {
+      const validationKey = `errors.${inner.validation_error_code}`;
       const translated = this.translationService.translate(validationKey);
       if (translated !== validationKey) {
         return translated;
@@ -52,8 +57,8 @@ export class ErrorTranslatorService {
     }
 
     // Priority 2: Fall back to error_code
-    if (error?.error?.error_code) {
-      const errorKey = `errors.${error.error.error_code}`;
+    if (inner?.error_code) {
+      const errorKey = `errors.${inner.error_code}`;
       const translated = this.translationService.translate(errorKey);
       if (translated !== errorKey) {
         return translated;
@@ -61,8 +66,8 @@ export class ErrorTranslatorService {
     }
 
     // Priority 3: Use message if available
-    if (error?.error?.message) {
-      const message = error.error.message;
+    if (inner?.message) {
+      const message = inner.message;
       // Try to translate if it looks like an error code
       if (message && typeof message === 'string' && message.match(/^[A-Z_]+$/)) {
         const messageKey = `errors.${message}`;
@@ -85,6 +90,10 @@ export class ErrorTranslatorService {
           return this.translationService.translate('errors.FORBIDDEN');
         case 404:
           return this.translationService.translate('errors.NOT_FOUND');
+        case 409:
+          return this.translationService.translate('errors.CONFLICT_ERROR');
+        case 422:
+          return this.translationService.translate('errors.VALIDATION_ERROR');
         case 500:
           return this.translationService.translate('errors.INTERNAL_ERROR');
         default:

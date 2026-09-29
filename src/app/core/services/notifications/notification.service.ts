@@ -7,10 +7,12 @@ import { ApiService } from '../../api/api.service';
 
 export interface Notification {
   id: string;
-  type: 'conversation_assignment' | 'new_message' | 'system';
+  type: 'conversation_assignment' | 'new_message' | 'system' | 'template';
   title: string;
   message: string;
   conversationId?: string;
+  templateId?: string;
+  templateStatus?: string;
   contactName?: string;
   contactPhone?: string;
   assignedBy?: string;
@@ -86,6 +88,8 @@ export class NotificationService implements OnDestroy {
       title: apiNotif.title,
       message: apiNotif.message,
       conversationId: apiNotif.conversationId,
+      templateId: apiNotif.templateId,
+      templateStatus: apiNotif.templateStatus,
       contactName: apiNotif.contactName,
       contactPhone: apiNotif.contactPhone,
       assignedBy: apiNotif.assignedBy,
@@ -99,6 +103,7 @@ export class NotificationService implements OnDestroy {
     switch (type) {
       case 'conversation_assignment': return 'assignment';
       case 'new_message': return 'message';
+      case 'template': return 'template';
       default: return 'info';
     }
   }

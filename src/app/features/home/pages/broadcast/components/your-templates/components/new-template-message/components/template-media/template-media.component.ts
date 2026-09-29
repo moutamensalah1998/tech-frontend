@@ -93,19 +93,8 @@ export class TemplateMediaComponent implements OnInit, OnDestroy {
     // Get current cursor position (use stored position or current selection)
     const cursorPos = input.selectionStart !== undefined ? input.selectionStart : this.cursorPosition;
 
-    // Show a simple prompt to get variable name
-    const variableName = this.promptForVariableName();
-    if (!variableName) {
-      // Return focus to input if user cancels
-      setTimeout(() => {
-        input.focus();
-        input.setSelectionRange(cursorPos, cursorPos);
-      }, 10);
-      return;
-    }
-
-    // Create the variable
-    const placeholder = this.variableService.addVariable(fieldType, variableName);
+    // Create the next positional variable ({{1}}, {{2}}, ...) — no prompt.
+    const placeholder = this.variableService.addVariable(fieldType);
     const control = this.form.get('text');
     const currentText = control?.value || '';
 
@@ -126,26 +115,6 @@ export class TemplateMediaComponent implements OnInit, OnDestroy {
       input.focus();
       input.setSelectionRange(newCursorPos, newCursorPos);
     }, 50);
-  }
-
-  private promptForVariableName(): string | null {
-    const suggestedName = this.variableService.generateUniqueVariableName('text');
-
-    const variableName = window.prompt(
-      `Enter variable name for header (letters, numbers, and underscores only):`,
-      suggestedName
-    );
-
-    if (!variableName) return null;
-
-    const cleanName = variableName.trim().replace(/[^a-zA-Z0-9_]/g, '');
-
-    if (!this.variableService.isValidVariableName(cleanName)) {
-      alert('Invalid variable name. Use only letters, numbers, and underscores.');
-      return this.promptForVariableName(); // Recursive call for retry
-    }
-
-    return cleanName;
   }
 
   onHeaderTextChange(event: Event): void {

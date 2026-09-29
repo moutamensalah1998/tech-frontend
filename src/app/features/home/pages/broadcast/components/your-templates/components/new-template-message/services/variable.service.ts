@@ -71,6 +71,61 @@ export class VariableService {
     this.variablesSubject.next(updatedVariables);
     this.removeVariableControl(variableToRemove.id);
     this.removeVariableFromAllTexts(variableToRemove.placeholder);
+    // Positional variables must stay sequential: {{1}}, {{2}}, ...
+    this.renumberPositionalVariables();
+  }
+
+  /**
+   * Re-number positional variables ({{1}}, {{2}}, ...) so they remain
+   * sequential after a deletion. Meta requires positional variables to start
+   * at 1 with no gaps.
+   */
+  private renumberPositionalVariables(): void {
+    (['body', 'text'] as const).forEach((fieldType) => {
+      const fieldVars = this.variables
+        .filter(v => v.fieldType === fieldType && /^\d+$/.test(v.name))
+        .sort((a, b) => parseInt(a.name, 10) - parseInt(b.name, 10));
+
+      if (!fieldVars.length) return;
+
+      const renames = fieldVars
+        .map((v, idx) => ({ variable: v, newName: String(idx + 1) }))
+        .filter(r => r.variable.name !== r.newName);
+
+      if (!renames.length) return;
+
+      const renameMap = new Map(renames.map(r => [r.variable.name, r.newName]));
+
+      const updated = this.variables.map(v => {
+        if (v.fieldType === fieldType && renameMap.has(v.name)) {
+          const newName = renameMap.get(v.name)!;
+          return { ...v, name: newName, placeholder: `{{${newName}}}` };
+        }
+        return v;
+      });
+      this.variablesSubject.next(updated);
+
+      renames.forEach(r => {
+        this.replacePlaceholderInText(r.variable.placeholder, `{{${r.newName}}}`);
+      });
+
+      setTimeout(() => this.updateVariableControlsInternal(), 0);
+    });
+  }
+
+  private replacePlaceholderInText(oldPlaceholder: string, newPlaceholder: string): void {
+    Object.keys(this.formControls).forEach(fieldType => {
+      const control = this.formControls[fieldType];
+      if (control && control.value) {
+        const updatedText = control.value.replace(
+          new RegExp(this.escapeRegExp(oldPlaceholder), 'g'),
+          newPlaceholder
+        );
+        if (updatedText !== control.value) {
+          control.setValue(updatedText, { emitEvent: false });
+        }
+      }
+    });
   }
 
   private removeVariableFromAllTexts(placeholder: string): void {
@@ -83,7 +138,7 @@ export class VariableService {
           ' '
         ).replace(/\s+/g, ' ').trim(); // Clean up extra spaces
 
-        formControl.setValue(updatedText);
+        formControl.setValue(updatedText, { emitEvent: false });
       }
     });
   }
@@ -295,15 +350,13 @@ export class VariableService {
   }
 
   generateUniqueVariableName(fieldType: 'body' | 'text', baseName: string = 'var'): string {
-    const allVariables = this.variables; // Check against ALL variables, not just field-specific
-    let counter = 1;
-    let proposedName = `${baseName}${counter}`;
-
-    while (allVariables.find(v => v.name === proposedName)) {
-      counter++;
-      proposedName = `${baseName}${counter}`;
-    }
-    return proposedName;
+    // Positional variables: {{1}}, {{2}}, ... — return the next sequential number.
+    const numbers = this.variables
+      .filter(v => v.fieldType === fieldType && /^\d+$/.test(v.name))
+      .map(v => parseInt(v.name, 10))
+      .filter(n => !Number.isNaN(n));
+    const next = numbers.length ? Math.max(...numbers) + 1 : 1;
+    return String(next);
   }
 
   removeVariableFromText(fieldType: 'body' | 'text', placeholder: string): void {

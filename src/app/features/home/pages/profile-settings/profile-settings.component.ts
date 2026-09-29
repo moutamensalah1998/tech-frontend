@@ -118,6 +118,13 @@ export class ProfileSettingsComponent implements OnDestroy {
         routerLink: '/dashboard/settings/user-preferences',
         exact: true,
         translateLabel: true
+      },
+      {
+        label: 'API Tokens',
+        icon: this.sanitizer.bypassSecurityTrustHtml('<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a4 4 0 00-4 4v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2h-2V6a4 4 0 00-4-4zm2 6V6a2 2 0 10-4 0v2h4z"/></svg>'),
+        routerLink: '/dashboard/settings/api-tokens',
+        exact: true,
+        translateLabel: false
       }
     ];
 

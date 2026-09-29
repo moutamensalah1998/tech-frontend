@@ -8,6 +8,7 @@ import { userPreferencesRoutes } from "./components/user-preferences/user-prefer
 import { connectWhatsappRoute } from "./components/connect-whatsapp/connect-whatsapp.routes";
 import { timeAndAreaRoutes } from "./components/time-and-area/time-and-area.routes";
 import { inviteManagementRoutes } from "./components/invite-management/invite-management.routes";
+import { apiTokensRoutes } from "./components/api-tokens/api-tokens.routes";
 
 export const profileSettingsRoutes = {
   path: 'settings',
@@ -20,6 +21,7 @@ export const profileSettingsRoutes = {
     userPreferencesRoutes,
     timeAndAreaRoutes,
     inviteManagementRoutes,
+    apiTokensRoutes,
     generalRoutes,
     importExportChatsRoutes,
     connectWhatsappRoute

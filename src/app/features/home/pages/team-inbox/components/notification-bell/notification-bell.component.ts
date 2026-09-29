@@ -146,6 +146,11 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
       this.router.navigate(['/dashboard/team-inbox'], {
         queryParams: { conversationId: notification.conversationId }
       });
+    } else if (notification.templateId) {
+      // Navigate to the template this notification refers to
+      this.router.navigate(['/dashboard/broadcast/your-templates'], {
+        queryParams: { templateId: notification.templateId }
+      });
     }
     
     this.isDropdownOpen = false;
@@ -171,8 +176,44 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
         return 'assignment';
       case 'new_message':
         return 'message';
+      case 'template':
+        return 'template';
       default:
         return 'info';
+    }
+  }
+
+  getTemplateStatusLabel(status?: string): string {
+    if (!status) return '';
+    const normalized = status.toUpperCase();
+    const labels: Record<string, string> = {
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+      PENDING: 'Pending',
+      PENDING_DELETION: 'Pending Deletion',
+      DISABLED: 'Disabled',
+      PAUSED: 'Paused',
+      DRAFT: 'Draft',
+      FAILED: 'Failed',
+    };
+    return labels[normalized] || status;
+  }
+
+  getTemplateStatusClass(status?: string): string {
+    if (!status) return 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400';
+    switch (status.toUpperCase()) {
+      case 'APPROVED':
+        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
+      case 'REJECTED':
+      case 'FAILED':
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+      case 'PENDING':
+        return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400';
+      case 'DISABLED':
+      case 'PAUSED':
+        return 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
+      default:
+        return 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400';
     }
   }
 

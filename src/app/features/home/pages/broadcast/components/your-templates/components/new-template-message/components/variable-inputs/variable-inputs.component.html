@@ -72,22 +72,10 @@
             <div class="mb-3">
               <label class="block text-xs font-medium text-text-secondary dark:text-dark-text-secondary mb-1">{{
                 'broadcast.createTemplate.variables.variableName' | translate }}</label>
-              <div class="relative">
-                <input type="text" [value]="variable.name" (input)="onVariableNameChange(variable, $event)"
-                  (blur)="validateVariableName(variable, $event)"
-                  class="w-full px-6 py-1 text-sm border border-border dark:border-dark-border rounded focus:ring-1 focus:ring-primary focus:border-primary font-mono text-center bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary"
-                  [placeholder]="'broadcast.createTemplate.variables.variableNamePlaceholder' | translate"
-                  [class.border-red-300]="!isValidName(variable.name)"
-                  [class.bg-red-50]="!isValidName(variable.name)" />
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-                  <span class="text-text-tertiary dark:text-dark-text-tertiary text-sm">&#123;&#123;</span>
-                </div>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <span class="text-text-tertiary dark:text-dark-text-tertiary text-sm">&#125;&#125;</span>
-                </div>
+              <div
+                class="w-full px-3 py-1.5 text-sm border border-border dark:border-dark-border rounded font-mono text-center bg-surface-secondary dark:bg-dark-surface-secondary text-text-primary dark:text-dark-text-primary select-all">
+                {{ variable.placeholder }}
               </div>
-              <div *ngIf="!isValidName(variable.name)" class="text-xs text-danger dark:text-danger-dark mt-1">{{
-                'broadcast.createTemplate.variables.variableNameHint' | translate }}</div>
               <div *ngIf="isVariableUsedInMultipleFields(variable)"
                 class="text-xs text-blue-600 dark:text-blue-400 mt-1">{{
                 'broadcast.createTemplate.variables.variableNameMultiHint' | translate }}</div>

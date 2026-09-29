@@ -1352,7 +1352,9 @@
         "chooseFile": "Choose",
         "noFileSelected": "No file selected",
         "fileRequirements": "Maximum file size: 16MB",
-        "supportedFormats": "Supported formats:"
+        "supportedFormats": "Supported formats:",
+        "documentHeaderTitle": "Document Header",
+        "documentHeaderHint": "The document is uploaded to Meta and referenced by a secure header_handle. It must be a valid PDF, DOC or DOCX file."
       },
       "variables": {
         "title": "Variable Configuration",

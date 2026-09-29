@@ -1349,7 +1349,9 @@
         "chooseFile": "اختر",
         "noFileSelected": "لم يتم اختيار ملف",
         "fileRequirements": "الحد الأقصى لحجم الملف: 16 ميجابايت",
-        "supportedFormats": "التنسيقات المدعومة:"
+        "supportedFormats": "التنسيقات المدعومة:",
+        "documentHeaderTitle": "رأس مستند",
+        "documentHeaderHint": "يتم رفع المستند إلى Meta والإشارة إليه عبر header_handle آمن. يجب أن يكون ملف PDF أو DOC أو DOCX صالحًا."
       },
       "variables": {
         "title": "تكوين المتغيرات",

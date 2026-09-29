@@ -98,22 +98,8 @@ ngOnInit(): void {
         ? textarea.selectionStart
         : this.cursorPositions[fieldType] || 0;
 
-    // Show a simple prompt to get variable name
-    const variableName = this.promptForVariableName(fieldType);
-    if (!variableName) {
-      // Return focus to textarea if user cancels
-      setTimeout(() => {
-        textarea.focus();
-        textarea.setSelectionRange(cursorPos, cursorPos);
-      }, 10);
-      return;
-    }
-
-    // Create the variable
-    const placeholder = this.variableService.addVariable(
-      fieldType,
-      variableName
-    );
+    // Create the next positional variable ({{1}}, {{2}}, ...) — no prompt.
+    const placeholder = this.variableService.addVariable(fieldType);
     const control = this.form.get(fieldType);
     const currentText = control?.value || '';
 
@@ -134,29 +120,6 @@ ngOnInit(): void {
       textarea.focus();
       textarea.setSelectionRange(newCursorPos, newCursorPos);
     }, 50);
-  }
-
-  private promptForVariableName(fieldType: 'body' ): string | null {
-    const suggestedName =
-      this.variableService.generateUniqueVariableName(fieldType);
-
-    const variableName = window.prompt(
-      `Enter variable name (letters, numbers, and underscores only):`,
-      suggestedName
-    );
-
-    if (!variableName) return null;
-
-    const cleanName = variableName.trim().replace(/[^a-zA-Z0-9_]/g, '');
-
-    if (!this.variableService.isValidVariableName(cleanName)) {
-      alert(
-        'Invalid variable name. Use only letters, numbers, and underscores.'
-      );
-      return this.promptForVariableName(fieldType); // Recursive call for retry
-    }
-
-    return cleanName;
   }
 
   onBodyTextChange(event: Event): void {

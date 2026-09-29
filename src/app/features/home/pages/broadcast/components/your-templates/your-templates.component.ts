@@ -45,6 +45,8 @@ export class YourTemplatesComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private sortSubject = new Subject<'NONE' | 'ASCENDING' | 'DESCENDING'>();
   private destroy$ = new Subject<void>();
+  private pendingTemplateId: string | null = null;
+  private openedFromNotification = false;
 
   constructor(
     private dialog: MatDialog,
@@ -84,8 +86,18 @@ export class YourTemplatesComponent implements OnInit, OnDestroy {
 
     this.dispatchLoadTemplates();
 
+    // Open a specific template when arriving from a notification deep link.
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.pendingTemplateId = params['templateId'] || null;
+      this.openedFromNotification = false;
+      if (this.pendingTemplateId) {
+        this.template$.pipe(take(1)).subscribe((data) => this.tryOpenPendingTemplate(data));
+      }
+    });
+
     this.template$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
       console.log('Template Data length:', data?.data?.length);
+      this.tryOpenPendingTemplate(data);
     });
 
     this.error$.pipe(takeUntil(this.destroy$)).subscribe((error) => {
@@ -200,6 +212,19 @@ export class YourTemplatesComponent implements OnInit, OnDestroy {
     });
   }
 
+  private tryOpenPendingTemplate(data?: TemplateApiResponse | null): void {
+    if (!this.pendingTemplateId || this.openedFromNotification) {
+      return;
+    }
+    const items = data?.data ?? [];
+    const match = items.find((item) => item?.template?.id === this.pendingTemplateId);
+    if (match && match.template) {
+      this.openedFromNotification = true;
+      this.pendingTemplateId = null;
+      this.openDialog(match.template);
+    }
+  }
+
   onEditTemplate(template: WhatsAppTemplate) {
     this.router.navigate(['/dashboard/broadcast/your-templates/edit'], {
       queryParams: {
@@ -252,5 +277,25 @@ export class YourTemplatesComponent implements OnInit, OnDestroy {
 
   onSyncTemplates() {
     this.store.dispatch(TemplateActions.syncTemplates());
+  }
+
+  getRejectionReason(template: WhatsAppTemplate): string {
+    if (!template || template.status !== 'REJECTED' || !template.reason) {
+      return '';
+    }
+    const reasonMap: Record<string, string> = {
+      ABUSIVE_CONTENT: 'Abusive content',
+      CATALOG_NOT_FOUND: 'Catalog not found',
+      DUPLICATE_CONTENT: 'Duplicate content',
+      ERROR_CODES: 'Error codes',
+      INVALID_FORMAT: 'Invalid format',
+      NONE: 'None',
+      PIRATED_CONTENT: 'Pirated content',
+      REFUND_INFORMATION_MISSING: 'Refund information missing',
+      SCAM: 'Scam or misleading content',
+      TAG_CONTENT_MISMATCH: 'Tag/content mismatch',
+      UNAVAILABLE_CONTENT: 'Unavailable content',
+    };
+    return reasonMap[template.reason] || template.reason;
   }
 }
