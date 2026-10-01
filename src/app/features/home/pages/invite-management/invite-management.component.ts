@@ -11,7 +11,7 @@ import { ToastService } from '../../../../core/services/toast-message.service';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 import { ApiService } from '../../../../core/api/api.service';
 
-const PLATFORM_OWNER_PHONE = '+962790701714';
+const PLATFORM_OWNER_PHONE = '+966 50 122 9022';
 
 @Component({
   standalone: true,

@@ -15,7 +15,7 @@ import { TranslationService } from '../../../../core/services/translation/transl
 import { ApiService } from '../../../../core/api/api.service';
 import { Subscription, Subject } from 'rxjs';
 
-const PLATFORM_OWNER_PHONE = '+962790701714';
+const PLATFORM_OWNER_PHONE = '+966 50 122 9022';
 
 @Component({
   selector: 'app-profile-settings',
