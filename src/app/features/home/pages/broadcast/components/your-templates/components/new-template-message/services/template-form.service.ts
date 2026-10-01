@@ -19,6 +19,7 @@ export interface TemplateFormData {
   offerCode: string;
   authCopyButtonText: string;
   includeSecurityText: boolean;
+  codeExpirationMinutes?: number;
   quickReplyTexts: string[];
   variables?: { [placeholder: string]: string };
 }
@@ -58,6 +59,7 @@ export class TemplateFormService {
       offerCode: [''],
       authCopyButtonText: [''],
       includeSecurityText: [false],
+      codeExpirationMinutes: [null],
       quickReplyTexts: this.fb.array([])
     });
 
@@ -151,6 +153,9 @@ export class TemplateFormService {
       offerCode: formValue.offerCode || '',
       authCopyButtonText: formValue.authCopyButtonText || '',
       includeSecurityText: formValue.includeSecurityText || false,
+      codeExpirationMinutes: formValue.codeExpirationMinutes
+        ? Number(formValue.codeExpirationMinutes)
+        : undefined,
       quickReplyTexts: quickReplyArray.value || [],
       variables: this.variableService.getVariableValues()
     };

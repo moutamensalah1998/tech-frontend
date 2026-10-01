@@ -127,14 +127,15 @@ export class TemplateSubmissionService {
     }
 
     const category = formData.category.toUpperCase();
+
+    // AUTHENTICATION templates use Meta's preset body/footer, so they are built
+    // through a dedicated path and must not carry body/header/footer text.
     if (category === 'AUTHENTICATION') {
-      if (!formData.body || formData.body.trim() === '') {
-        formData.body = '{{code}} is your verification code.';
-      }
-    } else {
-      if (!formData.body || formData.body.trim() === '') {
-        throw new Error('Message body is required');
-      }
+      return this.buildAuthenticationTemplateRequest(formData);
+    }
+
+    if (!formData.body || formData.body.trim() === '') {
+      throw new Error('Message body is required');
     }
 
     const request: any = {
@@ -176,6 +177,39 @@ export class TemplateSubmissionService {
     }
 
     return request;
+  }
+
+  private buildAuthenticationTemplateRequest(formData: TemplateFormData): any {
+    // AUTHENTICATION templates use Meta's preset body/footer, so we only send
+    // the optionals and the OTP button (no body text / header / footer text).
+    const request: any = {
+      name: formData.templateName.trim(),
+      category: 'AUTHENTICATION',
+      language: formData.language,
+    };
+
+    if (formData.includeSecurityText !== undefined) {
+      request.add_security_recommendation = !!formData.includeSecurityText;
+    }
+
+    if (formData.codeExpirationMinutes) {
+      request.code_expiration_minutes = formData.codeExpirationMinutes;
+    }
+
+    const buttons = this.buildAuthenticationButtons(formData);
+    if (buttons.length > 0) {
+      request.buttons = buttons;
+    }
+
+    return request;
+  }
+
+  private buildAuthenticationButtons(formData: TemplateFormData): any[] {
+    const button: any = { type: 'OTP', otp_type: 'COPY_CODE' };
+    if (formData.authCopyButtonText && formData.authCopyButtonText.trim()) {
+      button.text = formData.authCopyButtonText.trim();
+    }
+    return [button];
   }
 
   private extractVariablesAsListOfMaps(text: string): VariableMap[] {
@@ -249,13 +283,14 @@ export class TemplateSubmissionService {
       });
     }
 
-    // Add auth copy button
+    // Add auth copy button (OTP copy-code — only reachable for AUTHENTICATION)
     if (
       this.buttonService.hasAuthCopyButton &&
       formData.authCopyButtonText && formData.authCopyButtonText.trim()
     ) {
       buttons.push({
-        type: 'QUICK_REPLY',
+        type: 'OTP',
+        otp_type: 'COPY_CODE',
         text: formData.authCopyButtonText.trim(),
       });
     }
