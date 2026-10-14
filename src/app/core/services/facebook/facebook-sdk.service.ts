@@ -25,6 +25,11 @@ export interface EmbeddedSignupResult {
   business_id: string | null;
 }
 
+export interface EmbeddedSignupLaunchOptions {
+  featureType?: string;
+  sessionInfoVersion?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -99,12 +104,29 @@ export class FacebookSDKService {
    * number IDs that Meta reports through the ``WA_EMBEDDED_SIGNUP``
    * postMessage event, in addition to the exchangeable authorization code.
    */
-  launchEmbeddedSignup(configId: string): Promise<EmbeddedSignupResult> {
+  launchEmbeddedSignup(
+    configId: string,
+    options?: EmbeddedSignupLaunchOptions
+  ): Promise<EmbeddedSignupResult> {
     return this.waitForInit().then(() => {
       return new Promise<EmbeddedSignupResult>((resolve, reject) => {
         // Reset any session info captured by a previous attempt.
         this.capturedSessionInfo = null;
         this.attachSessionInfoListener();
+
+        // Embedded Signup v4: the flow (and its products/permissions) is
+        // defined by the Facebook Login for Business configuration referenced
+        // by ``config_id``. The standard Cloud API onboarding uses
+        // ``extras.setup`` only; the Coexistence (WhatsApp Business app
+        // onboarding) flow additionally passes ``featureType`` and
+        // ``sessionInfoVersion``.
+        const extras: Record<string, unknown> = { setup: {} };
+        if (options?.featureType) {
+          extras['featureType'] = options.featureType;
+        }
+        if (options?.sessionInfoVersion) {
+          extras['sessionInfoVersion'] = options.sessionInfoVersion;
+        }
 
         FB.login(
           (response: FBAuthResponse) => {
@@ -131,14 +153,26 @@ export class FacebookSDKService {
             config_id: configId,
             response_type: 'code',
             override_default_response_type: true,
-            extras: {
-              setup: {},
-              featureType: '',
-              sessionInfoVersion: '3'
-            }
+            extras
           }
         );
       });
+    });
+  }
+
+  /**
+   * Launch the Coexistence flow: onboard a business that already uses the
+   * WhatsApp Business app so the app and Cloud API share the same number.
+   *
+   * Meta reports completion through the
+   * ``FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING`` postMessage event, which can
+   * omit the phone number ID; the backend falls back to discovering it from
+   * the WABA in that case.
+   */
+  launchEmbeddedSignupCoexistence(configId: string): Promise<EmbeddedSignupResult> {
+    return this.launchEmbeddedSignup(configId, {
+      featureType: 'whatsapp_business_app_onboarding',
+      sessionInfoVersion: '2'
     });
   }
 

@@ -3,7 +3,7 @@ export const environment = {
   production: false,
   meta: {
     appId: '1506133857645770',
-    configId: '4278075445669207',
+    configId: '1623379982850888',
     redirectUri: 'https://prog-gate.cloud/meta/callback',
     apiVersion: 'v21.0',
   },

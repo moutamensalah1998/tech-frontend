@@ -176,11 +176,23 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   /**
-   * Launch the Meta Embedded Signup flow to connect a WhatsApp Business Account.
-   * This uses the shared Meta App (configId) for all tenants.
-   * The backend will isolate each customer's WABA to their own account.
+   * Launch the Meta Embedded Signup flow (Cloud API) to connect a new
+   * WhatsApp Business Account. Uses the shared Meta App config_id for all
+   * tenants; the backend isolates each customer's WABA to their own account.
    */
   async connectWhatsApp(): Promise<void> {
+    await this.launchAndExchange(false);
+  }
+
+  /**
+   * Launch the Coexistence flow to connect an existing WhatsApp Business app
+   * number so both the app and Cloud API share the same number.
+   */
+  async connectWhatsAppCoexistence(): Promise<void> {
+    await this.launchAndExchange(true);
+  }
+
+  private async launchAndExchange(coexistence: boolean): Promise<void> {
     this.connectingWhatsApp = true;
     this.errorMessage = null;
     this.successMessage = null;
@@ -188,7 +200,9 @@ export class BusinessProfileComponent implements OnInit {
     try {
       // Step 1: Launch FB.login with the Embedded Signup configuration
       const configId = this.whatsAppConnection.getConfigId();
-      const result = await this.facebookSDK.launchEmbeddedSignup(configId);
+      const result = coexistence
+        ? await this.facebookSDK.launchEmbeddedSignupCoexistence(configId)
+        : await this.facebookSDK.launchEmbeddedSignup(configId);
 
       // Step 2: Get the authorization code from Meta
       const code = result.code;
@@ -196,10 +210,16 @@ export class BusinessProfileComponent implements OnInit {
         throw new Error('No authorization code received from Meta');
       }
 
-      // Step 3: Send the code to the backend for token exchange
-      // The backend extracts the client_id from the JWT token,
-      // so we pass a placeholder - the backend will use the authenticated user's client_id
-      this.whatsAppConnection.exchangeToken(code, 'current').subscribe({
+      // Step 3: Send the code to the backend for token exchange.
+      // The backend extracts the client_id from the JWT token, so we pass a
+      // placeholder. Session-info IDs and the coexistence flag are forwarded
+      // so the backend can skip phone registration for Coexistence and still
+      // subscribe the app to the customer's WABA webhooks.
+      this.whatsAppConnection.exchangeToken(code, 'current', {
+        coexistence,
+        waba_id: result.waba_id,
+        phone_number_id: result.phone_number_id,
+      }).subscribe({
         next: (response) => {
           this.connectingWhatsApp = false;
           if (response.success) {
