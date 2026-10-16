@@ -22,8 +22,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           // Server-side error - use translator service
           errorMessage = this.errorTranslator.translateHttpError(error);
 
-          // Handle 401 - redirect to login
-          if (error.status === 401) {
+          // Handle 401 - redirect to login (but never from public pages
+          // such as /invite/:token – anonymous visitors must stay there)
+          if (error.status === 401 && !(this.router.url || '').startsWith('/invite/')) {
             this.router.navigate(['/auth/sign-in'], { replaceUrl: true });
           }
         }

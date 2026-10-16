@@ -218,8 +218,18 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleUnauthorizedError(originalError?: any): Observable<never> {
     this.store.dispatch(AuthActions.logout());
-    this.router.navigate(['auth/sign-in'], { replaceUrl: true });
+    // Public pages (e.g. /invite/:token) must keep working for anonymous
+    // visitors – a 401 from an incidental background request must not
+    // redirect them to the sign-in page.
+    if (!this.isPublicPage()) {
+      this.router.navigate(['auth/sign-in'], { replaceUrl: true });
+    }
     return throwError(() => originalError ?? new Error('Unauthorized'));
+  }
+
+  private isPublicPage(): boolean {
+    const url = this.router.url || '';
+    return url.startsWith('/invite/');
   }
 
   private handleAdminUnauthorizedError(originalError?: any): Observable<never> {

@@ -49,7 +49,7 @@
               </svg>
             </span>
             <span *ngIf="metaConnecting" class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-            {{ metaConnecting ? 'Opening WhatsApp Setup...' : 'Connect WhatsApp Business' }}
+            {{ metaConnecting ? 'Opening WhatsApp Setup...' : (invitation?.connection_type === 'coexistence' ? 'Connect WhatsApp Business App' : 'Connect WhatsApp Business') }}
           </button>
 
           <p *ngIf="error" class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
@@ -108,7 +108,7 @@
             placeholder="Minimum 8 characters">
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4" *ngIf="invitation?.connection_type !== 'coexistence'">
           <label class="block text-sm font-medium text-text-primary dark:text-dark-text-primary mb-1">WhatsApp Verification PIN (6 digits) *</label>
           <input type="text" inputmode="numeric" maxlength="6" formControlName="pin"
             class="w-full py-2.5 px-3 border rounded-lg text-sm bg-surface dark:bg-dark-surface text-text-primary dark:text-dark-text-primary focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 min-h-[44px]"

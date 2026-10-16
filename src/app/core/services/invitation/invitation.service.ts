@@ -7,6 +7,7 @@ import {
   InvitationValidateResponse,
   RegisterWithInvitationResponse,
   RegisterEmbeddedSignupResponse,
+  InvitationConnectionType,
 } from '../../models/invitation.model';
 
 @Injectable({
@@ -19,11 +20,13 @@ export class InvitationService {
   createInvitation(
     email?: string,
     company_name?: string,
-    expires_in_days: number = 30
+    expires_in_days: number = 30,
+    connection_type: InvitationConnectionType = 'cloud_api'
   ): Observable<InvitationCreateResponse> {
     let params = `expires_in_days=${expires_in_days}`;
     if (email) params += `&email=${encodeURIComponent(email)}`;
     if (company_name) params += `&company_name=${encodeURIComponent(company_name)}`;
+    params += `&connection_type=${encodeURIComponent(connection_type)}`;
     return this.apiService.post<InvitationCreateResponse>(
       `/v1/invitations/create?${params}`,
       {},
@@ -101,7 +104,7 @@ export class InvitationService {
     email: string;
     password: string;
     company_name: string;
-    pin: string;
+    pin?: string | null;
   }): Observable<RegisterEmbeddedSignupResponse> {
     const queryParams = new URLSearchParams();
     queryParams.set('token', params.token);
@@ -116,7 +119,7 @@ export class InvitationService {
     // The PIN is sent in the request body (JSON), never in the URL/query string.
     return this.apiService.post<RegisterEmbeddedSignupResponse>(
       `/v1/invite/register-embedded?${queryParams.toString()}`,
-      { pin: params.pin },
+      { pin: params.pin ?? null },
       { isJson: true }
     );
   }

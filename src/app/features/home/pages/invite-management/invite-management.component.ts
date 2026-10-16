@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InvitationService } from '../../../../core/services/invitation/invitation.service';
-import { InvitationItem } from '../../../../core/models/invitation.model';
+import { InvitationItem, InvitationConnectionType } from '../../../../core/models/invitation.model';
 import { ToastService } from '../../../../core/services/toast-message.service';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 import { ApiService } from '../../../../core/api/api.service';
@@ -31,6 +31,7 @@ export class InviteManagementComponent implements OnInit, OnDestroy {
   inviteEmail = '';
   inviteCompanyName = '';
   inviteExpiresInDays = 30;
+  inviteConnectionType: InvitationConnectionType = 'cloud_api';
 
   // Platform owner check
   isOwner = false;
@@ -104,7 +105,8 @@ export class InviteManagementComponent implements OnInit, OnDestroy {
     this.invitationService.createInvitation(
       this.inviteEmail || undefined,
       this.inviteCompanyName || undefined,
-      this.inviteExpiresInDays
+      this.inviteExpiresInDays,
+      this.inviteConnectionType
     ).subscribe({
       next: (res) => {
         this.creating = false;
@@ -163,5 +165,15 @@ export class InviteManagementComponent implements OnInit, OnDestroy {
       case 'disabled': return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
       default: return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  getConnectionTypeLabel(type?: string): string {
+    return type === 'coexistence' ? 'Coexistence' : 'Cloud API';
+  }
+
+  getConnectionTypeClass(type?: string): string {
+    return type === 'coexistence'
+      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+      : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
   }
 }

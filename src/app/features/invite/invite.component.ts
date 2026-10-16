@@ -83,6 +83,12 @@ export class InviteComponent implements OnInit, OnDestroy {
           if (res.data.company_name) {
             this.registerForm.patchValue({ company_name: res.data.company_name });
           }
+          // The Coexistence flow (WhatsApp Business app) already has an active
+          // number, so the two-step verification PIN is not required.
+          if (res.data.connection_type === 'coexistence') {
+            this.registerForm.controls.pin.clearValidators();
+            this.registerForm.controls.pin.updateValueAndValidity();
+          }
         }
       },
       error: (err) => {
@@ -98,7 +104,12 @@ export class InviteComponent implements OnInit, OnDestroy {
     this.metaConnecting = true;
     this.error = null;
 
-    this.fbSdk.launchEmbeddedSignup(this.metaConfigId)
+    const isCoexistence = this.invitation?.connection_type === 'coexistence';
+    const launch = isCoexistence
+      ? this.fbSdk.launchEmbeddedSignupCoexistence(this.metaConfigId)
+      : this.fbSdk.launchEmbeddedSignup(this.metaConfigId);
+
+    launch
       .then((result) => {
         this.metaConnecting = false;
         this.metaCode = result.code;
@@ -136,6 +147,7 @@ export class InviteComponent implements OnInit, OnDestroy {
     this.registering = true;
     this.error = null;
     const form = this.registerForm.value;
+    const isCoexistence = this.invitation?.connection_type === 'coexistence';
 
     this.invitationService.registerWithEmbeddedSignup({
       token: this.token,
@@ -147,7 +159,7 @@ export class InviteComponent implements OnInit, OnDestroy {
       email: form.email!,
       password: form.password!,
       company_name: form.company_name!,
-      pin: form.pin!,
+      pin: isCoexistence ? null : form.pin!,
     }).subscribe({
       next: (res) => {
         this.registering = false;

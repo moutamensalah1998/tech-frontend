@@ -1,3 +1,5 @@
+export type InvitationConnectionType = 'cloud_api' | 'coexistence';
+
 export interface InvitationItem {
   id: string;
   email: string | null;
@@ -5,6 +7,7 @@ export interface InvitationItem {
   token: string;
   invitation_link?: string;
   status: 'pending' | 'used' | 'expired' | 'disabled';
+  connection_type?: InvitationConnectionType;
   expires_at: string;
   used_at: string | null;
   created_at: string;
